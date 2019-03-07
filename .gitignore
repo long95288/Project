@@ -1,4 +1,11 @@
 # 不跟踪文件及其目录
 /C#/**/bin/
 /C#/**/obj/
+/Python/**/*.html
+/Python/**/*.txt
+/Python/**/*.png
+/Python/**/*.jpg
 *.exe
+*.dll
+/Python/venv/
+/Python/.idea/
