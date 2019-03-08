@@ -63,6 +63,16 @@ namespace _18iterate.Properties {
         /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
+        internal static System.Drawing.Bitmap _0df6201aa8182cf7ccba709cbdc684b4a3cd65b5_raw {
+            get {
+                object obj = ResourceManager.GetObject("0df6201aa8182cf7ccba709cbdc684b4a3cd65b5_raw", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
         internal static System.Drawing.Bitmap _22 {
             get {
                 object obj = ResourceManager.GetObject("22", resourceCulture);

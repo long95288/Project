@@ -37,7 +37,9 @@ namespace _18iterate
 
         private void button2_Click(object sender, EventArgs e)
         {
-
+            泛型 fr = new 泛型();
+            fr.Show();
+            this.Hide();
         }
     }
 }
