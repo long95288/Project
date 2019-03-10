@@ -7,5 +7,6 @@
 /Python/**/*.jpg
 *.exe
 *.dll
+*.class
 /Python/venv/
 /Python/.idea/
