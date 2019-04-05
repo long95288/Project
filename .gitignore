@@ -10,3 +10,5 @@
 *.class
 /Python/venv/
 /Python/.idea/
+/**/node_modules/
+/**/bin/
