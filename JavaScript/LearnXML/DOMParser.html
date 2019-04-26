@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+<div>
+ <b>TO:</b><span id="to"></span><br />
+<b>From:</b><span id="from"></span><br />
+<b>Message:</b><span id="message"></span><br>   
+</div>
+
+<script>
+if (window.XMLHttpRequest) {
+    xmlhttp = new XMLHttpRequest();
+} else {
+    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+}
+xmlhttp.open("GET","note.xml",false);
+xmlhttp.send();
+xmlDoc = xmlhttp.responseXML;
+
+document.getElementById("to").innerHTML=xmlDoc.getElementsByTagName("to")[0].childNodes[0].nodeValue;
+
+document.getElementById("from").innerHTML = xmlDoc.getElementsByTagName('from')[0].childNodes[0].nodeValue;
+
+document.getElementById('message').innerHTML = xmlDoc.getElementsByTagName('body')[0].childNodes[0].nodeValue;
+</script>
+</body>
+</html>
+
