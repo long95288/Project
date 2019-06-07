@@ -32,6 +32,7 @@ s = json.loads(jsondata)
 print("read success")
 
 pages = s['data']['pages']
+# noinspection PyInterpreter
 if pages > 1:
     for page in range(2, pages):
         geturl =

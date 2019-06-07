@@ -1,5 +1,5 @@
 # encoding=utf-8
-
+import xlrd
 import xlwt
 
 book = xlwt.Workbook(encoding='utf-8')  # 创建工作簿
