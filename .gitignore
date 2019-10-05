@@ -12,3 +12,5 @@
 /Python/.idea/
 /**/node_modules/
 /**/bin/
+*.idea
+*.vscode
