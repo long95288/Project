@@ -3,6 +3,7 @@ console.log('Hello World');
 function log(text){
   console.log(text);
 }
+// 承诺函数体
 function test(resolve,reject){
     var timeOut = Math.random()*2;
     log(`延时${timeOut}秒`);
@@ -26,3 +27,24 @@ p1.then((result)=>{
 p1.catch((result)=>{
     log(result);
 })
+// 声明一个promise
+var p2 = new Promise(function(resolve1,reject) {
+  // 随机数
+  let num = Math.random()*10;
+  console.log(`num = ${num}`)
+  if(num > 5){
+    resolve1(num);
+  }else{
+    reject(num);
+  }
+});
+
+function printResolve(val) {
+  console.log(`resolve 回调 num =${val}`);
+}
+function printReject(val){
+  console.log(`reject 回调 num = ${val}`);
+}
+
+// 使用promise
+p2.then(printNum).catch(printReject);
