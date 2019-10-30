@@ -22,35 +22,48 @@ window.downloadImage = function (url) {
 }
 
 window.insertButtons = function (element) {
-  console.log("=== element =======");
-  console.log(element);
-  console.log("=== end ========== ");
   var button = document.createElement("button");
   button.addEventListener("click", function () {
     console.log(element);
-    // 获得该box的9个图片的url
-    var urlList = element.firstElementChild.firstElementChild.children;
-    for (var i = 0; i < urlList.length; i++) {
-      var url = "https:" + urlList[i].firstElementChild.style.backgroundImage.split("url")[1].replace(/[\(\)\"]/g, "").split("@")[0].trim();
-      console.log(url);
-      // console.log(timeout);
-      window.downloadImage(url);
+    // 判断是不是多p图片
+    // document.getElementsByClassName("imagesbox")[0].firstElementChild.lastElementChild.lastElementChild.lastElementChild.children[0].firstElementChild.src
+    if(element.firstElementChild.classList[0] === 'boost-wrap') {
+      // 超过9p
+      console.log('=========创建超过9p下载任务==========')
+      let imageList = element.firstElementChild.lastElementChild.lastElementChild.lastElementChild.children;
+      for(let i=0; i < imageList.length; i++) {
+        let url =imageList[i].firstElementChild.src.split("@")[0].trim() ;
+        console.log(`${i} url = ${url}`);
+        // 下载图片
+        window.downloadImage(url);
+      }
+      console.log('=========创建图片下载任务完成=========')
+    } else {
+      // 获得该box的9个图片的url
+      var urlList = element.firstElementChild.firstElementChild.children;
+      console.log('=======创建9宫格下载任务============')
+      for (var i = 0; i < urlList.length; i++) {
+        var url = "https:" + urlList[i].firstElementChild.style.backgroundImage.split("url")[1].replace(/[\(\)\"]/g, "").split("@")[0].trim();
+        console.log(url);
+        // console.log(timeout);
+        window.downloadImage(url);
+      }
+      console.log('========创建任务完成===============')
     }
   });
-  button.style.backgroundColor = "#3388ff";
-  button.style.color = "white";
-  // button.style.height = "40px";
-  button.innerText = "下载该九宫格的图片";
-  console.log("按钮问题");
+  button.style.borderRadius="10px";
+  button.style.height = "35px";
+  button.style.backgroundColor="white";
+  button.style.opacity= "0.5";
+  button.style.borderWidth="thin";
+  button.style.position="absolute";
+  button.classList.add("downBtn");
+  button.innerText = "下载该动态的图片";
   element.append(button);
 }
 
 function initImageBox(){
   var allImagesBox = document.getElementsByClassName("imagesbox");
-  // 每个动态插入下载图片按钮
-  console.log("=======allImagesBox======");
-  console.log(allImagesBox);
-  console.log("=======end============");
   for (var i = 0; i < allImagesBox.length; i++) {
     var element22 = allImagesBox[i];
       console.log("i="+i);
