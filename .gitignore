@@ -16,3 +16,4 @@
 *.vscode
 *_rc.py
 *__pycache__/
+/Java/**/.idea
