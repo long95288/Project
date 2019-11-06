@@ -2,6 +2,7 @@ package concurrency;
 
 /**
  * next 加上同步锁之后数据变得可控了
+ * asynchronous 异步的
  * @author longquanxiao
  * @date 2019/11/6
  */
