@@ -1,0 +1,12 @@
+{
+  "list":[
+    {
+      "name":"notepad",
+      "path":"notepad"
+    },
+    {
+      "name":"notepad++",
+      "path":"F:\\Program Files\\Notepad++\\notepad++.exe"
+    }
+  ]
+}
