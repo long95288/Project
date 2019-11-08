@@ -48,7 +48,7 @@ class Form(QDialog):
         self.appBtn1.clicked.connect(lambda :self.executeApp(self.appBtn1))
         self.appBtn2.clicked.connect(lambda :self.executeApp(self.appBtn2))
         self.execute_btn.clicked.connect(self.executeByPath)
-        self.countBtn.clicked.connect(lambda :self.countThreads())
+        self.countBtn.clicked.connect(self.countThreads)
         # 添加按钮
         layout.addWidget(self.selectFileBtn)
         layout.addWidget(self.appBtn1)
