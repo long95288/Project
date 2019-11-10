@@ -40,6 +40,18 @@ class MyNumbers:
         else:
             raise StopIteration
 
+"""
+生成器
+"""
+def Fibonacci(n):
+    a,b,counter = 0,1,0
+    while True:
+        if (counter > 0):
+            return
+        yield a
+        a,b = b,a+b
+        counter += 1
+
 if __name__ == '__main__':
     # 使用迭代器
     sample1()
@@ -51,5 +63,12 @@ if __name__ == '__main__':
     # print(next(myClassIterator))
     for i in range(10):
         print(next(myClassIterator))
+    f = Fibonacci(10)
+    while True:
+        try:
+            print(next(f), end=" ")
+        except StopIteration:
+            sys.exit()
+
 
 
