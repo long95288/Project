@@ -10,8 +10,8 @@ header = {
     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) '
                   'Chrome/71.0.3578.98 Safari/537.36'
 }
-
-f = open('doupo.txt', 'a', encoding='utf-8')
+novel = "战魂.txt"
+f = open(novel, 'a', encoding='utf-8')
 # 先读后写
 list = open('chapterlist.txt', 'r', encoding='utf-8')
 
@@ -66,8 +66,10 @@ list = open('chapterlist.txt', 'w', encoding='utf-8')
 
 rooturl = 'http://www.022003.com'
 chapter_num = 1
+# 结束的标志
+endUrl = "/8_8470/"
 while True:
-    if start_chapter_url == '/2_2447/':
+    if start_chapter_url == endUrl:
         break
     # elif chapter_num == 3:
         #break
@@ -79,7 +81,7 @@ while True:
         start_chapter_url = get_info(page_url)
         # 日志跟踪
         list.write(start_chapter_url + '\n')
-        if start_chapter_url == '/2_2447/':
+        if start_chapter_url == endUrl:
             break
         page_url = ""
         # chapter_num += 1
