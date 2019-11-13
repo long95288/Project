@@ -4,12 +4,9 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
 import sys
+from GUI.DownloadThread import DownloadThread
 import requests
-import re
 from bs4 import BeautifulSoup
-import random
-import time
-
 """
 全局变量
 """
@@ -67,40 +64,16 @@ class MainWindow(QWidget,Ui_Form):
     def handle_download(self):
         self.download_btn.setEnabled(False)
         save_novel_name = self.novel_name_edit.text() + ".txt"
-        print("下载小说名:"+self.novel_name_edit.text())
-        save_novel_file = open(save_novel_name,'a', encoding="utf-8")
-        chapter_len = len(self.chapter_list_url)
+        t = DownloadThread(novel_name=save_novel_name,
+                           chapter_url_list=self.chapter_list_url,
+                           end_callback=self.downloadEnd,
+                           download_process_callback=self.chapter_download_end_handler)
+        t.start()
+    def downloadEnd(self):
+        print("下载完成")
+    def chapter_download_end_handler(self,process):
+        print("进度:"+process)
 
-        for i in range(9, chapter_len):
-            # 获得数据
-            request_url = rootUrl + self.chapter_list_url[i].get("href")
-            print(i+"request:"+request_url)
-            self.status_label.setText("请求:"+request_url)
-            title, content = self.get_chapter_content(request_url)
-            self.status_label.setText("保存:"+title)
-            save_novel_file.write(title+"\n"+content)
-            self.status_label.setText("保存:"+title+"成功！")
-            time.sleep(timeout+random.random())
-        self.download_btn.setEnabled(True)
-
-    def get_chapter_content(self, url):
-        response = requests.get(url, header)
-        if response.status_code == 200:
-            soup = BeautifulSoup(response.content.decode("utf-8"),"html.parser")
-            # 章节名称
-            chapter_title = soup.select('#wrapper > div.content_read > div.box_con > div.bookname > h1')
-            # 章节内容
-            chapter_content_temp = re.findall('<div id="content">(.*?)</div>', response.content.decode('utf-8'),
-                                  re.S)
-            chapter_content = self.clear_content(chapter_content_temp)
-            return chapter_title,chapter_content
-        else:
-            return "章节:"+url, "获取失败"
-    # 去掉空格,换行标签
-    def clear_content(self,str):
-        temp1_data = re.sub(r'.*?&nbsp;', '', str, count=0)
-        temp2_data = re.sub(r'<br .*?>', '', temp1_data, count=0)
-        return temp2_data
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     win = MainWindow()
