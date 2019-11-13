@@ -27,14 +27,14 @@ timeout = 1
 class MainWindow(QWidget,Ui_Form):
     def __init__(self,parent=None):
         super(MainWindow,self).__init__(parent)
+        self.chapter_list_url = []
         self.setupUi(self)
         self.connect_btn()
 
     # 设置按钮连接
     def connect_btn(self):
-        self.analyze_btn.clicked.connect(self.handle_analyze)
+        self.analyze_btn.clicked.connect(lambda : self.handle_analyze())
         self.download_btn.clicked.connect(self.handle_download)
-        pass
 
     # 分析URL
     def handle_analyze(self):
@@ -48,37 +48,42 @@ class MainWindow(QWidget,Ui_Form):
             print("小说名:"+novel_name)
             self.novel_name_edit.setText(novel_name)
             self.chapter_list_url = response_data.select("dd >a")
-            print("============章节列表============")
-            # 第一个章节从9开始
-            # print(chapter_list_url[9].get("href"))
+            # print("============章节列表============")
+            print(self.chapter_list_url)
+            # # 第一个章节从9开始
+            # print(self.chapter_list_url[9].get("href"))
             if len(self.chapter_list_url) <= 0:
                 print("获得章节列表错误")
                 self.status_label.setText("获得章节列表错误!!!")
-                return
             else:
-                self.chapter_count.setText(len(self.chapter_list_url))
+                chapter_count = len(self.chapter_list_url) - 9
+                self.chapter_count.setText(str(chapter_count))
                 self.analyze_btn.setEnabled(False)
                 self.download_btn.setEnabled(True)
-                return
         else:
             message = "请求:"+url+"失败，code:"+response.status_code
             print(message)
     # 下载
     def handle_download(self):
-        print("下载")
+        self.download_btn.setEnabled(False)
         save_novel_name = self.novel_name_edit.text() + ".txt"
+        print("下载小说名:"+self.novel_name_edit.text())
         save_novel_file = open(save_novel_name,'a', encoding="utf-8")
-        for i in range(9, len(self.chapter_list_url)):
+        chapter_len = len(self.chapter_list_url)
+
+        for i in range(9, chapter_len):
             # 获得数据
-            request_url = self.chapter_list_url[i].get("href")
+            request_url = rootUrl + self.chapter_list_url[i].get("href")
+            print(i+"request:"+request_url)
             self.status_label.setText("请求:"+request_url)
             title, content = self.get_chapter_content(request_url)
             self.status_label.setText("保存:"+title)
             save_novel_file.write(title+"\n"+content)
             self.status_label.setText("保存:"+title+"成功！")
             time.sleep(timeout+random.random())
+        self.download_btn.setEnabled(True)
 
-    def get_chapter_content(self,url):
+    def get_chapter_content(self, url):
         response = requests.get(url, header)
         if response.status_code == 200:
             soup = BeautifulSoup(response.content.decode("utf-8"),"html.parser")
