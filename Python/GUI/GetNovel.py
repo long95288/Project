@@ -40,6 +40,7 @@ class MainWindow(QWidget):
         layout = QFormLayout()
         # 地址后缀
         self.url_text = QLineEdit()
+        self.an = QPushButton("分析")
         layout.addRow(QLabel("小说地址:"),self.url_text)
         # 操作按钮
         # 开始分析按钮
