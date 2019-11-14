@@ -22,7 +22,7 @@ timeout = 1
 
 
 # 去掉空格,换行标签
-def clear_content(self,str):
+def clear_content(str):
     temp1_data = re.sub(r'.*?&nbsp;', '', str, count=0)
     temp2_data = re.sub(r'<br .*?>', '', temp1_data, count=0)
     return temp2_data
@@ -44,7 +44,7 @@ def get_chapter_content(url):
 
 
 class DownloadThread(threading.Thread):
-    def __int__(self, novel_name, chapter_url_list):
+    def __int__(self, novel_name,chapter_url_list):
         threading.Thread.__init__(self)
         self.process_callback = None
         self.novel_name = novel_name
@@ -54,10 +54,10 @@ class DownloadThread(threading.Thread):
         # 下载进度回调函数
 
 
-    def setProcessCallBack(self,callback):
-        self.process_callback = callback
-    def setEndCallBack(self,callback):
-        self.end_callback = callback
+    def setProcessCallBack(self,callback1):
+        self.process_callback = callback1
+    def setEndCallBack(self,callback1):
+        self.end_callback = callback1
 
     def run(self):
        print("start download ......")
