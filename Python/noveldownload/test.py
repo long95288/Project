@@ -1,5 +1,6 @@
 from noveldownload.NovelUtil import getNovelInfo
 from noveldownload.NovelUtil import getChapterInfo
+from noveldownload.DownloadThread import DownloadThread
 
 import nose
 
@@ -29,4 +30,11 @@ def testSaveNovelFile():
     from noveldownload.NovelUtil import saveNovelFile
     saveNovelFile(filename,saveContent)
 
+def threadCallBack(value):
+    print("callback value "+ str(value))
+
+def testDownloadThread():
+    from noveldownload.DownloadThread import DownloadThread
+    t = DownloadThread(novelName="fefe",novelChapterUrlList="ff",processCallBack=threadCallBack)
+    t.start()
 

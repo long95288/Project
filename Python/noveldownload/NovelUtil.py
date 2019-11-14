@@ -89,6 +89,8 @@ def saveNovelFile(filename,content):
         novel_file.write(content+"\n")
     except IOError:
         log("写入:"+filename+"失败")
+    else:
+        novel_file.close()
 
 """
 日志,写入日志文件
