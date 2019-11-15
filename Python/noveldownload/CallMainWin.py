@@ -14,7 +14,29 @@ class MainWindow(QWidget,Ui_Form):
         self.novelChapterUrlList = None
         self.novelName = None
         self.setupUi(self)
+        self.setContainStyle()
         self.connect_btn()
+
+    # 设置容器的样式
+    def setContainStyle(self):
+        style = """
+        QPushButton{
+            border-radius:5px;
+            background-color: #25AFF3;
+            color:white;
+        }
+        """
+        self.download_btn.setStyleSheet(style)
+        analyze_style = """
+        QPushButton{
+            border-radius:5px;
+            background-color: #25AFF3;
+            color:white;
+        }
+        """
+        self.analyze_btn.setStyleSheet(analyze_style)
+
+
     # 设置按钮连接
     def connect_btn(self):
         # debug
