@@ -35,6 +35,13 @@ class MainWindow(QWidget,Ui_Form):
         }
         """
         self.analyze_btn.setStyleSheet(analyze_style)
+        self.setObjectName("win")
+        win_style = """
+        #win{
+         border-image:url(./image/bg.jpg);
+        }
+        """
+        self.setStyleSheet(win_style)
 
 
     # 设置按钮连接
