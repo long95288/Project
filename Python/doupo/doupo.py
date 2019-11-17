@@ -10,7 +10,7 @@ header = {
     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) '
                   'Chrome/71.0.3578.98 Safari/537.36'
 }
-novel = "战魂.txt"
+novel = "人皇纪.txt"
 f = open(novel, 'a', encoding='utf-8')
 # 先读后写
 list = open('chapterlist.txt', 'r', encoding='utf-8')
@@ -67,7 +67,7 @@ list = open('chapterlist.txt', 'w', encoding='utf-8')
 rooturl = 'http://www.022003.com'
 chapter_num = 1
 # 结束的标志
-endUrl = "/8_8470/"
+endUrl = "/9_9072/"
 while True:
     if start_chapter_url == endUrl:
         break
@@ -85,7 +85,7 @@ while True:
             break
         page_url = ""
         # chapter_num += 1
-        time.sleep(2+random.random())
+        time.sleep(1+random.random())
 
 '''
 soup = BeautifulSoup(test_data,'html.parser')
