@@ -15,8 +15,9 @@ def testGetNovelInfo():
 
 def testGetChapterInfo():
     url = "http://www.022003.com/9_9072/4802415.html"
-    title,content = getChapterInfo(url)
+    title,content, nextUrl = getChapterInfo(url)
     print("章节标题:"+title)
+    print("下一个章节:"+ nextUrl)
     print("章节内容:\n")
     print(content)
 def testLog():
@@ -37,4 +38,16 @@ def testDownloadThread():
     from noveldownload.DownloadThread import DownloadThread
     t = DownloadThread(novelName="fefe",novelChapterUrlList="ff",processCallBack=threadCallBack)
     t.start()
+
+def testContinueDownloadThread():
+    from noveldownload.ContinueDownloadThread import ContinueDownloadThread
+    url = "http://www.022003.com/9_9072/19607848.html"
+    t = ContinueDownloadThread(continueChapterUrl=url)
+    t.start()
+def testGetNovelNameByChapterUrl():
+    from noveldownload.NovelUtil import getNovelNameByChapterUrl
+    # url = "http://www.022003.com/9_9072/19607848.html"
+    url = "http://www.022003.com/8_8293/4057865.html"
+    novelName = getNovelNameByChapterUrl(url)
+    print(novelName)
 

@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import *
 from noveldownload.MainWind import Ui_Form
 from noveldownload.NovelUtil import getNovelInfo
 from noveldownload.DownloadThread import DownloadThread
+from noveldownload.ContinueDownloadThread import ContinueDownloadThread
 import sys
 
 
@@ -35,13 +36,14 @@ class MainWindow(QWidget,Ui_Form):
         }
         """
         self.analyze_btn.setStyleSheet(analyze_style)
-        self.setObjectName("win")
-        win_style = """
-        #win{
-         border-image:url(./image/bg.jpg);
-        }
-        """
-        self.setStyleSheet(win_style)
+        self.continue_download_btn.setStyleSheet(style)
+        # self.setObjectName("win")
+        # win_style = """
+        # #win{
+        #  border-image:url(./image/bg.jpg);
+        # }
+        # """
+        # self.setStyleSheet(win_style)
 
 
     # 设置按钮连接
@@ -51,6 +53,7 @@ class MainWindow(QWidget,Ui_Form):
         # develop
         self.analyze_btn.clicked.connect(lambda: self.handle_analyze())
         self.download_btn.clicked.connect(self.handle_download)
+        self.continue_download_btn.clicked.connect(self.handle_continue_download)
 
     # 分析按钮
     def handle_analyze(self):
@@ -71,6 +74,18 @@ class MainWindow(QWidget,Ui_Form):
         t.start()
         self.download_btn.setEnabled(False)
 
+    # 继续下载
+    def handle_continue_download(self):
+        url = self.url_text_line_edit.text()
+        continueDownloadThread = ContinueDownloadThread(url)
+        continueDownloadThread.setStatusCallBack(self.handle_status)
+        continueDownloadThread.setDownloadEndCallBack(self.handle_download_end())
+        continueDownloadThread.start()
+        self.continue_download_btn.setEnabled(False)
+
+    def handle_status(self, value):
+        self.status_label.setText(str(value))
+
     # 下载进度回调函数
     def handle_process(self, value):
         self.progressBar.setProperty("value", value)
@@ -79,6 +94,7 @@ class MainWindow(QWidget,Ui_Form):
     def handle_download_end(self):
         self.analyze_btn.setEnabled(True)
         self.download_btn.setEnabled(False)
+        self.continue_download_btn.setEnabled(True)
         self.novelChapterUrlList = None
         self.novelName = ""
         self.progressBar.setProperty("value", 0)

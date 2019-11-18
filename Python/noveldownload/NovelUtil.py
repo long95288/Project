@@ -61,10 +61,12 @@ params:
 return:
     chapterTitle: 章节标题
     chapterContent: 章节内容
+    nextChapterUrl: 下一个章节的URL
 """
 def getChapterInfo(url):
     chapterTitle = ""
     chapterContent = ""
+    nextChapterUrl = ""
     response = requests.get(url,header)
     if response.status_code == 200:
         soup = BeautifulSoup(response.content.decode("utf-8"),"html.parser")
@@ -74,7 +76,12 @@ def getChapterInfo(url):
         tempContent = re.findall('<div id="content">(.*?)</div>', response.content.decode('utf-8'),
                                   re.S)[0]
         chapterContent = clearSpaceTabAndBrTab(tempContent)
-    return chapterTitle, chapterContent
+        # 下一个章节的url
+        nextChapterUrl = soup.select('#wrapper > div.content_read > div.box_con > div.bookname > '
+                                       'div.bottem1 > a:nth-child(4)')[0].get("href")
+
+        nextChapterUrl = rootUrl + nextChapterUrl
+    return chapterTitle, chapterContent, nextChapterUrl
 
 """
 将content里面的内容写入文件中
@@ -96,5 +103,24 @@ def saveNovelFile(filename,content):
 日志,写入日志文件
 """
 def log(value):
+    logfile = open('log.txt', 'a', encoding='utf-8')
     if logfile.writable():
         logfile.write(value)
+    try:
+        logfile.close()
+    except IOError:
+        print("写入日志错误")
+    else:
+        return
+"""
+根据url获得小说名
+"""
+def getNovelNameByChapterUrl(url):
+    novelName = ""
+    response = requests.get(url,header)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content.decode("utf-8"), "html.parser")
+        selector = "#wrapper > div.content_read > div.box_con > div.con_top > a"
+        # 获得小说的名称
+        novelName = soup.select(selector)[-1].string
+    return novelName
