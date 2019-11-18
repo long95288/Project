@@ -11,6 +11,7 @@ timeout = 1
 class ContinueDownloadThread(threading.Thread):
     def __init__(self, continueChapterUrl):
         threading.Thread.__init__(self)
+        self.setDaemon(True)
         # 继续下载的URL
         self.continueChapterUrl = continueChapterUrl
         # 结束的标志

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>379</width>
-    <height>250</height>
+    <width>400</width>
+    <height>300</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -22,8 +22,8 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>20</y>
+     <x>20</x>
+     <y>50</y>
      <width>51</width>
      <height>31</height>
     </rect>
@@ -41,8 +41,8 @@
   <widget class="QLineEdit" name="url_text_line_edit">
    <property name="geometry">
     <rect>
-     <x>50</x>
-     <y>20</y>
+     <x>60</x>
+     <y>50</y>
      <width>231</width>
      <height>31</height>
     </rect>
@@ -51,8 +51,8 @@
   <widget class="QPushButton" name="analyze_btn">
    <property name="geometry">
     <rect>
-     <x>290</x>
-     <y>20</y>
+     <x>300</x>
+     <y>50</y>
      <width>81</width>
      <height>31</height>
     </rect>
@@ -64,8 +64,8 @@
   <widget class="QProgressBar" name="progressBar">
    <property name="geometry">
     <rect>
-     <x>50</x>
-     <y>220</y>
+     <x>60</x>
+     <y>250</y>
      <width>321</width>
      <height>23</height>
     </rect>
@@ -77,8 +77,8 @@
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>220</y>
+     <x>20</x>
+     <y>250</y>
      <width>41</width>
      <height>21</height>
     </rect>
@@ -96,8 +96,8 @@
   <widget class="QPushButton" name="download_btn">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>180</y>
+     <x>20</x>
+     <y>210</y>
      <width>161</width>
      <height>31</height>
     </rect>
@@ -109,8 +109,8 @@
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>13</x>
-     <y>80</y>
+     <x>23</x>
+     <y>110</y>
      <width>41</width>
      <height>21</height>
     </rect>
@@ -122,8 +122,8 @@
   <widget class="QLineEdit" name="novel_name_edit">
    <property name="geometry">
     <rect>
-     <x>70</x>
-     <y>79</y>
+     <x>80</x>
+     <y>109</y>
      <width>221</width>
      <height>21</height>
     </rect>
@@ -132,8 +132,8 @@
   <widget class="QLabel" name="label_4">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>116</y>
+     <x>20</x>
+     <y>146</y>
      <width>51</width>
      <height>20</height>
     </rect>
@@ -145,8 +145,8 @@
   <widget class="QLabel" name="chapter_count">
    <property name="geometry">
     <rect>
-     <x>70</x>
-     <y>117</y>
+     <x>80</x>
+     <y>147</y>
      <width>201</width>
      <height>20</height>
     </rect>
@@ -158,8 +158,8 @@
   <widget class="QLabel" name="label_5">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>140</y>
+     <x>30</x>
+     <y>170</y>
      <width>31</width>
      <height>21</height>
     </rect>
@@ -171,8 +171,8 @@
   <widget class="QLabel" name="status_label">
    <property name="geometry">
     <rect>
-     <x>70</x>
-     <y>140</y>
+     <x>80</x>
+     <y>170</y>
      <width>201</width>
      <height>21</height>
     </rect>
@@ -184,8 +184,8 @@
   <widget class="QPushButton" name="continue_download_btn">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>180</y>
+     <x>210</x>
+     <y>210</y>
      <width>171</width>
      <height>31</height>
     </rect>
@@ -198,6 +198,19 @@
    </property>
    <property name="flat">
     <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="exit_btn">
+   <property name="geometry">
+    <rect>
+     <x>370</x>
+     <y>0</y>
+     <width>31</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>退出</string>
    </property>
   </widget>
  </widget>

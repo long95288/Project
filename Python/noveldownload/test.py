@@ -1,7 +1,8 @@
 from noveldownload.NovelUtil import getNovelInfo
 from noveldownload.NovelUtil import getChapterInfo
 from noveldownload.DownloadThread import DownloadThread
-
+from PyQt5.QtWidgets import *
+import sys
 import nose
 
 # 测试获得小说信息

@@ -11,6 +11,7 @@ timeout = 1
 class DownloadThread(threading.Thread):
     def __init__(self,novelName=None,novelChapterUrlList=None,processCallBack=None):
         threading.Thread.__init__(self)
+        self.setDaemon(True)
         self.novelName = novelName
         self.novelChapterUrlList = novelChapterUrlList
         self.processCallBack = processCallBack
@@ -27,7 +28,7 @@ class DownloadThread(threading.Thread):
             # code
             chapterUrl = self.novelChapterUrlList[i]
             log("download:"+chapterUrl+"\n")
-            chapterTitle,chapterContent = getChapterInfo(chapterUrl)
+            chapterTitle,chapterContent,_ = getChapterInfo(chapterUrl)
             saveContent = chapterTitle+"\n"+chapterContent
             saveNovelFile(filename=self.novelName,content=saveContent)
             time.sleep(timeout+random.random())
