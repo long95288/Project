@@ -16,8 +16,15 @@ mask = "./image/mask.png"
 class MainWindow(QWidget,Ui_Form):
     def __init__(self):
         super(QWidget, self).__init__()
-        self.novelChapterUrlList = None
+        # 小说相关的数据
         self.novelName = None
+        # 章节数
+        self.novelChapterCount = 0
+        # 已经下载的章节数
+        self.novelChapterDownloadCount = 0
+        # 章节数据
+        self.novelChapterUrlList = None
+
         self.setupUi(self)
         self.bgImage = QPixmap(bg)
         self.maskImage = QBitmap(mask)
@@ -56,6 +63,7 @@ class MainWindow(QWidget,Ui_Form):
         """
         self.analyze_btn.setStyleSheet(analyze_style)
         self.continue_download_btn.setStyleSheet(style)
+        self.stop_download_btn.setStyleSheet(style)
         # 设置退出样式
         exit_btn_style ="""
         QPushButton{
@@ -73,9 +81,8 @@ class MainWindow(QWidget,Ui_Form):
         self.progressBar.setStyleSheet(process_bar_style)
     def paintEvent(self, event):
         painter = QPainter(self)
-        painter.drawPixmap(self.rect(),self.bgImage)
+        painter.drawPixmap(self.rect(), self.bgImage)
         # painter.drawPixmap(0,0,self.height(),self.width(),self.bgImage)
-
 
     # 设置按钮连接
     def connect_btn(self):
@@ -86,26 +93,45 @@ class MainWindow(QWidget,Ui_Form):
         self.download_btn.clicked.connect(self.handle_download)
         self.continue_download_btn.clicked.connect(self.handle_continue_download)
         self.exit_btn.clicked.connect(self.handle_exit)
+
     # 分析按钮
     def handle_analyze(self):
         url = self.url_text_line_edit.text()
-        novelName,novelChapterCount,novelChapterUrlList = getNovelInfo(url)
-        self.novel_name_edit.setText(novelName)
+        novelName, novelChapterCount, novelChapterUrlList = getNovelInfo(url)
+        self.novelChapterCount = novelChapterCount
+        self.novel_name_edit.setText(str(novelName))
         self.novelName = str(novelName) + ".txt"
         # 如果设置的值是数字的话就直接内存报错
         self.chapter_count.setText(str(novelChapterCount))
         self.novelChapterUrlList = novelChapterUrlList
+        print(self.novelChapterUrlList)
+        # 下载进程
+        self.novelChapterDownloadCount = novelChapterCount - len(novelChapterUrlList)
+
+        progressValue = self.novelChapterDownloadCount*100 / novelChapterCount
+        self.progressBar.setProperty("value", progressValue)
+        if progressValue > 0:
+            self.status_label.setText("继续下载:"+str(progressValue))
+            self.progressBar.setVisible(True)
+            self.label_2.setVisible(True)
+
         self.download_btn.setEnabled(True)
 
     # 下载按钮
     def handle_download(self):
+        # 显示进度条
         self.progressBar.setVisible(True)
+        # 显示进度条的标签
         self.label_2.setVisible(True)
+        # 关闭分析按钮
         self.analyze_btn.setEnabled(False)
-        t = DownloadThread(self.novelName, self.novelChapterUrlList,self.handle_process)
+        # 关闭下载按钮
+        self.download_btn.setEnabled(False)
+        # 启动下载进程
+        t = DownloadThread(self.novelName, self.novelChapterUrlList, self.handle_process)
         t.setDownloadEndCallBack(self.handle_download_end())
         t.start()
-        self.download_btn.setEnabled(False)
+
 
     # 继续下载
     def handle_continue_download(self):
@@ -124,8 +150,13 @@ class MainWindow(QWidget,Ui_Form):
 
     # 下载进度回调函数
     def handle_process(self, value):
-        self.progressBar.setProperty("value", value)
-        self.status_label.setText("下载进度:"+str(value))
+        # 设置下载进度
+        # (下载的数量)/总量
+        count = self.novelChapterCount
+        self.novelChapterDownloadCount += value
+        showValue = self.novelChapterDownloadCount * 100 / count
+        self.progressBar.setProperty("value", showValue)
+        self.status_label.setText("下载进度:"+str(showValue))
 
     def handle_download_end(self):
         self.analyze_btn.setEnabled(True)

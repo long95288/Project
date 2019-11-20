@@ -18,7 +18,7 @@ logfile = open('log.txt','a',encoding='utf-8')
 """
 根据小说的URL获得小说的信息
 params:
-    url: 小说首页的url
+    url: 小说首页的url或者是某个章节的URL
 return:
     novelName: 小说名
     novelChapterCount: 小说章节数
@@ -32,17 +32,50 @@ def getNovelInfo(url):
     novelChapterCount = None
     # 小说章节地址数据
     novelChapterUrlList = []
+    # 是不是章节URL
+    isChapterURL = False
+    # 将URL保存
+    oldURL = url
+    splitURL = url.split("/")
+    if splitURL[-1].find("html") != -1:
+        # 传进来的是章节的URL
+        isChapterURL = True
+        # 去掉章节的末尾
+        url = ""
+        for i in range(0, len(splitURL)-1):
+            url = url + splitURL[i]+"/"
+
     response = requests.get(url, header)
     if response.status_code == 200:
         response_data = BeautifulSoup(response.content.decode('utf-8'), "html.parser")
         novelName = response_data.select("#info > h1")[0].string
         listTemp = response_data.select("dd >a")
         # 获得每个章节的地址
-        for i in range(9,len(listTemp)):
-            novelChapterUrlList.append(rootUrl+listTemp[i].get("href"))
+        novelChapterCount = 0
+        tempChapterURLList = []
+        # 获得全部的章节
+        for i in range(9, len(listTemp)):
+            novelChapterCount += 1
+            # 章节的URL
+            chapterURL = rootUrl+listTemp[i].get("href")
+            tempChapterURLList.append(chapterURL)
+        if isChapterURL:
+            # 中间续传的
+            # 开始添加章节的URL
+            startGetChapterFlag = False
+            for i in range(0, len(tempChapterURLList)):
+                if oldURL == tempChapterURLList[i]:
+                    # 找到了要续传的URL
+                    startGetChapterFlag = True
 
-        novelChapterCount = len(novelChapterUrlList)
-    return novelName,novelChapterCount,novelChapterUrlList
+                # 开始添加
+                if startGetChapterFlag:
+                    novelChapterUrlList.append(tempChapterURLList[i])
+        else:
+            # 如果是首页，直接赋值
+            novelChapterUrlList = tempChapterURLList
+
+    return novelName,novelChapterCount, novelChapterUrlList
 
 """
 去掉空格标签和换行标签

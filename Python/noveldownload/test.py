@@ -7,11 +7,12 @@ import nose
 
 # 测试获得小说信息
 def testGetNovelInfo():
-    url = "http://www.022003.com/9_9072/"
+    # url = "http://www.022003.com/9_9072/"
+    url = "http://www.022003.com/9_9072/4802510.html"
     name,count,list = getNovelInfo(url)
     print("小说名:"+name)
     print("章节数:"+str(count))
-    print("章节列表:")
+    print("章节列表:"+str(len(list)))
     print(list)
 
 def testGetChapterInfo():
@@ -51,4 +52,17 @@ def testGetNovelNameByChapterUrl():
     url = "http://www.022003.com/8_8293/4057865.html"
     novelName = getNovelNameByChapterUrl(url)
     print(novelName)
+
+def testParserUrl():
+    url = "http://www.022003.com/9_9072/19442020.html"
+    # print(url.find("html"))
+    print(url.split("/"))
+    list = url.split("/")
+    newURL = ""
+    for i in range(0,len(list)-1):
+        newURL= newURL+list[i]+"/"
+
+    print(newURL)
+    # print(list[-1].find("html") != -1)
+
 

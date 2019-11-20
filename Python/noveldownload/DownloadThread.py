@@ -23,19 +23,19 @@ class DownloadThread(threading.Thread):
     def run(self):
         chapterCount = len(self.novelChapterUrlList)
         for i in range(0, chapterCount):
-            print("request:"+str(i)+"="+self.novelChapterUrlList[i])
+            # print("request:"+str(i)+"="+self.novelChapterUrlList[i])
             # 请求数据和写入数据
             # code
             chapterUrl = self.novelChapterUrlList[i]
-            log("download:"+chapterUrl+"\n")
             chapterTitle,chapterContent,_ = getChapterInfo(chapterUrl)
             saveContent = chapterTitle+"\n"+chapterContent
             saveNovelFile(filename=self.novelName,content=saveContent)
+            log("保存:" + chapterTitle + ":" + chapterUrl + "\n")
             time.sleep(timeout+random.random())
             # 返回进度
             if self.processCallBack != None:
-                processValue = (i/chapterCount)*100
-                self.processCallBack(processValue)
+                # 返回下载的章节的index
+                self.processCallBack(i)
 
         # 如果设置了进程结束回调函数则调用该函数
         if self.downloadEndCallBack != None:
