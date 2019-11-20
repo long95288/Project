@@ -1,5 +1,6 @@
 from noveldownload.NovelUtil import getNovelInfo
 from noveldownload.NovelUtil import getChapterInfo
+from noveldownload.NovelUtil import *
 from noveldownload.DownloadThread import DownloadThread
 from PyQt5.QtWidgets import *
 import sys
@@ -64,5 +65,23 @@ def testParserUrl():
 
     print(newURL)
     # print(list[-1].find("html") != -1)
+def testReadLastLine():
+    flag = -3
+    with open("log.txt",'rb') as f:
+        while True:
+            f.seek(flag, 2)
+            result = f.readlines()
+            if len(result) > 1:
+                print(result[-1].decode("utf-8"))
+                break
+            flag *= 2
 
+def testGetHistoryUrl():
+    url = getHistoryUrl()
+    print(url)
+def testLoop():
+    for i in range(0,10):
+        if i == 7:
+            break
+        print("i=" + str(i))
 

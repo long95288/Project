@@ -191,7 +191,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>继续</string>
+    <string>前一个URL</string>
    </property>
    <property name="default">
     <bool>false</bool>

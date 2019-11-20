@@ -4,8 +4,10 @@ from PyQt5.QtCore import Qt
 
 from noveldownload.MainWind import Ui_Form
 from noveldownload.NovelUtil import getNovelInfo
+from noveldownload.NovelUtil import getHistoryUrl
+
 from noveldownload.DownloadThread import DownloadThread
-from noveldownload.ContinueDownloadThread import ContinueDownloadThread
+
 import sys
 
 bg = "./image/bg2.jpg"
@@ -24,6 +26,8 @@ class MainWindow(QWidget,Ui_Form):
         self.novelChapterDownloadCount = 0
         # 章节数据
         self.novelChapterUrlList = None
+        # 下载进程
+        self.downloadThread = None
 
         self.setupUi(self)
         self.bgImage = QPixmap(bg)
@@ -79,6 +83,7 @@ class MainWindow(QWidget,Ui_Form):
         }
         """
         self.progressBar.setStyleSheet(process_bar_style)
+
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.drawPixmap(self.rect(), self.bgImage)
@@ -93,6 +98,7 @@ class MainWindow(QWidget,Ui_Form):
         self.download_btn.clicked.connect(self.handle_download)
         self.continue_download_btn.clicked.connect(self.handle_continue_download)
         self.exit_btn.clicked.connect(self.handle_exit)
+        self.stop_download_btn.clicked.connect(self.handle_stop_download)
 
     # 分析按钮
     def handle_analyze(self):
@@ -100,11 +106,11 @@ class MainWindow(QWidget,Ui_Form):
         novelName, novelChapterCount, novelChapterUrlList = getNovelInfo(url)
         self.novelChapterCount = novelChapterCount
         self.novel_name_edit.setText(str(novelName))
-        self.novelName = str(novelName) + ".txt"
+        self.novelName = self.novel_name_edit.text() + ".txt"
         # 如果设置的值是数字的话就直接内存报错
         self.chapter_count.setText(str(novelChapterCount))
         self.novelChapterUrlList = novelChapterUrlList
-        print(self.novelChapterUrlList)
+        # print(self.novelChapterUrlList)
         # 下载进程
         self.novelChapterDownloadCount = novelChapterCount - len(novelChapterUrlList)
 
@@ -128,19 +134,28 @@ class MainWindow(QWidget,Ui_Form):
         # 关闭下载按钮
         self.download_btn.setEnabled(False)
         # 启动下载进程
-        t = DownloadThread(self.novelName, self.novelChapterUrlList, self.handle_process)
-        t.setDownloadEndCallBack(self.handle_download_end())
-        t.start()
-
+        self.downloadThread = DownloadThread(self.novelName,
+                                             self.novelChapterUrlList,
+                                             self.handle_process,
+                                             self.handle_download_end)
+        # self.downloadThread.setDownloadEndCallBack(self.handle_download_end)
+        self.downloadThread.start()
 
     # 继续下载
     def handle_continue_download(self):
-        url = self.url_text_line_edit.text()
-        continueDownloadThread = ContinueDownloadThread(url)
-        continueDownloadThread.setStatusCallBack(self.handle_status)
-        continueDownloadThread.setDownloadEndCallBack(self.handle_download_end())
-        continueDownloadThread.start()
+        # 继续下载
         self.continue_download_btn.setEnabled(False)
+        # 1.获得最后的URL
+        url = getHistoryUrl()
+        # 2.设置URL
+        self.url_text_line_edit.setText(url)
+        # 3.调用分析
+        self.handle_analyze()
+
+    # 暂停下载
+    def handle_stop_download(self):
+        if self.downloadThread is not None:
+            self.downloadThread.exitDownloadThread()
 
     def handle_exit(self):
         QApplication.instance().quit()
@@ -156,17 +171,19 @@ class MainWindow(QWidget,Ui_Form):
         self.novelChapterDownloadCount += value
         showValue = self.novelChapterDownloadCount * 100 / count
         self.progressBar.setProperty("value", showValue)
-        self.status_label.setText("下载进度:"+str(showValue))
+        self.status_label.setText("下载中..."+str(showValue))
 
-    def handle_download_end(self):
+    def handle_download_end(self, message):
         self.analyze_btn.setEnabled(True)
         self.download_btn.setEnabled(False)
         self.continue_download_btn.setEnabled(True)
         self.novelChapterUrlList = None
         self.novelName = ""
         self.progressBar.setProperty("value", 0)
-        self.status_label.setText("下载完成")
-
+        print("dddd")
+        print(message)
+        # self.status_label.setText(str(message))
+        return
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
@@ -175,23 +192,19 @@ class MainWindow(QWidget,Ui_Form):
             event.accept()
             self.setCursor(QCursor(Qt.OpenHandCursor))
 
-
     def mouseMoveEvent(self, QMouseEvent):
         if Qt.LeftButton and self.m_drag:
             self.move(QMouseEvent.globalPos() - self.m_DragPosition)
             QMouseEvent.accept()
 
-
     def mouseReleaseEvent(self, QMouseEvent):
         self.m_drag = False
         self.setCursor(QCursor(Qt.ArrowCursor))
 
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = MainWindow()
-    # window.resize(379, 250)
-    # window.setObjectName("MainWindow")
-    # window.setStyleSheet("#MainWindow{border-image:url(./image/bg.jpg);}")
     window.show()
     sys.exit(app.exec_())
 

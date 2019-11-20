@@ -157,3 +157,23 @@ def getNovelNameByChapterUrl(url):
         # 获得小说的名称
         novelName = soup.select(selector)[-1].string
     return novelName
+
+
+"""
+获得日志的最后一个下载的URL
+"""
+def getHistoryUrl():
+    flag = -3
+    result = None
+    url = ""
+    with open("log.txt", 'rb') as f:
+        while True:
+            f.seek(flag, 2)
+            temp = f.readlines()
+            if len(temp) > 1:
+                result = temp[-1].decode("utf-8")
+                break
+            flag *= 2
+    if result is not None:
+        url = str(result).split("#")[-1].strip()
+    return url

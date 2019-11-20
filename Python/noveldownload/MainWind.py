@@ -91,6 +91,6 @@ class Ui_Form(object):
         self.chapter_count.setText(_translate("Form", "未知"))
         self.label_5.setText(_translate("Form", "状态:"))
         self.status_label.setText(_translate("Form", "未知"))
-        self.continue_download_btn.setText(_translate("Form", "继续"))
+        self.continue_download_btn.setText(_translate("Form", "前一个URL"))
         self.exit_btn.setText(_translate("Form", "退出"))
         self.stop_download_btn.setText(_translate("Form", "暂停"))
