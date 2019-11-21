@@ -180,10 +180,8 @@ class MainWindow(QWidget,Ui_Form):
         self.novelChapterUrlList = None
         self.novelName = ""
         self.progressBar.setProperty("value", 0)
-        print("dddd")
         print(message)
-        # self.status_label.setText(str(message))
-        return
+        self.status_label.setText(message)
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:

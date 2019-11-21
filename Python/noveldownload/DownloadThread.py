@@ -20,7 +20,16 @@ class DownloadThread(threading.Thread):
 
     def setDownloadEndCallBack(self, method):
         self.downloadEndCallBack = method
-
+    #
+    # def setExitFlag(self):
+    #     self.exitFlag = True
+    def exitCallBack(self):
+        if self.downloadEndCallBack is not None:
+            print("回调。。。")
+            message = "下载完成!!"
+            if self.exitFlag:
+                message = "退出下载"
+            self.downloadEndCallBack(message=message)
     # 结束线程
     def exitDownloadThread(self):
         print("停止下载... 在线程中")
@@ -29,7 +38,10 @@ class DownloadThread(threading.Thread):
         self.exitFlag = True
         print("设置完成...")
         mutex.release()
-        return
+        # 异步调用
+        # t = threading.Thread(target=self.setExitFlag(),args=())
+        # t.setDaemon(True)
+        # t.start()
 
     def run(self):
         chapterCount = len(self.novelChapterUrlList)
@@ -63,4 +75,8 @@ class DownloadThread(threading.Thread):
         #     message = "下载完成!!"
         #     if self.exitFlag:
         #         message = "退出下载"
-        #     self.downloadEndCallBack(message)
+        #     self.downloadEndCallBack(message=message)
+        # t = threading.Thread(target=self.exitCallBack(),args=())
+        # t.setDaemon(True)
+        # t.start()
+        # print("线程退出.....")

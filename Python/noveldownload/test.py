@@ -5,6 +5,7 @@ from noveldownload.DownloadThread import DownloadThread
 from PyQt5.QtWidgets import *
 import sys
 import nose
+import threading
 
 # 测试获得小说信息
 def testGetNovelInfo():
@@ -85,3 +86,7 @@ def testLoop():
             break
         print("i=" + str(i))
 
+def testThreadRun():
+    t = threading.Thread()
+
+    t.start()
