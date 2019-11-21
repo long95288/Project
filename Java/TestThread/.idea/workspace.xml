@@ -249,22 +249,9 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.Immutable">
+  <component name="RunManager" selected="Application.SimpleFormat">
     <configuration name="AttemptLocking" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="concurrency.AttemptLocking" />
-      <module name="TestThread" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="concurrency.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="EvenGenerator" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="concurrency.EvenGenerator" />
       <module name="TestThread" />
       <extension name="coverage">
         <pattern>
@@ -296,6 +283,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="SimpleFormat" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="SimpleFormat" />
+      <module name="string" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="SynchronizedEvenGenerator" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="concurrency.SynchronizedEvenGenerator" />
       <module name="TestThread" />
@@ -311,11 +305,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.SimpleFormat" />
         <item itemvalue="Application.Immutable" />
         <item itemvalue="Application.AttemptLocking" />
         <item itemvalue="Application.MutexEvenGenerator" />
         <item itemvalue="Application.SynchronizedEvenGenerator" />
-        <item itemvalue="Application.EvenGenerator" />
       </list>
     </recent_temporary>
   </component>
