@@ -22,6 +22,21 @@ window.downloadImage = function (url) {
 }
 
 window.insertButtons = function (element) {
+  // 获得该动态的卡片节点的id document.getElementsByClassName("imagesbox")[0].parentElement.parentElement.parentElement.parentElement.parentElement
+  var did = element.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("data-did");
+  var idListStr = this.localStorage.getItem("idList");
+  // 是否是新数据
+  var newData = false;
+  if (idListStr === null){
+    insertList = []
+    this.localStorage.setItem("idList",insertList)
+  }
+  var idList = this.localStorage.getItem("idList").split(",");
+  if (idList.indexOf(did) !== -1){
+    // 已经下载过了
+    newData = true;
+  }
+
   var button = document.createElement("button");
   button.addEventListener("click", function () {
     console.log(element);
@@ -38,6 +53,8 @@ window.insertButtons = function (element) {
         window.downloadImage(url);
       }
       console.log('=========创建图片下载任务完成=========')
+      // 添加该项目已经下载的列表中
+      idList.push(did);
     } else {
       // 获得该box的9个图片的url
       var urlList = element.firstElementChild.firstElementChild.children;
@@ -49,7 +66,11 @@ window.insertButtons = function (element) {
         window.downloadImage(url);
       }
       console.log('========创建任务完成===============')
+      // 添加该项目已经下载的列表中
+      idList.push(did);
     }
+    // 更新缓存数据
+    localStorage.setItem("idList",idList);
   });
   button.style.borderRadius="10px";
   button.style.height = "35px";
@@ -58,7 +79,13 @@ window.insertButtons = function (element) {
   button.style.borderWidth="thin";
   button.style.position="absolute";
   button.classList.add("downBtn");
-  button.innerText = "下载该动态的图片";
+  if(newData){
+    button.innerText = "下载该动态的图片";
+  }else{
+    // 已经下载过了
+    button.style.color="#02B5DA";
+    button.innerText = "已经下载过了";
+  }
   element.append(button);
 }
 
