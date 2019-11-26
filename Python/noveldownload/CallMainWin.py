@@ -47,6 +47,16 @@ class MainWindow(QWidget,Ui_Form):
             background-color: rgb(255, 255, 255,0.5);
             color:black;
         }
+        QPushButton:hover{
+            border-radius:5px;
+            background-color: rgb(255, 255, 255,0.7);
+            color:black;
+        }
+        QPushButton:Pressed{
+            border-radius:5px;
+            background-color: rgb(255, 255, 255,0.9);
+            color:black;
+        }
         """
         self.download_btn.setStyleSheet(style)
         self.download_btn.setWindowOpacity(0.5)
@@ -72,6 +82,9 @@ class MainWindow(QWidget,Ui_Form):
         exit_btn_style ="""
         QPushButton{
             border-image: url(./image/close.png);
+        }
+        QPushButton:hover{
+            border-image: url(./image/close-hover.png);
         }
         """
         self.exit_btn.setText("")
@@ -125,6 +138,8 @@ class MainWindow(QWidget,Ui_Form):
 
     # 下载按钮
     def handle_download(self):
+        if self.novelName is None or self.novelChapterUrlList is None:
+            return
         # 显示进度条
         self.progressBar.setVisible(True)
         # 显示进度条的标签
