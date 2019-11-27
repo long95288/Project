@@ -74,6 +74,11 @@ class MainWindow(QWidget,Ui_Form):
             background-color: rgb(37, 175, 243,0.5);
             color:white;
         }
+        QPushButton:hover{
+            border-radius:5px;
+            background-color: rgb(37, 175, 243,0.8);
+            color:white;
+        }
         """
         self.analyze_btn.setStyleSheet(analyze_style)
         self.continue_download_btn.setStyleSheet(style)
@@ -218,6 +223,7 @@ class MainWindow(QWidget,Ui_Form):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = MainWindow()
+    # window.setWindowOpacity(0.5)
     window.show()
     sys.exit(app.exec_())
 
