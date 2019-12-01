@@ -5,6 +5,7 @@
 /Python/**/*.txt
 /Python/**/*.png
 /Python/**/*.jpg
+/Python/**/*.json
 *.exe
 *.dll
 *.class
