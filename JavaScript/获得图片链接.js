@@ -23,8 +23,9 @@ function download(filename,content,contetnType){
 
 (function(){
   // getUrlList();
-  // console.log(localStorage.getItem("urllist"));
+  // console.log(localStorage.getItem("urllist"))
   var list = localStorage.getItem("urllist").split(",");
   var content = JSON.stringify(list);
-  download('urllist.json',content);
+  var filename = window.location.pathname.split("/")[1].trim() + ".json"
+  download(filename,content);
 })()
