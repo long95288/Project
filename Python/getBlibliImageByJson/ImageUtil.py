@@ -38,12 +38,48 @@ def getImageUrlList(url):
     has_more = 0
     # 根据URL请求数据
     header = random.choice(headers)
+    log("请求:{}\n".format(url))
     response = requests.get(url, header)
     if response.status_code == 200:
-        response_data = response.content
-        with open('temp.json', 'a') as f:
-            f.write(response_data.decode('utf-8'))
-        print(response_data)
+        response_data = json.loads(response.text)
+        data = response_data['data']
+        if data:
+            # has_more
+            has_more = data['has_more']
+            # list
+            if has_more != 0:
+                cards = data['cards']
+                if cards:
+                    cards_num = len(cards)
+                    for i in range(0, cards_num):
+                        card = cards[i]
+                        card_type = card['desc']['type']
+                        # 专栏图片
+                        if card_type == 64:
+                            cv_id = card['desc']['uid']
+                            print("是CV Id = " + str(cv_id))
+                            cv_image_list = getImageUrlListByCV(id=cv_id)
+                            for img in cv_image_list:
+                                list.append(img)
+                        elif card_type == 2:
+                            # 非专栏card,获得图片数据
+                            card_str = card['card']
+                            # 解析为json
+                            card_json = json.loads(card_str)
+                            item = card_json['item']
+                            if item:
+                                pictures = item['pictures']
+                                # 获得pictures中的图片url加入列表中
+                                if pictures:
+                                    for picture in pictures:
+                                        image_src = picture['img_src']
+                                        list.append(image_src)
+                        # 获得最后一个card 的id
+                        if i == cards_num - 1:
+                            last_uid = card['desc']['dynamic_id']
+                            print("最后一个动态ID = "+str(last_uid))
+        else:
+            log("请求:--{}--无数据\n".format(url))
     else:
         # 失败写入日志
         log_message = "请求--{}--失败\n".format(url)
@@ -56,6 +92,5 @@ def getImageUrlList(url):
 """
 def getImageUrlListByCV(id):
     list = []
-
     return list
 
