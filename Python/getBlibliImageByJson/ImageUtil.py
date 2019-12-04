@@ -17,6 +17,7 @@ import json
 import time
 import random
 from getBlibliImageByJson.Log import log
+from bs4 import BeautifulSoup
 
 headers = [
     {
@@ -24,8 +25,13 @@ headers = [
     },
     {
         'user-agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36'
+    },
+    {
+        'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.18362'
     }
 ]
+# 保存blibli的图片
+save_path = "D:\\bibliimage\\"
 """
 获得动态图片的url列表
 """
@@ -56,11 +62,14 @@ def getImageUrlList(url):
                         card_type = card['desc']['type']
                         # 专栏图片
                         if card_type == 64:
-                            cv_id = card['desc']['uid']
+                            cv_id = card['desc']['rid']
                             print("是CV Id = " + str(cv_id))
                             cv_image_list = getImageUrlListByCV(id=cv_id)
-                            for img in cv_image_list:
-                                list.append(img)
+                            dy_id = card['desc']['dynamic_id']
+                            # 添加进去
+                            list.append((dy_id, cv_image_list))
+                            # for img in cv_image_list:
+                            #     list.append(img)
                         elif card_type == 2:
                             # 非专栏card,获得图片数据
                             card_str = card['card']
@@ -71,9 +80,13 @@ def getImageUrlList(url):
                                 pictures = item['pictures']
                                 # 获得pictures中的图片url加入列表中
                                 if pictures:
+                                    dy_id = card['desc']['dynamic_id']
+                                    img_list = []
                                     for picture in pictures:
                                         image_src = picture['img_src']
-                                        list.append(image_src)
+                                        img_list.append(image_src)
+                                        # list.append(image_src)
+                                    list.append((dy_id, img_list))
                         # 获得最后一个card 的id
                         if i == cards_num - 1:
                             last_uid = card['desc']['dynamic_id']
@@ -89,8 +102,58 @@ def getImageUrlList(url):
 
 """
 根据CV的id,获得该cv内所有的图片连接
+return:
+    list: 图片列表
 """
 def getImageUrlListByCV(id):
+    url = "https://www.bilibili.com/read/cv{}".format(id)
+    header = random.choice(headers)
+    log("请求CV:{}".format(url))
+    response = requests.get(url, header)
     list = []
+    if response.status_code == 200:
+        response_data = BeautifulSoup(response.content.decode('utf-8'), 'html.parser')
+        image_box = response_data.select('.img-box > img')
+        if image_box:
+            for item in image_box:
+                src = "https:" + item.attrs['data-src']
+                list.append(src)
+            #
+            log("获得CV:{}图片成功".format(url))
+        else:
+            log("获得CV:{}图片失败".format(url))
+    else:
+        log("请求CV:{}失败".format(url))
+    # 防止过快请求
+    time.sleep(1)
     return list
 
+
+def get_image_content(url):
+    header = random.choice(headers)
+    response = requests.get(url, header)
+    response_data = None
+    if response.status_code == 200:
+        response_data = response.content
+    else:
+        log("获取:{}失败".format(url))
+    return response_data
+
+
+"""
+保存图片文件
+"""
+def save_image(image_name,image_conten):
+    filename = save_path + image_name
+    with open(filename, 'wb') as fp:
+        fp.write(image_conten)
+        log("保存:{}成功".format(image_name))
+        fp.close()
+        # print("保存:"+image_name+"成功")
+
+
+def downloadImageByURL(url):
+    image_name = str(url).split("/")[-1]
+    image_content = get_image_content(url)
+    if image_content is not None:
+        save_image(image_name, image_content)

@@ -2,7 +2,7 @@
 def testGetImageUrlList():
     from getBlibliImageByJson.ImageUtil import getImageUrlList
     from getBlibliImageByJson.MySqlUtil import insertListToDataBase
-    url = "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?host_uid=372365045&offset_dynamic_id=318601219481368456"
+    url = "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?host_uid=372365045&offset_dynamic_id=0"
     list, has_more, last_uid = getImageUrlList(url)
     print("list:")
     print(list)
@@ -17,7 +17,7 @@ def testGetImageUrlList():
 """
 def testParseJsonData():
     import json
-    with open('temp.json','r') as f:
+    with open('temp.json','r',encoding='utf-8') as f:
         response_data = json.load(f)
         # print(json_data)
         has_more = response_data['data']['has_more']
@@ -111,3 +111,37 @@ def testGetUID():
     with open('conf.json','r') as f:
         json_data = json.load(f)
         print(json_data['uids'])
+
+"""
+测试获得cv的图片列表
+"""
+def testGetImageUrlListByCV():
+    id = 4091501
+    from getBlibliImageByJson.ImageUtil import getImageUrlListByCV
+
+    list = getImageUrlListByCV(id)
+    print(list)
+
+def testUID():
+    from getBlibliImageByJson.MySqlUtil import getUID
+    uid = getUID()
+    print(uid)
+
+def testQueryImagesByDidAndUid():
+    from getBlibliImageByJson.MySqlUtil import queryImagesByDidAndUid
+    uid = 299876758
+    dynamic_id = 312545637717924441
+    list = queryImagesByDidAndUid(uid, dynamic_id)
+    print(list)
+
+def testUpdateDynamicToDownloaded():
+    from getBlibliImageByJson.MySqlUtil import updateDynamicToDownloaded
+    dynamic_id = 328910025756276615
+    uid = 27642052
+    print("影响:{}行".format(updateDynamicToDownloaded(uid,dynamic_id)))
+
+def testQueryUndownloadDynamic():
+    from getBlibliImageByJson.MySqlUtil import queryUndownloadDynamic
+    list = queryUndownloadDynamic(10)
+
+    print(list)
