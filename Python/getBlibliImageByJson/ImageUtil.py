@@ -25,9 +25,6 @@ headers = [
     },
     {
         'user-agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36'
-    },
-    {
-        'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.18362'
     }
 ]
 # 保存blibli的图片
@@ -131,12 +128,16 @@ def getImageUrlListByCV(id):
 
 def get_image_content(url):
     header = random.choice(headers)
-    response = requests.get(url, header)
     response_data = None
-    if response.status_code == 200:
-        response_data = response.content
-    else:
-        log("获取:{}失败".format(url))
+    try:
+        response = requests.get(url, header)
+        if response.status_code == 200:
+            response_data = response.content
+        else:
+            log("获取:{}失败".format(url))
+    except RuntimeError:
+        log("请求{}异常".format(url))
+
     return response_data
 
 

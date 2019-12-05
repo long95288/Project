@@ -145,3 +145,42 @@ def testQueryUndownloadDynamic():
     list = queryUndownloadDynamic(10)
 
     print(list)
+
+def testaDownloadStatus():
+    # 设置已经下载图片的数据库
+    # import os
+    # import pymysql
+    #
+    # root_path = "D:\\bibliimage\\"
+    # # 获得全部图片的文件名
+    # list = os.listdir(root_path)
+    # list_num = len(list)
+    # insert_num = 0
+    # db = pymysql.connect("localhost", "root", "root2037", "blibli")
+    # cursor = db.cursor()
+    # sql = "UPDATE t_image SET status = 1 WHERE id = {}"
+    #
+    # for i in list:
+    #     sql = sql.format(i)
+    #     cursor.execute(sql)
+    # db.commit()
+    # while insert_num < list_num:
+    #     insert_num += 100
+    #     insert_list = []
+    #     if insert_num > list_num:
+    #         insert_list = list[insert_num - 100: list_num]
+    #     else:
+    #         insert_list = list[list_num-100:insert_num]
+    #
+    #     count = cursor.executemany(sql, insert_list)
+    #     db.commit()
+    #     print("影响行数:{}".format(count))
+    #     break
+    # print("文件长度:{}".format(len(list)))
+    # sql = "UPDATE t_image SET status = 1 WHERE id = %s"
+    # db = pymysql.connect("localhost", "root", "root2037", "blibli")
+    # cursor = db.cursor()
+    # count = cursor.executemany(sql,list)
+    # db.commit()
+    # print("更新数目:{}".format(count))
+    pass
