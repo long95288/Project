@@ -120,6 +120,10 @@ def queryRecordByUidAndDynamicId(uid,dynamic_id):
     db.close()
     return result
 
+
+"""
+获得用户的列表
+"""
 def getUID():
     db = pymysql.connect("localhost", "root", "root2037", "blibli")
     cursor = db.cursor()
@@ -165,8 +169,15 @@ def insertDynamicList(dynamic_list):
         # 生成图片表的数据
         for image in image_list:
             image_id = str(image).split("/")[-1]
+            # 去掉相应的@数据
+            image_id = image_id.split("@")[0]
+            # 统一换成https
+            url = str(image).replace("http:", "")
+            url = url.replace("https:", "")
+            url = "https:{}".format(url)
+            src = url.split("@")[0]
             # 图片数据
-            insert_image_data = (image_id,image,'0',uid,dynamic_id)
+            insert_image_data = (image_id,src,'0',uid,dynamic_id)
             insert_image_list.append(insert_image_data)
     # 获得全部数据后分两次批量插入
     insert_dynamic_sql = "INSERT INTO t_dynamic (dynamic_id,uid,download_status) VALUES (%s,%s,%s)"
@@ -176,19 +187,17 @@ def insertDynamicList(dynamic_list):
     try:
         # 批量插入动态
         if len(dynamic_list) > 0:
-            log("插入动态数据......")
             cursor.executemany(insert_dynamic_sql,insert_dynamic_list)
             # 提交变更
             db.commit()
         # 批量插入图片
         if len(insert_image_list) > 0:
-            log("插入动态图片数据.....")
             cursor.executemany(insert_image_sql, insert_image_list)
             # 提交变更
             db.commit()
     except EnvironmentError:
         db.rollback()
-        print("插入错误")
+        log("插入错误！！！！")
     db.close()
 
 """

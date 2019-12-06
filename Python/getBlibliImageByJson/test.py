@@ -184,3 +184,9 @@ def testaDownloadStatus():
     # db.commit()
     # print("更新数目:{}".format(count))
     pass
+
+def testGetImageList():
+    from getLastestImages import getLastestImageByUid
+
+    uid = 388275388
+    getLastestImageByUid(uid)
