@@ -16,6 +16,7 @@ import requests
 import json
 import time
 import random
+import datetime
 from getBlibliImageByJson.Log import log
 from bs4 import BeautifulSoup
 
@@ -28,7 +29,8 @@ headers = [
     }
 ]
 # 保存blibli的图片
-save_path = "D:\\bibliimage\\"
+day = datetime.datetime.now().strftime('%Y%m%d')
+save_path = "D:\\bibliimage2\\" + day +"\\"
 """
 获得动态图片的url列表
 """
