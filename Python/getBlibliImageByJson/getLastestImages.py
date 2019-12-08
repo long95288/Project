@@ -145,10 +145,10 @@ def start_download_images():
     log("开始下载......")
     timeout = 1
     log("获得数据库数据")
-    undownload_dynamic_list = queryUndownloadDynamic(10)
-    while len(undownload_dynamic_list) > 0:
+    un_download_dynamic_list = queryUndownloadDynamic(10)
+    while len(un_download_dynamic_list) > 0:
         # 下载
-        for dynamic in undownload_dynamic_list:
+        for dynamic in un_download_dynamic_list:
             dynamic_id = dynamic[0]
             uid = dynamic[1]
             # 获得动态的图片列表的url
@@ -167,7 +167,7 @@ def start_download_images():
             updateDynamicToDownloaded(uid=uid, dynamic_id=dynamic_id)
 
         log("获得数据库数据......")
-        undownload_dynamic_list = queryUndownloadDynamic(10)
+        un_download_dynamic_list = queryUndownloadDynamic(10)
 
 """
 启动
