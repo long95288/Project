@@ -12,6 +12,7 @@ def testGetImageUrlList():
     # affect_count = insertListToDataBase(list)
     # print("affect_count " + str(affect_count))
 
+
 """
 解析字符串
 """
