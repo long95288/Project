@@ -11,6 +11,7 @@
 
     <modules>
         <module>string</module>
+        <module>IO</module>
     </modules>
     <build>
         <plugins>
