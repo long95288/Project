@@ -31,6 +31,8 @@ public class CPlusExecutor extends TestOJExecutor{
             // 获得结果流
             BufferedReader resultReader = new BufferedReader(new InputStreamReader(process.getInputStream(),"GBK"));
 
+            //
+
             String print;
             while ((print = errReader.readLine())!= null){
                 System.out.println(print);

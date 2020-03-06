@@ -28,7 +28,6 @@ public class PythonExecutor extends TestOJExecutor{
             FileWriter fileWriter = new FileWriter(pythonFile);
             fileWriter.write(code);
             fileWriter.flush();
-            System.out.println("flush ...");
             fileWriter.close();
             // 2.运行文件
             String command = "python " + filepath;
@@ -38,8 +37,15 @@ public class PythonExecutor extends TestOJExecutor{
             BufferedReader errReader = new BufferedReader(new InputStreamReader(process.getErrorStream(),"GBK"));
             // 获得结果流
             BufferedReader resultReader = new BufferedReader(new InputStreamReader(process.getInputStream(),"GBK"));
-            // 获得输入流
-            System.out.println("获得输入流...");
+            // 获得输出流 控制台的输入
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream(),"GBK"));
+            String inputData = "这是向控制台输入的数据1....";
+            // 换行符是必须的!!!!,否则控制台无法知道已经完成输入
+            writer.write(inputData + "\n");
+            inputData = "这是向控制台输入的数据2...";
+            writer.write(inputData+"\n");
+            writer.flush();
+            writer.close();
 
             String print = null;
             while ((print = resultReader.readLine()) != null){
@@ -66,7 +72,15 @@ public class PythonExecutor extends TestOJExecutor{
                 "if __name__ == '__main__':\n" +
                 "    print(\"This is python program\")\n" +
                 "    print(\"这是python程序\")\n" +
-                "    print(fff)";
+                "    print(\"这是控制台输出的数据....\")\n" +
+                "    # 读取控制台的输入数据\n" +
+                "    print(\"读取第一组数据\")\n" +
+                "    fff = input()\n"+
+                "    print(fff)\n" +
+                "    print(\"读取第二组数据\")\n" +
+                "    fff2 = input()\n" +
+                "    print(fff2)\n" +
+                "    print(fff3)\n";
         new PythonExecutor().run(code);
     }
 }
