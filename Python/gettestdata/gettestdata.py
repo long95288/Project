@@ -2,6 +2,7 @@
 import requests
 
 url = 'https://space.bilibili.com/36802028/dynamic'
+url = 'https://m.qhysfe.com/xieemanhua/619.html'
 header = {
     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko)'
                   ' Chrome/71.0.3578.98 Safari/537.36'

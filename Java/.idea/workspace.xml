@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f0c900ab-a3a1-40bb-bcca-48aa7ec8d662" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/IO/src/main/java/CommandWrapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IO/src/main/java/CPlusExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/IO/src/main/java/CPlusExecutor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IO/src/main/java/PythonExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/IO/src/main/java/PythonExecutor.java" afterDir="false" />
-    </list>
+    <list default="true" id="f0c900ab-a3a1-40bb-bcca-48aa7ec8d662" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/string/target/" />
     <ignored path="$PROJECT_DIR$/target/" />
     <ignored path="$PROJECT_DIR$/IO/target/" />
@@ -65,7 +60,7 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/IO/src/main/java/PythonExecutor.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="151">
+                <state relative-caret-position="6">
                   <caret line="82" column="34" selection-start-line="82" selection-start-column="34" selection-end-line="82" selection-end-column="34" />
                   <folding>
                     <element signature="imports" expanded="true" />
@@ -145,7 +140,7 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/IO/src/main/java/OSExecute.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="139">
+                <state relative-caret-position="6">
                   <caret line="15" column="27" selection-start-line="15" selection-start-column="27" selection-end-line="15" selection-end-column="27" />
                   <folding>
                     <element signature="imports" expanded="true" />
@@ -230,9 +225,10 @@
       </MavenImportingSettings>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="952" />
-    <option name="width" value="1512" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-16" />
+    <option name="y" value="61" />
+    <option name="width" value="1940" />
     <option name="height" value="1071" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -410,17 +406,17 @@
       <workItem from="1582814408560" duration="1016000" />
       <workItem from="1583069298307" duration="3117000" />
       <workItem from="1583382611762" duration="596000" />
-      <workItem from="1583499954541" duration="518000" />
+      <workItem from="1583499954541" duration="1288000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="52104000" />
+    <option name="totallyTimeSpent" value="52874000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="952" y="0" width="1512" height="1071" extended-state="0" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.85427135" visible="true" weight="0.30972221" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.85427135" visible="true" weight="0.23927039" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -436,7 +432,7 @@
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="9" visible="true" weight="0.6655738" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="9" visible="true" weight="0.9577778" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="bottom" id="Messages" order="11" />
       <window_info anchor="bottom" id="FindBugs-IDEA" order="12" />
@@ -767,7 +763,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/IO/src/main/java/PythonExecutor.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="151">
+        <state relative-caret-position="6">
           <caret line="82" column="34" selection-start-line="82" selection-start-column="34" selection-end-line="82" selection-end-column="34" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -797,7 +793,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/IO/src/main/java/OSExecute.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="139">
+        <state relative-caret-position="6">
           <caret line="15" column="27" selection-start-line="15" selection-start-column="27" selection-end-line="15" selection-end-column="27" />
           <folding>
             <element signature="imports" expanded="true" />
