@@ -75,20 +75,25 @@ def download_image(url,save_dir,filename):
 # 获得html中的图片的url
 def get_image_url(url):
   header = random.choice(headers)
+  imgurl = None
   try:
     response = requests.get(url,header)
     if response.status_code == 200:
-      response_data = response.content
-      soup = BeautifulSoup(response_data,'html.parser')
-      img_list = soup.select('#content > div.primary > p > a > img')
-      if img_list is not None:
-        url = img_list[0].get('src')
-      
+      response_data = response.content.decode('utf-8')
+      # print(response_data)
+      pattern = '<p style="text-align: center;">.*?<a .*?><img src="http://3qwd.lzsysj.com/qhysfe/uploads/allimg/.*?" .*?></a>.*?</p>'
+      imgs = re.findall(pattern,response_data,re.S)
+      # print(imgs)
+      if len(imgs) > 0:
+        urls = re.findall('src="http://3qwd.lzsysj.com/qhysfe/uploads/allimg/.*?"',imgs[0])
+        if len(urls) > 0:
+          imgurl = urls[0].split("src=")[-1].replace('\"',"")
+          print('图片url: {}'.format(imgurl))
   except RuntimeError:
     log('请求:{} 异常'.format(url))
   else:
-    return url
-  return url
+    return imgurl
+  return imgurl
 
 # 获得一本漫画的名称和url
 # 第一个名称
@@ -98,16 +103,24 @@ def get_single_pic(url):
   if response.status_code == 200:
     response_data = response.content
     soup = BeautifulSoup(response_data,'html.parser')
+    
     title = soup.select('#content > div.primary > center > h1')[0].string
-    total_number = soup.select('#content > div.showpage > a:nth-child(1)')[0].string
-    number = int(re.findall('共(.*)页:',total_number)[0]) + 1
+
+    number = int(re.findall('共(.*)页:',response_data.decode('utf-8'))[0]) + 1
+
     # 获得封面,第一张图片
-    cover_url = soup.select('#content > div.primary > p > a > img')[0].get('src')
-    print(cover_url)
+    pattern = '<p style="text-align: center;">.*?<a .*?><img src="http://3qwd.lzsysj.com/qhysfe/uploads/allimg/.*?" .*?></a>.*?</p>'
+    imgs = re.findall(pattern,response_data.decode('utf-8'),re.S)
+    if len(imgs) > 0:
+      urls = re.findall('src="http://3qwd.lzsysj.com/qhysfe/uploads/allimg/.*?"',imgs[0])
+      if len(urls) > 0:
+        cover_url = urls[0].split("src=")[-1].replace('\"',"")
+    
+    print("封面:{}".format(cover_url))
+
     title = title.replace(":","")
     title = title.replace(";","")
     save_dir = base_save_dir + title + "\\"
-
     # 创建该漫画的保存的文件夹
     if not os.path.exists(save_dir):
       os.mkdir(save_dir)
@@ -116,33 +129,45 @@ def get_single_pic(url):
     file_extend = cover_url.split('.')[-1]
     image_name = "1."+file_extend
     print('save_dir '+save_dir)
-    print(image_name)
+    print('封面:{}'.format(image_name))
     download_image(cover_url,save_dir,image_name)
     # 获得全部的url
     pic_base_url = url.split('.html')[0]
     for i in range(2,number):
       new_url = pic_base_url + "_" + str(i)+".html"
       # 获得新的数据
+      print("下载:{} 中的图片".format(new_url))
 
       image_url = get_image_url(new_url)
-      
       if image_url is None:
         continue
 
-      print("下载:{}".format(new_url))
       extend = image_url.split('.')[-1]
       new_image_name = str(i)+ "." + extend
+      print("下载图片:{}".format(image_url))
       download_image(image_url,save_dir,new_image_name)
       time.sleep(3 + random.random())
     
-    # print(url_list)
-    # print(number)
-    # print(title)
-  # print(response_data)
   
-
+def testRe():
+  str = """
+  <p style="text-align: center;">
+	<a href="381_3.html"><img src="http://3qwd.lzsysj.com/qhysfe/uploads/allimg/180713/liv3xjat0of687.jpg" title="里番库口工漫画:[秋葉魔王]h本子優等生の吉田さんは先生に監禁されて肉便器になりました。 " original="http://3qwd.lzsysj.com/qhysfe/uploads/allimg/180713/liv3xjat0of687.jpg"></a></p>
+  """
+  pattern = '<p style="text-align: center;">.*?<a .*?><img src="http://3qwd.lzsysj.com/qhysfe/uploads/allimg/.*?" .*?></a>.*?</p>'
+  #imgs = re.findall('<img src="http://3qwd.lzsysj.com/qhysfe/uploads/allimg/.*?" title=.*? original="http://3qwd.lzsysj.com/qhysfe/uploads/allimg/.*?">',str)
+  imgs = re.findall(pattern,str,re.S)
+  print(imgs)
+  url = re.findall('src="http://3qwd.lzsysj.com/qhysfe/uploads/allimg/.*?"',imgs[0])
+  print(url[0].split("src=")[-1])
+  pass
 
 if __name__ == '__main__':
+    #testRe()
+    # test_url = 'https://m.qhysfe.com/xieemanhua/381_2.html'
+    # get_single_pic(test_url)
+    # print(get_image_url(test_url))
+
     # 两个核心功能
     # 已经下载的列表
     downloaded_list = []
