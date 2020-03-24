@@ -81,7 +81,7 @@ def get_image_url(url):
     if response.status_code == 200:
       response_data = response.content.decode('utf-8')
       # print(response_data)
-      pattern = '<p style="text-align: center;">.*?<a .*?><img src="http://3qwd.lzsysj.com/qhysfe/uploads/allimg/.*?" .*?></a>.*?</p>'
+      pattern = '<a .*?><img src="http://3qwd.lzsysj.com/qhysfe/uploads/allimg/.*?" .*?></a>'
       imgs = re.findall(pattern,response_data,re.S)
       # print(imgs)
       if len(imgs) > 0:
@@ -109,15 +109,16 @@ def get_single_pic(url):
     number = int(re.findall('共(.*)页:',response_data.decode('utf-8'))[0]) + 1
 
     # 获得封面,第一张图片
-    pattern = '<p style="text-align: center;">.*?<a .*?><img src="http://3qwd.lzsysj.com/qhysfe/uploads/allimg/.*?" .*?></a>.*?</p>'
-    imgs = re.findall(pattern,response_data.decode('utf-8'),re.S)
-    if len(imgs) > 0:
-      urls = re.findall('src="http://3qwd.lzsysj.com/qhysfe/uploads/allimg/.*?"',imgs[0])
-      if len(urls) > 0:
-        cover_url = urls[0].split("src=")[-1].replace('\"',"")
-    
-    print("封面:{}".format(cover_url))
+    # pattern = '<p style="text-align: center;">.*?<a .*?><img src="http://3qwd.lzsysj.com/qhysfe/uploads/allimg/.*?" .*?></a>.*?</p>'
+    # imgs = re.findall(pattern,response_data.decode('utf-8'),re.S)
+    # if len(imgs) > 0:
+    #   urls = re.findall('src="http://3qwd.lzsysj.com/qhysfe/uploads/allimg/.*?"',imgs[0])
+    #   if len(urls) > 0:
+    #     cover_url = urls[0].split("src=")[-1].replace('\"',"")
 
+    cover_url = get_image_url(url)
+    print("封面:{}".format(cover_url))
+    
     title = title.replace(":","")
     title = title.replace(";","")
     save_dir = base_save_dir + title + "\\"
