@@ -26,8 +26,9 @@ if __name__ == '__main__':
     # print(os.getcwd())
     # print("\n")
     #
-    img.save(path)
+    # img.save(path)
     # bmp = Image.open("bg.bmp")
     # bmpFile = bmp.load()
+    path = "F:\\tools\\settingImage\\3fd38d86c2addb77fec9519ea40470a2b31711b2.jpg"
     setWallPaper(path)
     pass
