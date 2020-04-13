@@ -4,6 +4,7 @@ import win32con
 import os
 import datetime
 import random
+import time
 
 
 day = datetime.datetime.now().strftime('%Y%m%d')
@@ -62,14 +63,19 @@ if __name__ == '__main__':
         image_list = image_filter(file_list)
         print(image_list)
         if len(image_list) > 0:
-            wallpaper_path = image_dir + "\\" + random.choice(image_list)
-            if os.path.exists(wallpaper_path):
-                if setWallPaper(wallpaper_path):
-                    log("设置壁纸成功:path = {}".format(wallpaper_path))
+            while True:
+                wallpaper_path = image_dir + "\\" + random.choice(image_list)
+                if os.path.exists(wallpaper_path):
+                    if setWallPaper(wallpaper_path):
+                        log("设置壁纸成功:path = {}".format(wallpaper_path))
+                    else:
+                        log("设置壁纸失败,详情查看日志。path = {}".format(wallpaper_path))
+                        break
                 else:
-                    log("设置壁纸失败,详情查看日志。path = {}".format(wallpaper_path))
-            else:
-                log("无效路径:{}".format(wallpaper_path))
+                    log("无效路径:{}".format(wallpaper_path))
+                    break
+                time.sleep(10)
+
         else:
             log("文件夹中没有图片文件:path = {}".format(image_dir))
     else:
