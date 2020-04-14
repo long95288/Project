@@ -30,10 +30,10 @@ def getBooks(url):
         return json_data["msg"]["list"]
 
 def saveBook(books):
-    db = pymysql.connect("localhost","root","root2037","book")
+    db = pymysql.connect("localhost","root","root2037","library")
     affect_count = -1
     cursor = db.cursor()
-    sql = "INSERT INTO t_book (author,cover,isbn,name,num,path,pubdate,publisher,schoolName,sort,Summary) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+    sql = "INSERT INTO t_book (author,cover,isbn,name,num,path,pubdate,publisher,schoolName,sort,Summary,cataid) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
     insert_book_list = []
     for book in books:
         author = book.get("author", "null")
@@ -51,7 +51,8 @@ def saveBook(books):
         schoolName = book.get("schoolName","null")
         sort = book.get("sort","0")
         summary = book.get("Summary","")
-        insert_book = (author,cover,isbn,name,num,path,pubdate,publisher,schoolName,sort,summary)
+        cataid = book.get("cataid","12")
+        insert_book = (author,cover,isbn,name,num,path,pubdate,publisher,schoolName,sort,summary,cataid)
         insert_book_list.append(insert_book)
 
     try:
@@ -63,6 +64,13 @@ def saveBook(books):
         db.rollback()
     db.close()
     return affect_count
+
+def saveBookCatalogue(books):
+    db = pymysql.connect("localhost","root","root2037","library")
+    affect_count = -1
+    cursor = db.cursor()
+    sql = "INSERT INTO t_book_catalogue (book_id,catalogue_id) VALUES (%s,%s)"
+    insert_book_list = []
 
 def testGetBook():
     url="http://unitvb.featurelib.libsou.com/book/list_jsonp?callback=jQuery172024434167592111566_1586496638266&schoolid=72&cpage=1&pageSize=150&_=1586496638384"
@@ -77,7 +85,7 @@ def getAllBooks():
         url = root_url.format(i)
         books = getBooks(url)
         file = "book_page_{}.json".format(i)
-        with open(file, 'w') as f:
+        with open(file, 'w',encoding="utf-8") as f:
             f.write(json.dumps(books, ensure_ascii=False))
             print("写入json完成")
             f.close()
@@ -89,7 +97,7 @@ def saveAllBook():
     for i in range(1,42):
         file = "book_page_{}.json".format(i)
         books = []
-        with open(file,'r') as f:
+        with open(file,'r',encoding="utf-8") as f:
             json_data = f.read()
             f.close()
             books = json.loads(json_data)
@@ -141,6 +149,7 @@ def downloadBook():
     pass
 
 if __name__ == '__main__':
-    downloadBook()
-
+    # downloadBook()
+    # getAllBooks()
+    saveAllBook()
     pass
