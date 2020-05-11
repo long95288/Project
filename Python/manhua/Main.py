@@ -17,7 +17,12 @@ headers = [
     }
 ]
 # 网站根目录的url
-root_url = 'https://m.qhysfe.com'
+root_url = 'https://m.lfkmhw.com/'
+index_url = ''
+list_prefix = ""
+totalPageNumber = 0
+images_pattern = ''
+image_pattern = ''
 
 # 保存图片的根路径
 base_save_dir = 'D:\\manhua\\'
@@ -81,11 +86,13 @@ def get_image_url(url):
     if response.status_code == 200:
       response_data = response.content.decode('utf-8')
       # print(response_data)
-      pattern = '<a .*?><img src="http://3qwd.lzsysj.com/qhysfe/uploads/allimg/.*?" .*?></a>'
-      imgs = re.findall(pattern,response_data,re.S)
+      # http://lf.veestyle.cn/uploads/2020/05sx/0511/tu2.jpg
+      # images_pattern = '<a .*?><img src="http://lf.veestyle.cn/uploads/.*?" .*?></a>'
+      imgs = re.findall(images_pattern,response_data,re.S)
       # print(imgs)
       if len(imgs) > 0:
-        urls = re.findall('src="http://3qwd.lzsysj.com/qhysfe/uploads/allimg/.*?"',imgs[0])
+        # image_pattern = 'src="http://lf.veestyle.cn/uploads/.*?"'
+        urls = re.findall(image_pattern,imgs[0])
         if len(urls) > 0:
           imgurl = urls[0].split("src=")[-1].replace('\"',"")
           print('图片url: {}'.format(imgurl))
@@ -121,6 +128,8 @@ def get_single_pic(url):
     
     title = title.replace(":","")
     title = title.replace(";","")
+    title = title.replace("\\","").replace("/","").replace("*","").replace("?","").replace("\"","").replace("<","").replace(">","").replace("|","")
+
     save_dir = base_save_dir + title + "\\"
     # 创建该漫画的保存的文件夹
     if not os.path.exists(save_dir):
@@ -150,7 +159,7 @@ def get_single_pic(url):
       time.sleep(3 + random.random())
     
   
-def testRe():
+def atestRe():
   str = """
   <p style="text-align: center;">
 	<a href="381_3.html"><img src="http://3qwd.lzsysj.com/qhysfe/uploads/allimg/180713/liv3xjat0of687.jpg" title="里番库口工漫画:[秋葉魔王]h本子優等生の吉田さんは先生に監禁されて肉便器になりました。 " original="http://3qwd.lzsysj.com/qhysfe/uploads/allimg/180713/liv3xjat0of687.jpg"></a></p>
@@ -163,12 +172,37 @@ def testRe():
   print(url[0].split("src=")[-1])
   pass
 
-if __name__ == '__main__':
-    #testRe()
-    # test_url = 'https://m.qhysfe.com/xieemanhua/381_2.html'
-    # get_single_pic(test_url)
-    # print(get_image_url(test_url))
+def testInit():
+  init()
 
+def init():
+  with open('conf.json','r') as f:
+    conf = json.loads(f.read())
+    f.close()
+    global root_url
+    root_url = conf.get("root_url")
+    global index_url
+    index_url = conf.get("index_url")
+    global list_prefix
+    list_prefix = conf.get("list_prefix")
+    global totalPageNumber
+    totalPageNumber = conf.get("total_page_number")
+    global images_pattern
+    images_pattern = conf.get("images_pattern")
+    global image_pattern
+    image_pattern = conf.get("image_pattern")
+  print("================conf===================")
+  print("root_url:{}".format(root_url))
+  print("index_url{}".format(index_url))
+  print("list_prefix{}".format(list_prefix))
+  print("totalPageNumber{}".format(totalPageNumber))
+  print("images_pattern{}".format(images_pattern))
+  print("image_pattern{}".format(image_pattern))
+  print("=======================================")
+
+
+if __name__ == '__main__':
+    init()
     # 两个核心功能
     # 已经下载的列表
     downloaded_list = []
@@ -178,10 +212,10 @@ if __name__ == '__main__':
       downloaded_list = json.loads(json_data)
 
     # 1、根据主页获得漫画的列表
-    index_url = 'https://m.qhysfe.com/xieemanhua/'
-
-    for i in range(1,36):
-      new_list_url = index_url + "list_1_"+str(i)+".html"
+    # index_url = 'https://m.lfkmhw.com/shaonvmanhua/'
+    # totalPageNumber = 245
+    for i in range(1, totalPageNumber):
+      new_list_url = index_url + str(list_prefix).format(i)
       print('列表url:{}'.format(new_list_url))
       url_list = get_index_info(new_list_url)
       for item in url_list:
