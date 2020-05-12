@@ -5,6 +5,7 @@ import re
 import time
 from bs4 import BeautifulSoup
 import random
+import datetime
 import os
 import json
 
@@ -16,6 +17,11 @@ headers = [
         'user-agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36'
     }
 ]
+
+day = datetime.datetime.now().strftime('%Y%m%d')
+log_file = day+"_log.txt"
+rpc_url = "http://localhost:6800/jsonrpc"
+
 # 网站根目录的url
 root_url = 'https://m.lfkmhw.com/'
 index_url = ''
@@ -28,15 +34,111 @@ image_pattern = ''
 base_save_dir = 'D:\\manhua\\'
 
 # 日志处理
-def log(massage):
-  print(massage)
+def log(value,print_flag = True):
+    logfile = open(log_file, 'a', encoding='utf-8')
+    if logfile.writable():
+        now_data = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        log_message = "时间:{} : log : {}\n".format(now_data, value)
+        if print_flag:
+            print(log_message)
+        logfile.write(log_message)
+    try:
+        logfile.close()
+    except IOError:
+        print("写入日志错误")
+    else:
+        return
+
+
+def addDownloadTask(url,dir,out):
+    postdata = {
+        "jsonrpc": "2.0",
+        "id": "QXJpYU5nXzE1NDgzODg5MzhfMC4xMTYyODI2OTExMzMxMzczOA=="
+    }
+    rpc_request = postdata
+    rpc_request["method"] = "aria2.addUri"
+    # rpc 的选项，去掉--就可以了
+    options = {
+        "dir":dir,
+        "out":out,
+        "allow-overwrite":"true"
+    }
+    rpc_request["params"] = [[url],options]
+    response = requests.post(url=rpc_url, json=rpc_request)
+    if response.status_code == 200:
+        result = response.json().get("result", [])
+        print("gid: {}".format(result))
+        return result
+    else:
+        log("无法调用aria2")
+
+def download_status(gid):
+    postdata = {
+        "jsonrpc": "2.0",
+        "id": "QXJpYU5nXzE1NDgzODg5MzhfMC4xMTYyODI2OTExMzMxMzczOA=="
+    }
+    rpc_request = postdata
+    rpc_request["method"] = "aria2.tellStatus"
+    rpc_request["params"] = [gid]
+    response = requests.post(url=rpc_url,json=rpc_request)
+    if response.status_code == 200:
+        result = response.json().get("result","")
+        if result != "":
+            status = result.get("status")
+            if status != "":
+                return status
+    return None
+
+"""
+下载工具
+url: 下载地址
+dir: 保存路径
+out: 保存名称
+"""
+def download(url,dir,out):
+    log("开始下载:{}".format(url))
+    gid = addDownloadTask(url,dir,out)
+    status = download_status(gid)
+    error = False
+    while True and not error:
+        if status == "active":
+            time.sleep(3)
+            print("下载中.....\n")
+            status = download_status(gid)
+        if status == "complete":
+            break
+        elif status == "waiting":
+            log("下载队列已满")
+            time.sleep(4)
+        elif status == "paused":
+            log("暂停下载")
+            break
+        elif status == "error":
+            log("下载错误")
+            error = True
+            break
+        elif status == "removed":
+            log("已经从下载队列中移除")
+            break
+    if error:
+        log("下载:{}出错".format(url))
+        return -1
+    else:
+        log("下载{}成功".format(url))
+        return 0
+
+def testDownload():
+    url = "http://lf.veestyle.cn/uploads/2020/04sx/042/tu13.jpg"
+    dir = "D:\\tmp"
+    out = "13.jpg"
+    download(url=url,dir=dir,out=out)
 
 # 获得首页内容
 # 返回页面的list
 def get_index_info(url):
   header = random.choice(headers)
   result = []
-  response = requests.get(url,header)
+  response = requests.get(url, header)
   if response.status_code == 200:
     response_data = response.content
     soup = BeautifulSoup(response_data,'html.parser')
@@ -67,15 +169,16 @@ def get_image_content(url):
 # save_dir 保存的路径
 # 保存的名称
 def download_image(url,save_dir,filename):
-  # 创建文件夹
-  image_content = get_image_content(url)
-  if image_content is not None:
-    filedir = save_dir + filename
-    with open(filedir,'wb') as f:
-      f.write(image_content)
-      log("下载: {} 成功".format(url))
-  else:
-    log("下载: {} 失败".format(url))
+    download(url=url,dir=save_dir,out=filename)
+  # # 创建文件夹
+  # image_content = get_image_content(url)
+  # if image_content is not None:
+  #   filedir = save_dir + filename
+  #   with open(filedir,'wb') as f:
+  #     f.write(image_content)
+  #     log("下载: {} 成功".format(url))
+  # else:
+  #   log("下载: {} 失败".format(url))
 
 # 获得html中的图片的url
 def get_image_url(url):
@@ -157,9 +260,9 @@ def get_single_pic(url):
       print("下载图片:{}".format(image_url))
       download_image(image_url,save_dir,new_image_name)
       time.sleep(3 + random.random())
-    
-  
-def atestRe():
+
+
+def t2estRe():
   str = """
   <p style="text-align: center;">
 	<a href="381_3.html"><img src="http://3qwd.lzsysj.com/qhysfe/uploads/allimg/180713/liv3xjat0of687.jpg" title="里番库口工漫画:[秋葉魔王]h本子優等生の吉田さんは先生に監禁されて肉便器になりました。 " original="http://3qwd.lzsysj.com/qhysfe/uploads/allimg/180713/liv3xjat0of687.jpg"></a></p>
@@ -172,7 +275,7 @@ def atestRe():
   print(url[0].split("src=")[-1])
   pass
 
-def testInit():
+def te2stInit():
   init()
 
 def init():
