@@ -19,3 +19,9 @@
 *_rc.py
 *__pycache__/
 /Java/*.*?/.idea
+/Go/**/*.html
+/Go/**/*.txt
+/Go/**/*.png
+/Go/**/*.jpg
+/Go/**/*.json
+/Go/**/*.bmp
