@@ -103,7 +103,7 @@ func addDownloadTask(url string, dir string, out string) string {
     body := requestBody{
         jsonrpc: "2.0",
         id:      "QXJpYU5nXzE1NDgzODg5MzhfMC4xMTYyODI2OTExMzMxMzczOA==",
-        method:  "aria2.addUri"
+        method:  "aria2.addUri",
     }
     bodyString,_ := json.Marshal(body)
     res,err := http.Post(rpc_url,"application/json",strings.NewReader(string(bodyString)))
