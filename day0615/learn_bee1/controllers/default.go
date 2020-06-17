@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"encoding/json"
+
 	"github.com/astaxie/beego"
 )
 
@@ -18,8 +20,13 @@ func (c *MainController) Get() {
 	c.TplName = "index.tpl"
 }
 
+type Hello struct {
+	Name string
+	Age  int
+}
+
 func (c *HelloController) Get() {
-	c.Data["title"] = "Hello"
-	c.Data["number"] = 10
-	c.TplName = "index.tpl"
+
+	data, _ := json.Marshal(Hello{Name: "名称", Age: 132})
+	c.Ctx.WriteString(string(data))
 }
