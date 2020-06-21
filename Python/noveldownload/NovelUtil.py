@@ -12,7 +12,7 @@ header = {
                   'Chrome/71.0.3578.98 Safari/537.36'
 }
 # 笔趣阁的根网址
-rootUrl = "http://www.022003.com"
+rootUrl = "http://www.vipxs.la/"
 # 日志文件
 logfile = open('log.txt','a',encoding='utf-8')
 """
