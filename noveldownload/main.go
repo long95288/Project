@@ -30,7 +30,8 @@ var urlList []string
 var novelName = ""
 var chapterNum = 0
 var savePath = "download/"
-var bgPixMap *gui.QPixmap
+var wHeight int
+var wWidth int
 
 func InitUi() *widgets.QMainWindow{
     
@@ -132,7 +133,7 @@ func setIndexStatusUI() {
 // 下载小说
 func download()  {
     os.MkdirAll(savePath,0666)
-    file,err := os.OpenFile(savePath + novelNameLineEdit.Text()+".txt",os.O_CREATE|os.O_APPEND,0666)
+    file,err := os.OpenFile(savePath + novelNameLineEdit.Text()+".txt",os.O_CREATE|os.O_TRUNC|os.O_WRONLY,0666)
     if err != nil {
         fmt.Println(err)
     }
@@ -202,14 +203,16 @@ func initEvent() {
     app.ConnectPaintEvent(func(event *gui.QPaintEvent) {
         // 第一种方式
         // 重设图片宽高以适应应用大小
-        bgPixMap = gui.NewQPixmap3("image/bg.jpg","",core.Qt__AutoColor)
-        bgPixMap = bgPixMap.Scaled2(app.Width(),app.Height(),core.Qt__IgnoreAspectRatio,core.Qt__SmoothTransformation)
-        bgPalette := gui.NewQPalette()
-        brush := gui.NewQBrush7(bgPixMap)
-        bgPalette.SetBrush(gui.QPalette__Background,brush)
-        app.SetPalette(bgPalette)
-        // 第二种方式
-        //bgLabel.SetGeometry2(0,0,app.Width(),app.Height())
+        if !(wHeight == app.Height() && wWidth == app.Width()) {
+            bgPixMap := gui.NewQPixmap3("image/bg.jpg","",core.Qt__AutoColor)
+            bgPixMap = bgPixMap.Scaled2(app.Width(),app.Height(),core.Qt__IgnoreAspectRatio,core.Qt__SmoothTransformation)
+            bgPalette := gui.NewQPalette()
+            brush := gui.NewQBrush7(bgPixMap)
+            bgPalette.SetBrush(gui.QPalette__Background,brush)
+            app.SetPalette(bgPalette)
+            wHeight = app.Height()
+            wWidth = app.Width()
+        }
         event.Accept()
     })
 }
