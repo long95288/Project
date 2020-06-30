@@ -13,6 +13,9 @@ QPushButton {
     line-height: 14px;
     color: white;
 }
+QPushButton:hover{
+    background-color: #196fff;
+}
 QPushButton:disabled{
     background-color: darkgrey;
     color: gray;
@@ -46,5 +49,5 @@ QProgressBar {
 }
 QProgressBar::chunk {
     background-color: #409EFF ;
-    width: 20px;
+    /*width: 20px;*/
 }

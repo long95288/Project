@@ -5,6 +5,7 @@
 package main
 
 import (
+    "bufio"
     "fmt"
     "github.com/therecipe/qt/core"
     "github.com/therecipe/qt/gui"
@@ -30,6 +31,10 @@ var urlList []string
 var novelName = ""
 var chapterNum = 0
 var savePath = "download/"
+var bgPixMap *gui.QPixmap
+var bgPalette *gui.QPalette
+var brush *gui.QBrush
+
 var wHeight int
 var wWidth int
 
@@ -39,7 +44,10 @@ func InitUi() *widgets.QMainWindow{
     app.SetWindowTitle("小说下载器")
     // app.SetGeometry2(300,300,400,180)
     app.SetWindowIcon(gui.NewQIcon5("image/app.png"))
-    
+    // 背景图片
+    bgPixMap = gui.NewQPixmap3("image/bg.png","",core.Qt__AutoColor)
+    bgPalette = gui.NewQPalette()
+    brush = gui.NewQBrush()
     
     // 布局
     layoutWidget = widgets.NewQWidget(app,core.Qt__Widget)
@@ -108,6 +116,7 @@ func setStyle(app *widgets.QMainWindow) {
 
 // 下载状态时的ui
 func setDownloadStatusUI()  {
+    urlLineEdit.SetEnabled(false)
     novelNameLineEdit.SetEnabled(false)
     analyzeBtn.SetEnabled(false)
     startDownloadBtn.SetEnabled(false)
@@ -123,6 +132,7 @@ func setAnalyzeSuccessUI(){
 }
 // 初始值UI
 func setIndexStatusUI() {
+    urlLineEdit.SetEnabled(true)
     novelNameLineEdit.SetEnabled(false)
     novelNameLineEdit.SetText("")
     novelChapterNumLabel.SetText("")
@@ -137,8 +147,8 @@ func download()  {
     if err != nil {
         fmt.Println(err)
     }
-    defer file.Close()
     successFlag := true
+    writer := bufio.NewWriter(file)
     for index,url := range urlList{
         msg1 := fmt.Sprintf("下载:%d url:%s", index, url)
         fmt.Println(msg1)
@@ -149,7 +159,7 @@ func download()  {
             successFlag = false
             break
         }
-        _,err = file.WriteString(content)
+        _,err = writer.WriteString(content)
         if err != nil {
             fmt.Println("write err",err)
             successFlag = false
@@ -161,6 +171,7 @@ func download()  {
         processBar.SetValue(int(process))
         time.Sleep(500*time.Millisecond)
     }
+    file.Close()
     msg := ""
     if successFlag {
         msg = fmt.Sprintf("下载《%s》完成",novelName)
@@ -168,7 +179,7 @@ func download()  {
         msg = fmt.Sprintf("下载《%s》出错",novelName)
     }
     widgets.QMessageBox_Information(
-        nil,
+        app,
         "信息",
         msg,
         widgets.QMessageBox__Yes,
@@ -204,10 +215,8 @@ func initEvent() {
         // 第一种方式
         // 重设图片宽高以适应应用大小
         if !(wHeight == app.Height() && wWidth == app.Width()) {
-            bgPixMap := gui.NewQPixmap3("image/bg.jpg","",core.Qt__AutoColor)
-            bgPixMap = bgPixMap.Scaled2(app.Width(),app.Height(),core.Qt__IgnoreAspectRatio,core.Qt__SmoothTransformation)
-            bgPalette := gui.NewQPalette()
-            brush := gui.NewQBrush7(bgPixMap)
+            bgPixMapTmp := bgPixMap.Scaled2(app.Width(),app.Height(),core.Qt__IgnoreAspectRatio,core.Qt__SmoothTransformation)
+            brush.SetTexture(bgPixMapTmp)
             bgPalette.SetBrush(gui.QPalette__Background,brush)
             app.SetPalette(bgPalette)
             wHeight = app.Height()
