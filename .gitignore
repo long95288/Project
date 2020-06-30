@@ -8,3 +8,6 @@
 *.jpg
 *.gif
 */*/deploy
+*/*?/*/*./deploy
+/.*/deploy/
+/noveldownload/deploy/

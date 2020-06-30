@@ -1,0 +1,50 @@
+QMainWindow{
+    /*background-image: url("image/bg.png");*/
+    /*background-repeat: no-repeat no-repeat;*/
+    /*border-image: url("image/bg.jpg");*/
+}
+QPushButton {
+    width: 80px;
+    height: 36px;
+    background: #1989fa;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 14px;
+    color: white;
+}
+QPushButton:disabled{
+    background-color: darkgrey;
+    color: gray;
+}
+QLabel {
+    width: 47px;
+    height: 16px;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 16px;
+}
+QLineEdit {
+    width: 240px;
+    height: 30px;
+    border: 1px solid #1989fa;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 16px;
+}
+QLineEdit:disabled{
+    background-color: darkgrey;
+}
+QProgressBar {
+    border: 1px solid #1989fa;
+    height: 20px;
+    border-radius: 5px;
+    background-color: white;
+    color: darkgrey;
+    text-align: center;
+}
+QProgressBar::chunk {
+    background-color: #409EFF ;
+    width: 20px;
+}
