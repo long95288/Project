@@ -1,0 +1,10 @@
+
+
+QLCDNumber{
+    color: red;
+}
+QWidget#mineArea{
+    /*width: 840px;*/
+    background-color: darkgray;
+}
+
