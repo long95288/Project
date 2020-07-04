@@ -1,6 +1,7 @@
 package main
 
 import (
+    "encoding/json"
     "fmt"
     "github.com/therecipe/qt/core"
     "github.com/therecipe/qt/gui"
@@ -9,6 +10,8 @@ import (
     "math/rand"
     "os"
     "strconv"
+    "sync"
+    "time"
 )
 const(
     // 方块类型
@@ -37,6 +40,27 @@ func (m *Mine) getX() int {
 func (m *Mine) getY() int {
     return m.y
 }
+
+type config struct {
+    BgImage string `json:"bgImage"`
+    LabelImage string `json:"labelImage"`
+    AppIcon string `json:"appIcon"`
+}
+func (c *config) init() {
+    data,err := ioutil.ReadFile("conf.json")
+    if err != nil {
+        c.BgImage = "bg.jpg"
+        c.LabelImage = "label.png"
+        c.AppIcon="app.png"
+        return
+    }
+    err = json.Unmarshal(data,c)
+    if err != nil {
+        c.BgImage = "bg.jpg"
+        c.LabelImage = "label.png"
+        c.AppIcon = "app.png"
+    }
+}
 var (
     gameMap [rows][column]int8 // 游戏地图
     flagImage *gui.QPixmap // 旗子图片
@@ -47,22 +71,43 @@ var (
     timeUsedLCD *widgets.QLCDNumber
     statusLabel   *widgets.QLabel
     flagRemainLCD *widgets.QLCDNumber
+    isGameOver bool
+    lock sync.Mutex
+    bgPixMap *gui.QPixmap
+    bgPalette *gui.QPalette
+    brush *gui.QBrush
+    wHeight int
+    wWidth int
+    configuration config
 )
 
 // 设置初始的游戏地图
 func setDefaultMap() {
-    for i:= 0;i<rows;i++{
-        for j:=0;j<column;j++{
-            gameMap[i][j] = BLOCKTYPE__UNDEFINE
+    for y:= 0;y<rows;y++{
+        for x:=0; x <column; x++{
+            setGameMapBlock(x,y,BLOCKTYPE__UNDEFINE)
         }
     }
 }
-
+// 计数器
+func counter() {
+    count :=0
+    for !isGameOver {
+        timeUsedLCD.Display2(count)
+        count ++
+        time.Sleep(1*time.Second)
+    }
+}
 func startActionHandle(checked bool)   {
     fmt.Println("开始菜单被按下")
+    resetMines()
+    mineArea.SetEnabled(true)
+    // 开始计数
+    go counter()
+    
 }
 
-// 是否是雷
+// 判断(x,y)坐标下面是否是雷
 func isMine(x, y int) bool {
     for i:=0;i < mineNumber;i++{
         if mines[i].getX() == x && mines[i].getY() == y{
@@ -74,8 +119,8 @@ func isMine(x, y int) bool {
 }
 // 左键事件处理
 func handleLeftButtonPress(event *gui.QMouseEvent) {
-    fmt.Println("按下鼠标左键")
-    fmt.Printf("坐标:x= %d, y= %d \n",event.X()/40,event.Y()/40)
+    //fmt.Println("按下鼠标左键")
+    //fmt.Printf("坐标:x= %d, y= %d \n",event.X()/40,event.Y()/40)
     x,y := event.X()/40,event.Y()/40
     if !isValid(x,y) {
         return
@@ -83,6 +128,7 @@ func handleLeftButtonPress(event *gui.QMouseEvent) {
     if isMine(x,y) && gameMap[y][x] == BLOCKTYPE__UNDEFINE{
         // 触雷了
         GameOver()
+        return
     }else if gameMap[y][x] == BLOCKTYPE__UNDEFINE {
         // 挖开该点
         surroundMines := getSurroundMines(x, y)
@@ -93,11 +139,11 @@ func handleLeftButtonPress(event *gui.QMouseEvent) {
             // 显示雷数
             gameMap[y][x] = int8(surroundMines)
         }
-    }else if gameMap[x][y] == BLOCKTYPE__FLAG{
+    }else if gameMap[y][x] == BLOCKTYPE__FLAG{
         // 去掉旗帜
         flagNumber ++
         // 设置为未定义
-        gameMap[x][y] = BLOCKTYPE__UNDEFINE
+        gameMap[y][x] = BLOCKTYPE__UNDEFINE
     }
     // 判断对局
     if checkWin() {
@@ -112,9 +158,22 @@ func GameOver() {
         gameMap[mines[i].getY()][mines[i].getX()] = BLOCKTYPE__MINE
     }
     mineArea.Repaint()
+    mineArea.SetEnabled(false)
+    lock.Lock()
+    isGameOver = true
+    lock.Unlock()
+    
+    widgets.QMessageBox_Information(
+        mineArea,
+        "游戏信息",
+        "游戏结束",
+        widgets.QMessageBox__Yes,
+        widgets.QMessageBox__Yes,
+        )
 }
 func WinGame()  {
     // 赢了游戏
+    //fmt.Println("赢了游戏")
     GameOver()
 }
 func checkWin() bool {
@@ -133,10 +192,13 @@ func checkWin() bool {
     }
     return false
 }
+// 获得(x,y)坐标周围的雷的个数
+// 分别判断前后左右是否有雷
+//
 func getSurroundMines(x, y int) int {
    var number,tmpx,tmpy int
    for i := -1; i<= 1;i++{
-      for j:= -1;j<=1;j++{
+      for j:= -1;j<= 1;j++{
           tmpx,tmpy = x+i,y+j
           if isValid(tmpx,tmpy) && isMine(tmpx,tmpy) {
               number ++
@@ -146,29 +208,32 @@ func getSurroundMines(x, y int) int {
    return number
 }
 // 判断x,y坐标是否有效
+// x坐标要小于列数
+// y坐标小小于行数
 func isValid(x, y int) bool {
-    if x >= 0 && x < rows && y >= 0 && y < column {
+    if x >= 0 && x < column && y >= 0 && y < rows {
         return true
     }
     return false
 }
 
-// 设置x,y周围八块地方的雷区显示
+// 设置(x,y)周围八块地方的雷区显示
+//
 func setSurround(x, y int) {
     var mineNum,tmpx,tmpy int
     for i:=-1; i <= 1; i++{
         for j:=-1;j <= 1;j++{
             tmpx,tmpy = x+i,y+j
             if isValid(tmpx,tmpy) {
-                if gameMap[tmpx][tmpy] == BLOCKTYPE__UNDEFINE {
+                if gameMap[tmpy][tmpx] == BLOCKTYPE__UNDEFINE {
                     // 没有挖开
                     mineNum = getSurroundMines(tmpx, tmpy)
                     if mineNum > 0 {
                         // 设置该点的值
-                        gameMap[tmpx][tmpy] = int8(mineNum)
+                        gameMap[tmpy][tmpx] = int8(mineNum)
                     } else if mineNum == 0 {
                         // 递归挖开
-                        gameMap[tmpx][tmpy] = BLOCKTYPE__EMPTY
+                        gameMap[tmpy][tmpx] = BLOCKTYPE__EMPTY
                         setSurround(tmpx, tmpy)
                     }
                 }
@@ -179,18 +244,18 @@ func setSurround(x, y int) {
 // 鼠标右键
 // 如果所点的地方是未挖开的,放旗帜
 func handleRightButtonPress(event *gui.QMouseEvent)  {
-    fmt.Println("按下鼠标右键")
-    fmt.Printf("坐标:x= %d, y= %d \n",event.X()/40,event.Y()/40)
+    //fmt.Println("按下鼠标右键")
+    //fmt.Printf("坐标:x= %d, y= %d \n",event.X()/40,event.Y()/40)
     x,y := event.X()/40,event.Y()/40
     if !isValid(x,y) {
         return
     }
-    blockType := gameMap[y][x]
+    blockType := getGameMapBlock(x,y)
     switch blockType {
     case BLOCKTYPE__UNDEFINE:
         if flagNumber > 0{
             flagNumber -= 1
-            gameMap[y][x] = BLOCKTYPE__FLAG
+            setGameMapBlock(x,y,BLOCKTYPE__FLAG)
         }
     }
     mineArea.Repaint()
@@ -224,14 +289,23 @@ func setMines() {
             }
         }
     }
-    for _,mine := range mines {
-        fmt.Printf("地雷数据:x = %d;y = %d\n",mine.getX(),mine.getY())
-    }
+    //for _,mine := range mines {
+    //    fmt.Printf("地雷数据:x = %d;y = %d\n",mine.getX(),mine.getY())
+    //}
+}
+
+func getGameMapBlock(x,y int) int8  {
+    return gameMap[y][x]
+}
+func setGameMapBlock(x,y int,blockType int8)  {
+    gameMap[y][x] = blockType
 }
 
 func resetMines() {
     flagNumber = mineNumber
+    isGameOver = false
     setMines()
+    mineArea.Repaint()
 }
 
 // 雷区绘制
@@ -252,11 +326,12 @@ func mineAreaPaintHandle(event *gui.QPaintEvent) {
             blockType := gameMap[i][j]
             switch blockType {
             case BLOCKTYPE__EMPTY:
-                painter.FillRect7(j*40+2,i*40+2,37,37,core.Qt__white)
+                //painter.FillRect7(j*40+2,i*40+2,37,37,core.Qt__white)
+                painter.DrawText3(j*40+2, i*40+2,"")
             case BLOCKTYPE__FLAG:
                 painter.DrawPixmap11(j*40+2,i*40+2,37,37,flagImage)
             case BLOCKTYPE__MINE:
-                fmt.Println("雷区")
+                //fmt.Println("雷区")
                 painter.DrawPixmap11(j*40+2,i*40+2,37,37,mineImage)
             case BLOCKTYPE__UNDEFINE:
                 // 未定义方框
@@ -264,7 +339,7 @@ func mineAreaPaintHandle(event *gui.QPaintEvent) {
             default:
                 // 绘制数字
                 painter.SetFont(gui.NewQFont2("黑体",20,400,false))
-                painter.DrawText3(j*40+15, i*40-15+40,strconv.Itoa(int(blockType)))
+                painter.DrawText3(j*40+15, i*40-10+40,strconv.Itoa(int(blockType)))
             }
         }
     }
@@ -273,14 +348,21 @@ func mineAreaPaintHandle(event *gui.QPaintEvent) {
     event.Accept()
 }
 func InitUI() *widgets.QMainWindow {
+    configuration = config{}
+    configuration.init()
     app := widgets.NewQMainWindow(nil,0)
     app.SetWindowTitle("扫雷")
     layoutWidget := widgets.NewQWidget(app,core.Qt__Widget)
     app.SetCentralWidget(layoutWidget)
+    app.SetWindowIcon(gui.NewQIcon5(configuration.AppIcon))
+    
+    
     
     flagImage = gui.NewQPixmap3("flag.png","",core.Qt__AutoColor)
     mineImage = gui.NewQPixmap3("mine.png","",core.Qt__AutoColor)
-    
+    bgPixMap = gui.NewQPixmap3(configuration.BgImage,"",core.Qt__AutoColor)
+    bgPalette = gui.NewQPalette()
+    brush = gui.NewQBrush()
     setMines()
     
     var gameActions []*widgets.QAction
@@ -317,6 +399,8 @@ func InitUI() *widgets.QMainWindow {
     // 当前状态
     statusLabel = widgets.NewQLabel(showMessageWidget,0)
     statusLabel.SetObjectName("statusLabel")
+    statusLabel.SetMaximumWidth(60)
+    
     // 剩余旗子
     flagRemainLCD = widgets.NewQLCDNumber(showMessageWidget)
     flagRemainLCD.SetObjectName("flagRemainLCD")
@@ -331,6 +415,8 @@ func InitUI() *widgets.QMainWindow {
     mineArea.SetMinimumSize2(column*40+2,rows*40+2)
     mineArea.SetMaximumSize2(column*40+2,rows*40+2)
     mineArea.SetObjectName("mineArea")
+    mineArea.SetEnabled(false)
+    
     VerticalLayout.AddWidget(mineArea,0,0)
     
     mineArea.ConnectPaintEvent(mineAreaPaintHandle)
@@ -340,18 +426,25 @@ func InitUI() *widgets.QMainWindow {
 }
 
 func setStyle(app *widgets.QMainWindow) {
-    qr := app.FrameGeometry()
-    cp := widgets.NewQDesktopWidget().AvailableGeometry2(app).Center()
-    qr.MoveCenter(cp)
-    app.Move(qr.TopLeft())
+    labelBg := gui.NewQPixmap3(configuration.LabelImage,"",core.Qt__AutoColor).Scaled2(60,60,core.Qt__IgnoreAspectRatio,core.Qt__SmoothTransformation)
+    statusLabel.SetPixmap(labelBg)
     style, err := ioutil.ReadFile("style.qss")
     if err != nil {
         return
     }
     app.SetStyleSheet(string(style))
-}
-func setEvent()  {
-
+    app.ConnectPaintEvent(func(event *gui.QPaintEvent) {
+        // 重设图片宽高以适应应用大小
+        if !(wHeight == app.Height() && wWidth == app.Width()) {
+            bgPixMapTmp := bgPixMap.Scaled2(app.Width(),app.Height(),core.Qt__IgnoreAspectRatio,core.Qt__SmoothTransformation)
+            brush.SetTexture(bgPixMapTmp)
+            bgPalette.SetBrush(gui.QPalette__Background,brush)
+            app.SetPalette(bgPalette)
+            wHeight = app.Height()
+            wWidth = app.Width()
+        }
+        event.Accept()
+    })
 }
 func main() {
     // 创建应用程序
