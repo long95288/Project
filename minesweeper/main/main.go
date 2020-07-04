@@ -20,7 +20,7 @@ const(
 const(
     rows int = 16//行数
     column int = 20  // 列数
-    mineNumber int = 10
+    mineNumber int = 20
 )
 type Mine struct {
     x int
@@ -44,6 +44,9 @@ var (
     mineArea *widgets.QWidget // 雷区
     flagNumber int = 10
     mines      [mineNumber]Mine
+    timeUsedLCD *widgets.QLCDNumber
+    statusLabel   *widgets.QLabel
+    flagRemainLCD *widgets.QLCDNumber
 )
 
 // 设置初始的游戏地图
@@ -53,11 +56,6 @@ func setDefaultMap() {
             gameMap[i][j] = BLOCKTYPE__UNDEFINE
         }
     }
-    // 测试图片显示
-    gameMap[0][0] = BLOCKTYPE__MINE
-    gameMap[0][1] = BLOCKTYPE__FLAG
-    gameMap[0][2] = BLOCKTYPE__EMPTY
-    gameMap[0][3] = 6
 }
 
 func startActionHandle(checked bool)   {
@@ -77,12 +75,15 @@ func isMine(x, y int) bool {
 // 左键事件处理
 func handleLeftButtonPress(event *gui.QMouseEvent) {
     fmt.Println("按下鼠标左键")
-    fmt.Printf("坐标:x= %d, y= %d \n",event.X(),event.Y())
+    fmt.Printf("坐标:x= %d, y= %d \n",event.X()/40,event.Y()/40)
     x,y := event.X()/40,event.Y()/40
-    if isMine(x,y) && gameMap[x][y] == BLOCKTYPE__UNDEFINE{
+    if !isValid(x,y) {
+        return
+    }
+    if isMine(x,y) && gameMap[y][x] == BLOCKTYPE__UNDEFINE{
         // 触雷了
         GameOver()
-    }else if gameMap[x][y] == BLOCKTYPE__UNDEFINE {
+    }else if gameMap[y][x] == BLOCKTYPE__UNDEFINE {
         // 挖开该点
         surroundMines := getSurroundMines(x, y)
         if surroundMines == 0 {
@@ -90,7 +91,7 @@ func handleLeftButtonPress(event *gui.QMouseEvent) {
             setSurround(x,y)
         }else{
             // 显示雷数
-            gameMap[x][y] = int8(surroundMines)
+            gameMap[y][x] = int8(surroundMines)
         }
     }else if gameMap[x][y] == BLOCKTYPE__FLAG{
         // 去掉旗帜
@@ -102,13 +103,15 @@ func handleLeftButtonPress(event *gui.QMouseEvent) {
     if checkWin() {
         WinGame()
     }
+    mineArea.Repaint()
 }
 
 func GameOver() {
     fmt.Println("游戏结束")
     for i:= 0;i<mineNumber;i++{
-        gameMap[mines[i].getX()][mines[i].getY()] = BLOCKTYPE__MINE
+        gameMap[mines[i].getY()][mines[i].getX()] = BLOCKTYPE__MINE
     }
+    mineArea.Repaint()
 }
 func WinGame()  {
     // 赢了游戏
@@ -135,13 +138,14 @@ func getSurroundMines(x, y int) int {
    for i := -1; i<= 1;i++{
       for j:= -1;j<=1;j++{
           tmpx,tmpy = x+i,y+j
-          if isMine(tmpx,tmpy) && isValid(tmpx,tmpy){
+          if isValid(tmpx,tmpy) && isMine(tmpx,tmpy) {
               number ++
           }
       }
    }
    return number
 }
+// 判断x,y坐标是否有效
 func isValid(x, y int) bool {
     if x >= 0 && x < rows && y >= 0 && y < column {
         return true
@@ -164,6 +168,7 @@ func setSurround(x, y int) {
                         gameMap[tmpx][tmpy] = int8(mineNum)
                     } else if mineNum == 0 {
                         // 递归挖开
+                        gameMap[tmpx][tmpy] = BLOCKTYPE__EMPTY
                         setSurround(tmpx, tmpy)
                     }
                 }
@@ -171,18 +176,24 @@ func setSurround(x, y int) {
         }
     }
 }
+// 鼠标右键
+// 如果所点的地方是未挖开的,放旗帜
 func handleRightButtonPress(event *gui.QMouseEvent)  {
     fmt.Println("按下鼠标右键")
-    fmt.Printf("坐标:x= %d, y= %d \n",event.X(),event.Y())
+    fmt.Printf("坐标:x= %d, y= %d \n",event.X()/40,event.Y()/40)
     x,y := event.X()/40,event.Y()/40
-    blockType := gameMap[x][y]
+    if !isValid(x,y) {
+        return
+    }
+    blockType := gameMap[y][x]
     switch blockType {
     case BLOCKTYPE__UNDEFINE:
         if flagNumber > 0{
             flagNumber -= 1
-            gameMap[x][y] = BLOCKTYPE__FLAG
+            gameMap[y][x] = BLOCKTYPE__FLAG
         }
     }
+    mineArea.Repaint()
 }
 
 func mousePressHandle(event *gui.QMouseEvent)  {
@@ -200,7 +211,7 @@ func setMines() {
     setDefaultMap()
     for i:=0;i<mineNumber;i++{
         for true{
-            randomX,randomY := rand.Intn(rows),rand.Intn(column)
+            randomX,randomY := rand.Intn(column),rand.Intn(rows)
             isSeted := false
             for j:=0;j<i;j++{
                 if mines[j].getX() == randomX && mines[j].getY() == randomY{
@@ -219,7 +230,7 @@ func setMines() {
 }
 
 func resetMines() {
-    flagNumber = 10
+    flagNumber = mineNumber
     setMines()
 }
 
@@ -243,10 +254,10 @@ func mineAreaPaintHandle(event *gui.QPaintEvent) {
             case BLOCKTYPE__EMPTY:
                 painter.FillRect7(j*40+2,i*40+2,37,37,core.Qt__white)
             case BLOCKTYPE__FLAG:
-                painter.DrawPixmap11(j*40,i*40,40,40,flagImage)
+                painter.DrawPixmap11(j*40+2,i*40+2,37,37,flagImage)
             case BLOCKTYPE__MINE:
-                fmt.Println("")
-                painter.DrawPixmap11(j*40,i*40,40,40,mineImage)
+                fmt.Println("雷区")
+                painter.DrawPixmap11(j*40+2,i*40+2,37,37,mineImage)
             case BLOCKTYPE__UNDEFINE:
                 // 未定义方框
                 painter.FillRect7(j*40+2,i*40+2,37,37,core.Qt__lightGray)
@@ -257,8 +268,8 @@ func mineAreaPaintHandle(event *gui.QPaintEvent) {
             }
         }
     }
-    //painter.DrawText3(30,30,"Hello World")
-    //painter.DrawLine3(0,0,22,22)
+    painter.End()
+    flagRemainLCD.Display2(flagNumber)
     event.Accept()
 }
 func InitUI() *widgets.QMainWindow {
@@ -300,22 +311,25 @@ func InitUI() *widgets.QMainWindow {
     showMessageWidget.SetMinimumHeight(60)
     showMessageLayout := widgets.NewQHBoxLayout2(showMessageWidget)
     // 已用时间
-    timeUsedLCD := widgets.NewQLCDNumber(showMessageWidget)
+    timeUsedLCD = widgets.NewQLCDNumber(showMessageWidget)
     timeUsedLCD.SetObjectName("timeUsedLCD")
+    timeUsedLCD.SetDecMode()
     // 当前状态
-    statusLabel := widgets.NewQLabel(showMessageWidget,0)
+    statusLabel = widgets.NewQLabel(showMessageWidget,0)
     statusLabel.SetObjectName("statusLabel")
     // 剩余旗子
-    remainFlagLCD := widgets.NewQLCDNumber(showMessageWidget)
-    remainFlagLCD.SetObjectName("remainFlagLCD")
+    flagRemainLCD = widgets.NewQLCDNumber(showMessageWidget)
+    flagRemainLCD.SetObjectName("flagRemainLCD")
+    flagRemainLCD.SetDecMode()
     showMessageLayout.AddWidget(timeUsedLCD,0,0)
     showMessageLayout.AddWidget(statusLabel,0,0)
-    showMessageLayout.AddWidget(remainFlagLCD,0,0)
+    showMessageLayout.AddWidget(flagRemainLCD,0,0)
     VerticalLayout.AddWidget(showMessageWidget,0,0)
     
     // 雷区
     mineArea = widgets.NewQWidget(app,core.Qt__Widget)
-    mineArea.SetMinimumSize2(800,600)
+    mineArea.SetMinimumSize2(column*40+2,rows*40+2)
+    mineArea.SetMaximumSize2(column*40+2,rows*40+2)
     mineArea.SetObjectName("mineArea")
     VerticalLayout.AddWidget(mineArea,0,0)
     
@@ -324,6 +338,7 @@ func InitUI() *widgets.QMainWindow {
     setStyle(app)
     return app
 }
+
 func setStyle(app *widgets.QMainWindow) {
     qr := app.FrameGeometry()
     cp := widgets.NewQDesktopWidget().AvailableGeometry2(app).Center()
