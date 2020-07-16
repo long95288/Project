@@ -15,7 +15,7 @@ import (
 // 第一种方式
 func readFileDemo01()  {
     buf := make([]byte,1024)
-    f,_ := os.Open("main.go")
+    f,_ := os.Open("findlinks1.go")
     defer f.Close()
     for true {
         n,_ := f.Read(buf)
@@ -73,7 +73,7 @@ func writeFileDemo03(){
 // 第二种方式读取
 func readFileDemo02() {
     buf := make([]byte,2)
-    f,_ := os.Open("main.go")
+    f,_ := os.Open("findlinks1.go")
     defer f.Close()
     r := bufio.NewReader(f)
     w := bufio.NewWriter(os.Stdout)
@@ -86,7 +86,7 @@ func readFileDemo02() {
 }
 // 读取字符串
 func readFileDemo03(){
-    f,_ := os.Open("main.go")
+    f,_ := os.Open("findlinks1.go")
     defer f.Close()
     r := bufio.NewReader(f)
     var sum string
