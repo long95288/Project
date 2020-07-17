@@ -20,7 +20,7 @@ const(
     BLOCKTYPE__FLAG int8 = -1 // 旗子
     BLOCKTYPE__EMPTY int8 = 0 // 空
 )
-const(
+var (
     rows int = 16//行数
     column int = 20  // 列数
     mineNumber int = 20
@@ -62,12 +62,13 @@ func (c *config) init() {
     }
 }
 var (
-    gameMap [rows][column]int8 // 游戏地图
+    app *widgets.QMainWindow
+    gameMap [][]int8 // 游戏地图
     flagImage *gui.QPixmap // 旗子图片
     mineImage *gui.QPixmap // 地雷图片
     mineArea *widgets.QWidget // 雷区
     flagNumber int = 10
-    mines      [mineNumber]Mine
+    mines      []Mine
     timeUsedLCD *widgets.QLCDNumber
     statusLabel   *widgets.QLabel
     flagRemainLCD *widgets.QLCDNumber
@@ -103,6 +104,7 @@ func startActionHandle(checked bool)   {
     resetMines()
     mineArea.SetEnabled(true)
     // 开始计数
+    isGameOver = false
     go counter()
     
 }
@@ -272,7 +274,7 @@ func mousePressHandle(event *gui.QMouseEvent)  {
 
 // 埋地雷
 func setMines() {
-    mines = [mineNumber]Mine{}
+    mines = make([]Mine,mineNumber)
     setDefaultMap()
     for i:=0;i<mineNumber;i++{
         for true{
@@ -347,16 +349,55 @@ func mineAreaPaintHandle(event *gui.QPaintEvent) {
     flagRemainLCD.Display2(flagNumber)
     event.Accept()
 }
+// 游戏难度选择
+func gameLevelSelect(level int){
+    switch level {
+    case 1:
+        rows = 9
+        column = 9
+        mineNumber = 10
+    case 2:
+        rows = 16
+        column = 16
+        mineNumber = 40
+    case 3:
+        rows = 16
+        column = 30
+        mineNumber = 99
+    default:
+        rows = 9
+        column = 9
+        mineNumber = 10
+    }
+    
+    // 重新设置map
+    gameMap = make([][]int8,rows)
+    for i:=0;i<rows;i++{
+        gameMap[i] = make([]int8,column)
+    }
+}
+func repaintUI(status int) {
+    lock.Lock()
+    isGameOver = true
+    lock.Unlock()
+    timeUsedLCD.Display2(0)
+    mineArea.SetMinimumSize2(column*40+2,rows*40+2)
+    mineArea.SetMaximumSize2(column*40+2,rows*40+2)
+    app.SetFixedSize2(column*40+2+20,rows*40+2+60+60)
+    app.Repaint()
+}
 func InitUI() *widgets.QMainWindow {
     configuration = config{}
     configuration.init()
-    app := widgets.NewQMainWindow(nil,0)
+    gameMap = make([][]int8,rows)
+    for i:=0;i<rows;i++{
+        gameMap[i] = make([]int8,column)
+    }
+    app = widgets.NewQMainWindow(nil,0)
     app.SetWindowTitle("扫雷")
     layoutWidget := widgets.NewQWidget(app,core.Qt__Widget)
     app.SetCentralWidget(layoutWidget)
     app.SetWindowIcon(gui.NewQIcon5(configuration.AppIcon))
-    
-    
     
     flagImage = gui.NewQPixmap3("flag.png","",core.Qt__AutoColor)
     mineImage = gui.NewQPixmap3("mine.png","",core.Qt__AutoColor)
@@ -385,6 +426,41 @@ func InitUI() *widgets.QMainWindow {
     gameMenu := menuBar.AddMenu2("游戏")
     gameMenu.AddActions(gameActions)
     
+    // 难度选择
+    gameMenu = menuBar.AddMenu2("难度")
+    var difficultySelection []*widgets.QAction
+    var easyLevelAction,mediumLevelAction,hardLevelAction *widgets.QAction
+    // 简单难度
+    easyLevelAction = widgets.NewQAction2("简单",app)
+    easyLevelAction.SetChecked(true)
+    easyLevelAction.ConnectTriggered(func(checked bool) {
+        easyLevelAction.SetChecked(true)
+        mediumLevelAction.SetCheckable(false)
+        hardLevelAction.SetCheckable(false)
+        gameLevelSelect(1)
+        repaintUI(1)
+    })
+    // 中等难度
+    mediumLevelAction = widgets.NewQAction2("中等",app)
+    mediumLevelAction.ConnectTriggered(func(checked bool) {
+        easyLevelAction.SetChecked(false)
+        mediumLevelAction.SetCheckable(true)
+        hardLevelAction.SetCheckable(false)
+        gameLevelSelect(2)
+        repaintUI(2)
+    })
+    // 困难
+    hardLevelAction = widgets.NewQAction2("困难",app)
+    hardLevelAction.ConnectTriggered(func(checked bool) {
+        fmt.Println("checked:",checked)
+        easyLevelAction.SetChecked(false)
+        mediumLevelAction.SetCheckable(false)
+        hardLevelAction.SetCheckable(true)
+        gameLevelSelect(3)
+        repaintUI(3)
+    })
+    difficultySelection = append(difficultySelection,easyLevelAction,mediumLevelAction,hardLevelAction)
+    gameMenu.AddActions(difficultySelection)
     // 垂直布局
     VerticalLayout := widgets.NewQVBoxLayout2(layoutWidget)
     // 显示栏布局
