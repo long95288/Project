@@ -48,8 +48,8 @@ func main() {
     
     // 4.获得json数据
     type s1 struct {
-        Name string `json:"name" form:"name"`
-        Age int `json:"age" form:"age"`
+        Name string `json:"name" form:"name" binding:"required"`
+        Age int `json:"age" form:"age" binding:"required"`
     }
     r.POST("/p4", func(c *gin.Context) {
         var s s1
@@ -72,6 +72,20 @@ func main() {
                 "err":err.Error(),
             })
         }
+    })
+    // 6.url路径绑定
+    // 请求:http://localhost:8080/p6?name=fff&age=12
+    // 响应:{"name":"fff","age":12}
+    r.GET("/p6", func(c *gin.Context) {
+        var s s1
+        if err := c.ShouldBind(&s);err == nil{
+            c.JSON(http.StatusOK,s)
+        }else{
+            c.JSON(http.StatusBadRequest,gin.H{
+                "err":err.Error(),
+            })
+        }
+        
     })
     
     r.Run(":8080")
