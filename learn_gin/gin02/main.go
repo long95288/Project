@@ -1,7 +1,9 @@
 package main
 
 import (
+    "fmt"
     "github.com/gin-gonic/gin"
+    "log"
     "net/http"
 )
 
@@ -87,6 +89,45 @@ func main() {
         }
         
     })
-    
+    // 7.单文件上传
+    r.POST("/upload", func(c *gin.Context) {
+        file,err := c.FormFile("file1")
+        if err != nil{
+            c.JSON(http.StatusInternalServerError, gin.H{
+                "err":err.Error(),
+            })
+            return
+        }
+        log.Println("上传文件名:",file.Filename)
+        //  保存文件
+        err = c.SaveUploadedFile(file,file.Filename)
+        if err != nil {
+            log.Println(err)
+            return
+        }else{
+            c.JSON(http.StatusOK,gin.H{
+                "message":fmt.Sprintf("%s 上传成功",file.Filename),
+            })
+        }
+    })
+    // 8.多文件上传
+    //r.MaxMultipartMemory =
+    r.POST("/uploads", func(c *gin.Context) {
+        form ,err := c.MultipartForm()
+        if err != nil {
+            c.JSON(http.StatusInternalServerError,gin.H{
+                "err":err.Error(),
+            })
+            return
+        }
+        files := form.File["file"]
+        for index,file := range files{
+            log.Println(index," ",file.Filename)
+            c.SaveUploadedFile(file,file.Filename)
+        }
+        c.JSON(http.StatusOK,gin.H{
+            "message":fmt.Sprintf("上传%d个文件成功",len(files)),
+        })
+    })
     r.Run(":8080")
 }
