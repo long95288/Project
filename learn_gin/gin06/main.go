@@ -13,8 +13,8 @@ var (
     db *gorm.DB
 )
 func (u *UserTb) TableName() string  {
+    // 返回的值是数据库中数据库表名
     return "usertb"
-    
 }
 
 func InsertDemo() {
@@ -23,10 +23,16 @@ func InsertDemo() {
         Password: "testPassword",
     }
     // 判断主键是否为空
+    // 只是对值进行非空(零值)判断,并不会涉及数据库查询
+    //
     re := db.NewRecord(insertUser)
-    // 插入数据
-    db.Create(&insertUser)
-    fmt.Println("insert operation :",re)
+    if re {
+        // 插入数据
+        if err := db.Create(&insertUser).Error;err == nil{
+            fmt.Println("insert success")
+        }
+    }
+    
 }
 
 func SelectDemo(){
