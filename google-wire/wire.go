@@ -6,6 +6,6 @@ package main
 //
 //// 初始
 //func InitializeEvent(msg string) Event {
-//    wire.Build(NewEvent,NewGreeter,NewMessage)
-//    return Event{}
+//   wire.Build(NewEvent,NewGreeter,NewMessage)
+//   return Event{}
 //}
