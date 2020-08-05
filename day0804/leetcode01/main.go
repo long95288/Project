@@ -68,6 +68,23 @@ func deleteDuplicates2(head *ListNode) *ListNode{
     }
     return head
 }
+func removeElements(head *ListNode, val int) *ListNode {
+    // 使用flag
+    flag := &ListNode{Val: 0}
+    flag.Next = head
+    // 前置和当前
+    pre,cur := flag,head
+    for cur != nil{
+        if cur.Val == val {
+            // 删除节点
+            pre.Next = cur.Next
+        }else{
+            pre = cur
+        }
+        cur = cur.Next
+    }
+    return flag.Next
+}
 func main() {
     l1 := &ListNode{
         Val: 9,
@@ -89,6 +106,7 @@ func main() {
     }
     _ = l2
     //fmt.Println(AddTwoNumbers(l1,l2))
-    fmt.Println(deleteDuplicates(l1))
-    fmt.Println(deleteDuplicates2(l1))
+    //fmt.Println(deleteDuplicates(l1))
+    //fmt.Println(deleteDuplicates2(l1))
+    fmt.Println(removeElements(l1,9))
 }
