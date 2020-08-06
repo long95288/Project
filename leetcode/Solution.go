@@ -42,3 +42,27 @@ func getIntersectionNode(headA, headB *ListNode) *ListNode {
     }
     return nil
 }
+// 876. 链表的中间结点
+func middleNode(head *ListNode) *ListNode {
+    length := 0
+    cur := head
+    if head == nil {
+        return head
+    }
+    for cur != nil {
+        length ++
+        cur = cur.Next
+    }
+    cur = head
+    if length % 2 == 0{
+        // 偶数 = (length+2)/2
+        length = (length + 2)/2
+    }else {
+        // 奇数 = (length+1)/2
+        length = (length + 1)/2
+    }
+    for ;length>1;length-- {
+        cur = cur.Next
+    }
+    return cur
+}
