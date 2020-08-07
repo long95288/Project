@@ -66,3 +66,116 @@ func middleNode(head *ListNode) *ListNode {
     }
     return cur
 }
+/**
+锯齿状数据,只能递减,每次减1。步数最少。
+奇数位先减,操作的步数。
+偶数位再减,操作的步数。
+比较那个走得少。
+ */
+func MovesToMakeZigzag(nums []int) int {
+    /**
+    锯齿状数据,只能递减,每次减1。步数最少。
+    奇数位先减,操作的步数。
+    偶数位再减,操作的步数。
+    比较那个走得少。
+    */
+    oddStep := 0
+    eventStep := 0
+    length := len(nums)
+    // 奇位数先减 1,3,5,7
+    for i:=0;i < length; i = i +2{
+        tmp := nums[i]
+        // 处在头部,只比较右边的数据
+        if i == 0 {
+            if nums[i + 1] > tmp {
+                // A < B 高过，不用管
+                continue
+            }else {
+                // A >= B,下拉
+                oddStep = oddStep + (tmp - nums[i+1] + 1)
+                continue
+            }
+        }
+        // 处在尾部
+        if i == length -1 {
+            // B > C
+            if nums[i-1] > tmp {
+                continue
+            }else {
+                // B < C
+                oddStep = oddStep + (tmp - nums[i-1] + 1)
+                continue
+            }
+        }
+        
+        // 处在中间,比两边。低过最低的便可
+        if i > 0 && i < length-1 {
+            // 比较两边,
+            if nums[i-1] > tmp && tmp < nums[i+1] {
+                continue
+            }
+            if nums[i-1] > nums[i+1] {
+                // A > C 低过右边便可
+                if nums[i + 1] > tmp {
+                    continue
+                }else {
+                    oddStep = oddStep + (tmp - nums[i+1] + 1)
+                    continue
+                }
+            }else{
+                // A < C 低过左边便可
+                if nums[i - 1] > tmp {
+                    continue
+                }else {
+                    oddStep = oddStep + (tmp - nums[i-1] + 1)
+                    continue
+                }
+            }
+        }
+    }
+    
+    // 偶数位先减 2,4,6,8
+    for i:=1;i < length;i= i + 2{
+        tmp := nums[i]
+        // 尾部
+        if i == length -1 {
+            // B > C
+            if nums[i-1] > tmp {
+                continue
+            }else {
+                // B < C
+                eventStep = eventStep + (tmp - nums[i-1] + 1)
+                continue
+            }
+        }
+        // 中间
+        if i > 0 && i < length-1 {
+            // 比较两边,
+            if nums[i-1] > tmp && tmp < nums[i+1] {
+                continue
+            }
+            if nums[i-1] > nums[i+1] {
+                // A > C 低过右边便可
+                if nums[i + 1] > tmp {
+                    continue
+                }else {
+                    eventStep = eventStep + (tmp - nums[i+1] + 1)
+                    continue
+                }
+            }else{
+                // A < C 低过左边便可
+                if nums[i - 1] > tmp {
+                    continue
+                }else {
+                    eventStep = eventStep + (tmp - nums[i-1] + 1)
+                    continue
+                }
+            }
+        }
+    }
+    
+    if oddStep > eventStep {
+        return eventStep
+    }
+    return oddStep
+}
