@@ -1,5 +1,7 @@
 package leetcode
 
+import "fmt"
+
 type ListNode struct {
     Val int
     Next *ListNode
@@ -178,4 +180,86 @@ func MovesToMakeZigzag(nums []int) int {
         return eventStep
     }
     return oddStep
+}
+func ReverseList(head *ListNode) *ListNode {
+   var tmp *ListNode = nil
+   cur := head
+   for cur != nil {
+       tmpNode := &ListNode{
+           Val: cur.Val,
+       }
+       tmpNode.Next = tmp
+       tmp = tmpNode
+       cur = cur.Next
+   }
+   return tmp
+}
+// 解法2
+func ReverseList2(head *ListNode) *ListNode {
+    var tmp *ListNode = nil
+    cur := head
+    for cur != nil {
+        tmpNode := cur
+        cur = cur.Next
+        // 断开链表
+        tmpNode.Next = nil
+        // 重新连接
+        tmpNode.Next = tmp
+        tmp = tmpNode
+    }
+    return tmp
+}
+// 判断链表是否是回文数
+func isPalindrome(head *ListNode) bool {
+    // 复制链表
+    cp := []int{}
+    cur := head
+    for cur != nil {
+        cp = append(cp,cur.Val)
+        cur = cur.Next
+    }
+    // 逆序比较
+    cur = head
+    index := len(cp) - 1
+    index2 := 0
+    for index != index2 && index2 < index {
+        if cp[index] != cp[index2] {
+            return false
+        }
+        index --
+        index2 ++
+    }
+    //for cur != nil{
+    //    if cur.Val != cp[index] {
+    //        return false
+    //    }
+    //    index --
+    //    cur = cur.Next
+    //}
+    return true
+}
+/**
+二进制转10进制
+ */
+func getDecimalValue(head *ListNode) int {
+    // 读出来
+    //arr := []int{}
+    cur := head
+    length := 0
+    for cur != nil {
+        //arr = append(arr,cur.Val)
+        cur = cur.Next
+        length ++
+    }
+    // 按权重进行相加
+    //length := len(arr)
+    length --
+    base := 1 << length
+    result := 0
+    for cur = head;cur!=nil;cur=cur.Next {
+        result = result + cur.Val * base
+        fmt.Println(result," ",base)
+        base /= 2
+    }
+    return result
 }
