@@ -263,3 +263,96 @@ func getDecimalValue(head *ListNode) int {
     }
     return result
 }
+func getKthFromEnd(head *ListNode, k int) *ListNode {
+    // 第一遍算长度
+    length := 0
+    cur := head
+    for ;cur != nil;cur= cur.Next {
+        length ++
+    }
+    // 算前进步数
+    length = length - k
+    cur = head
+    for i:=1; i <=length; i++{
+        cur = cur.Next
+    }
+    return cur
+}
+func getKthFromEnd2(head *ListNode, k int) *ListNode {
+    fast,slow := head,head
+    for i:=k;i>0;i--{
+        fast = fast.Next
+    }
+    for fast != nil {
+        slow = slow.Next
+        fast = fast.Next
+    }
+    return slow
+}
+func removeDuplicateNodes(head *ListNode) *ListNode {
+    // 向后读取,如果后面的数据和现在的一样,删除节点。不一样,指针前移
+    if head == nil {
+        return head
+    }
+    pre,cur := head,head.Next
+    // 临时缓冲区
+    buf := make(map[int]struct{})
+    buf[pre.Val] = struct{}{}
+    for cur != nil {
+        if _,ok := buf[cur.Val];ok {
+            // 相同,删除节点
+            cur = cur.Next
+            pre.Next = cur
+        }else{
+            // 不相同,继续
+            buf[cur.Val] = struct{}{}
+            pre = pre.Next
+            cur = cur.Next
+        }
+    }
+    return head
+}
+func removeDuplicateNodes2(head *ListNode) *ListNode {
+    if head == nil {
+        return head
+    }
+    
+    pre,cur := head,head.Next
+    for pre != nil {
+        preTmp := pre
+        for cur != nil {
+            if cur.Val == pre.Val {
+                cur = cur.Next
+                preTmp.Next = cur
+            }else{
+                preTmp = preTmp.Next
+                cur = cur.Next
+            }
+        }
+        pre = pre.Next
+        if pre == nil {
+            break
+        }
+        cur = pre.Next
+    }
+    return head
+}
+func removeDuplicateNodes3(head *ListNode) *ListNode {
+    if head == nil {
+        return nil
+    }
+    index := head
+    for index != nil {
+        cur := index
+        for cur.Next != nil {
+            if cur.Next.Val == index.Val {
+                // 删除节点
+                cur.Next = cur.Next.Next
+            }else{
+                cur = cur.Next
+            }
+        }
+        index = index.Next
+    }
+    return head
+}

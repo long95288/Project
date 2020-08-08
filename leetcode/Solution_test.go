@@ -72,3 +72,21 @@ func TestGetDecimalValue(t *testing.T) {
     }
     fmt.Println(getDecimalValue(l1))
 }
+func TestRemoveDuplicateNodes2(t *testing.T)   {
+    l1 := &ListNode{
+        Val:  1,
+        Next: &ListNode{
+            Val:  2,
+            Next: &ListNode{
+                Val:  2,
+                Next: &ListNode{
+                    Val:  1,
+                    Next: nil,
+                },
+            },
+        },
+    }
+    //head := removeDuplicateNodes2(l1)
+    head := removeDuplicateNodes3(l1)
+    fmt.Println(head)
+}
