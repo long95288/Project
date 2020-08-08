@@ -1,6 +1,8 @@
 package leetcode
 
-import "fmt"
+import (
+    "fmt"
+)
 
 type ListNode struct {
     Val int
@@ -355,4 +357,41 @@ func removeDuplicateNodes3(head *ListNode) *ListNode {
         index = index.Next
     }
     return head
+}
+func reversePrint(head *ListNode) []int {
+    arr := []int{}
+    for cur := head;cur != nil;cur = cur.Next{
+        arr = append([]int{cur.Val},arr...)
+    }
+    return arr
+}
+func reversePrint2(head *ListNode) []int {
+    length := 0
+    for cur:=head;cur != nil;cur=cur.Next{
+        length ++
+    }
+    arr := make([]int,length)
+    for cur:=head;cur!=nil;cur=cur.Next{
+        arr[length-1] = cur.Val
+        length --
+    }
+    return arr
+}
+func deleteNode(node *ListNode) {
+    // 快慢指针
+    // 快指针比慢指针快1步，慢指针需要后退一步,再继续
+    step := 2
+    fast,slow := node,node
+    for fast!=nil && fast.Next != nil {
+        if step > 0 {
+            // 停留一步
+            step --
+        }else{
+            slow = slow.Next
+        }
+        
+        fast = fast.Next.Next
+    }
+    // 删除中间节点
+    slow.Next = slow.Next.Next
 }

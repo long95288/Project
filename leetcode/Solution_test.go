@@ -24,6 +24,8 @@ func TestDivide(t *testing.T)  {
 func TestAbs(t *testing.T) {
     i := -1
     fmt.Println(-i)
+    i = (-1) % 3
+    fmt.Println(i)
 }
 func TestMovesToMakeZigzag(t *testing.T)  {
     nums := []int{1,2,3}
@@ -89,4 +91,43 @@ func TestRemoveDuplicateNodes2(t *testing.T)   {
     //head := removeDuplicateNodes2(l1)
     head := removeDuplicateNodes3(l1)
     fmt.Println(head)
+}
+func TestReversePrint(t *testing.T) {
+    l1 := &ListNode{
+        Val:  1,
+        Next: &ListNode{
+            Val:  2,
+            Next: &ListNode{
+                Val:  3,
+                Next: &ListNode{
+                    Val:  4,
+                    Next: nil,
+                },
+            },
+        },
+    }
+    //fmt.Println(reversePrint(l1))
+    fmt.Println(reversePrint2(l1))
+}
+func TestDeleteNode(t *testing.T)  {
+    l1 := &ListNode{
+        Val:  4,
+        Next: &ListNode{
+            Val:  5,
+            Next: &ListNode{
+                Val:  1,
+                Next: &ListNode{
+                    Val:  9,
+                    Next: nil,
+                },
+            },
+        },
+    }
+    deleteNode(l1)
+    printNode(l1)
+}
+func printNode(head *ListNode){
+    for cur:=head;cur!=nil;cur=cur.Next{
+        fmt.Println(cur.Val)
+    }
 }
