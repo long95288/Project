@@ -395,3 +395,82 @@ func deleteNode(node *ListNode) {
     // 删除中间节点
     slow.Next = slow.Next.Next
 }
+func deleteDuplicates(head *ListNode) *ListNode {
+    // map
+    mp := make(map[int]int)
+    for cur:=head;cur!=nil;cur=cur.Next{
+        mp[cur.Val] += 1
+    }
+    dump := &ListNode{}
+    dump.Next = head
+    dup := false
+    for cur := dump;cur!= nil&&cur.Next != nil;{
+        // 判断重复 值大于2
+        if v := mp[cur.Next.Val]; !dup && v > 1 {
+            dup = true
+        }
+        // 删除重复的节点
+        if dup {
+            if v := mp[cur.Next.Val];v > 0{
+                mp[cur.Next.Val] -= 1
+                if v := mp[cur.Next.Val];v == 0 {
+                    dup = false
+                }
+                cur.Next = cur.Next.Next
+            }
+        }else{
+            cur = cur.Next
+        }
+    }
+    return dump.Next
+}
+func deleteDuplicates2(head *ListNode) *ListNode {
+    //if head == nil || head.Next == nil {
+    //    return head
+    //}
+    //// 小于三个个元素的
+    //if head.Next.Next == nil {
+    //    if head.Val == head.Next.Val{
+    //        return nil
+    //    }else{
+    //        return head
+    //    }
+    //}
+    //// 三个元素以上的
+    //// 新链表
+    //newLink := &ListNode{}
+    //// 新链表的尾巴指针
+    //newLinkTail := newLink
+    //// 前一个值,后一个值
+    //beforeVal := head.Val
+    //for cur := head.Next;cur != nil;{
+    //    // 中间节点
+    //    if cur.Next == nil {
+    //        // 最后一个了,只要比较前面就行
+    //        if beforeVal != cur.Val {
+    //            // 不同,加入新链表
+    //            newLinkTail.Next = cur
+    //            break
+    //        }else {
+    //            //相同 掠过
+    //            cur = cur.Next
+    //        }
+    //    }else{
+    //        // 不是最后一个
+    //        if beforeVal != cur.Val && cur.Val != cur.Next.Val {
+    //            // 都不相同,加入节点
+    //            newLinkTail.Next = cur
+    //            // 更新值
+    //            beforeVal = cur.Val
+    //            cur = cur.Next
+    //
+    //            newLinkTail= newLinkTail.Next
+    //            newLinkTail.Next = nil
+    //        }else if beforeVal == cur.Val{
+    //            cur = cur.Next
+    //        }
+    //    }
+    //}
+    //return newLink.Next
+    return nil
+}

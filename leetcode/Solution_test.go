@@ -126,6 +126,24 @@ func TestDeleteNode(t *testing.T)  {
     deleteNode(l1)
     printNode(l1)
 }
+func TestDeleteNode2(t *testing.T) {
+    l1 := &ListNode{
+        Val:  1,
+        Next: &ListNode{
+            Val:  2,
+            Next: &ListNode{
+                Val:  2,
+                Next: &ListNode{
+                    Val:  5,
+                    Next: nil,
+                },
+            },
+        },
+    }
+    re := deleteDuplicates2(l1)
+    printNode(re)
+}
+
 func printNode(head *ListNode){
     for cur:=head;cur!=nil;cur=cur.Next{
         fmt.Println(cur.Val)
