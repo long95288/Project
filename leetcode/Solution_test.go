@@ -143,7 +143,77 @@ func TestDeleteNode2(t *testing.T) {
     re := deleteDuplicates2(l1)
     printNode(re)
 }
-
+func TestReverseBetween(t *testing.T)  {
+    l1 := &ListNode{
+       Val:  1,
+       Next: &ListNode{
+           Val:  2,
+           Next: &ListNode{
+               Val:  3,
+               Next: &ListNode{
+                   Val:  4,
+                   Next: &ListNode{
+                       Val:  5,
+                       Next: nil,
+                   },
+               },
+           },
+       },
+    }
+    printNode(reverseBetween(l1,1,5))
+    l2 := &ListNode{
+       Val:  3,
+       Next: &ListNode{
+           Val:  5,
+           Next: nil,
+       },
+    }
+    fmt.Println(".....")
+    printNode(reverseBetween(l2,1,2))
+}
+func TestReverseBetween2(t *testing.T)  {
+    l2 := &ListNode{
+        Val:  3,
+        Next: &ListNode{
+            Val:  4,
+            Next: &ListNode{
+                Val:  5,
+                Next: &ListNode{
+                    Val:  6,
+                    Next: nil,
+                },
+            },
+        },
+    }
+    fmt.Println(".....")
+    printNode(reverseBetween2(l2,2,3))
+}
+func TestAddTwoNumbers(t *testing.T)  {
+    l1 := &ListNode{
+        Val:  7,
+        Next: &ListNode{
+            Val:  2,
+            Next: &ListNode{
+                Val:  4,
+                Next: &ListNode{
+                    Val:  3,
+                    Next: nil,
+                },
+            },
+        },
+    }
+    l2 := &ListNode{
+        Val:  5,
+        Next: &ListNode{
+            Val:  6,
+            Next: &ListNode{
+                Val:  4,
+                Next: nil,
+            },
+        },
+    }
+    printNode(addTwoNumbers(l1,l2))
+}
 func printNode(head *ListNode){
     for cur:=head;cur!=nil;cur=cur.Next{
         fmt.Println(cur.Val)

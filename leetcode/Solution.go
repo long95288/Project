@@ -474,3 +474,143 @@ func deleteDuplicates2(head *ListNode) *ListNode {
     //return newLink.Next
     return nil
 }
+func reverseBetween(head *ListNode, m int, n int) *ListNode {
+    
+    // 先将待翻转的数据存下来,存完之后就翻转
+    // 使用array存储
+    // 哑节点
+    if head.Next == nil {
+        return head
+    }
+    dummy := &ListNode{}
+    dummy.Next = head
+    pre,cur := dummy,head
+    arr := []*ListNode{}
+    sub := n - m
+    step := 2
+    i := 0
+    for {
+        if step == 2 {
+            // 分析阶段
+            if i < m -1 {
+                // 定位
+                pre = cur
+                cur = cur.Next
+                i ++
+            }else if i >= m -1 && i <= n -1{
+                // 赋值
+                arr = append(arr,cur)
+                cur = cur.Next
+                i ++
+            }else{
+                step --
+                continue
+            }
+        }else if step == 1{
+            // 反转阶段
+            if sub >= 0 {
+                tmp := arr[sub]
+                tmp.Next = nil
+                pre.Next = tmp
+                pre = tmp
+                sub --
+            }else{
+                // 翻转完成,链表连接
+                pre.Next = cur
+                step --
+            }
+        }else{
+            break
+        }
+    }
+    return dummy.Next
+}
+func reverseBetween2(head *ListNode, m int, n int) *ListNode {
+    // 使用多指针，边走边翻转
+    dummy := &ListNode{}
+    dummy.Next = head
+    // 新生成链表的尾巴
+    dTail := dummy
+    // 旧的数据
+    var sHead *ListNode = nil
+    var sTail *ListNode = nil
+    i := 0
+    cur := head
+    for {
+        if i < m -1 {
+            dTail = cur
+            cur = cur.Next
+            i ++
+        }else if i == m-1{
+            // 切割点
+            sTail = cur
+            sHead = cur
+            cur = cur.Next
+            i ++
+        }else if i > m -1 && i <= n -1 {
+            // 翻转点
+            tmp := cur
+            cur = cur.Next
+            tmp.Next = sHead
+            sHead = tmp
+            i ++
+        }else if i == n {
+            // 重新连接点
+            dTail.Next = sHead
+            sTail.Next = cur
+            break
+        }else{
+            break
+        }
+    }
+    
+    return dummy.Next
+}
+func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
+    stack1 := []int{}
+    stack2 := []int{}
+    // 数据入栈
+    for cur:=l1;cur!= nil;cur=cur.Next{
+        stack1 = append(stack1,cur.Val)
+    }
+    for cur:=l2;cur!=nil;cur=cur.Next{
+        stack2 = append(stack2,cur.Val)
+    }
+    // 出栈相加
+    dummy := &ListNode{}
+    top1,top2 := len(stack1),len(stack2)
+    carray := 0
+    for top1 > 0 || top2 > 0{
+        a,b := 0,0
+        if top1 == 0 {
+            a = 0
+        }else{
+            a = stack1[top1 - 1]
+            top1 --
+        }
+        if top2 == 0 {
+            b = 0
+        }else{
+            b = stack2[top2 -1]
+            top2 --
+        }
+        sum := a + b + carray
+        carray = sum / 10
+        val := sum % 10
+        node := &ListNode{
+            Val:val,
+            Next:nil,
+        }
+        node.Next = dummy.Next
+        dummy.Next = node
+    }
+    if carray > 0 {
+        cNode := &ListNode{
+            Val:1,
+            Next:nil,
+        }
+        cNode.Next = dummy.Next
+        dummy.Next = cNode
+    }
+    return dummy.Next
+}
