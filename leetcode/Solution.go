@@ -614,3 +614,46 @@ func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
     }
     return dummy.Next
 }
+func searchInsert(nums []int, target int) int {
+    i := 0
+    for ;i < len(nums);i++{
+        if nums[i] == target {
+            return i
+        }
+        if i + 1 < len(nums)  {
+            if target > nums[i] && target < nums[i + 1]{
+                return i + 1
+            }
+        }
+    }
+    return i
+}
+func merge(A []int, m int, B []int, n int)  {
+    // 从后向前移动,每次寻找最大值填入A
+    m,n = m-1,n-1
+    index := m + n -1
+    for m >=0 || n >= 0 {
+        if m < 0 {
+            // A已经选取结束了,把B放入便可
+            A[index] = B[n]
+            index --
+            n --
+            continue
+        }
+        if n < 0 {
+            A[index] = A[m]
+            index --
+            m --
+            continue
+        }
+        if A[m] >= B[n] {
+            A[index] = A[m]
+            m --
+            index --
+        }else {
+            A[index] = B[n]
+            n--
+            index --
+        }
+    }
+}
