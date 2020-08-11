@@ -657,3 +657,61 @@ func merge(A []int, m int, B []int, n int)  {
         }
     }
 }
+func generate(numRows int) [][]int {
+   reNums := make([][]int,numRows)
+   for i:=0;i<numRows;i++{
+       if i == 0 {
+           reNums[i] = []int{1}
+       }else{
+           subNum := make([]int,i+1)
+           for j:=0;j < i + 1;j++ {
+                pre1,pre2 := 0,0
+                if j-1 <0 {
+                    pre1 = 0
+                }else{
+                    pre1 = reNums[i-1][j-1]
+                }
+                
+                if j >= i {
+                    pre2 = 0
+                }else{
+                    pre2 = reNums[i-1][j]
+                }
+                subNum[j] = pre1 + pre2
+           }
+           reNums[i] = subNum
+       }
+   }
+   return reNums
+}
+func rotate(nums []int, k int)  {
+    // 先整体翻转,然后前k个数据翻转，然后再length - K个数据翻转
+    length := len(nums)
+    // 1.全部翻转
+    for i:=0;i<length;i++{
+        if i == length-1-i {
+            break
+        }
+        tmp := nums[i]
+        nums[i] = nums[length-1-i]
+        nums[length-1-i] = tmp
+    }
+    // 2.翻转前k个
+    for i:=0;i<k;i++{
+        if i== k -1 -i {
+            break
+        }
+        tmp := nums[i]
+        nums[i] = nums[k-1-i]
+        nums[k-1-i] = tmp
+    }
+    // 3.翻转后n-k个
+    for i:=length-k-1;i<length;i++{
+        if i == length-1-i + length-k-1{
+            break
+        }
+        tmp := nums[i]
+        nums[i] = nums[length-1-i + length-k-1]
+        nums[length-1-i + length-k-1] = tmp
+    }
+}

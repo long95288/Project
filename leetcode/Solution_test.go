@@ -214,6 +214,13 @@ func TestAddTwoNumbers(t *testing.T)  {
     }
     printNode(addTwoNumbers(l1,l2))
 }
+
+func TestGenerator(t *testing.T) {
+    fmt.Println(generate(5))
+}
+func TestRotate(t *testing.T) {
+    rotate([]int{1,2,3,4,5,6,7},3)
+}
 func printNode(head *ListNode){
     for cur:=head;cur!=nil;cur=cur.Next{
         fmt.Println(cur.Val)
