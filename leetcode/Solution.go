@@ -684,34 +684,23 @@ func generate(numRows int) [][]int {
    }
    return reNums
 }
+func reverse(nums []int, start int, end int) {
+    for start < end{
+        tmp := nums[start]
+        nums[start] = nums[end]
+        nums[end] = tmp
+        start ++
+        end --
+    }
+}
 func rotate(nums []int, k int)  {
     // 先整体翻转,然后前k个数据翻转，然后再length - K个数据翻转
     length := len(nums)
+    k = k % length
     // 1.全部翻转
-    for i:=0;i<length;i++{
-        if i == length-1-i {
-            break
-        }
-        tmp := nums[i]
-        nums[i] = nums[length-1-i]
-        nums[length-1-i] = tmp
-    }
+    reverse(nums,0,length-1)
     // 2.翻转前k个
-    for i:=0;i<k;i++{
-        if i== k -1 -i {
-            break
-        }
-        tmp := nums[i]
-        nums[i] = nums[k-1-i]
-        nums[k-1-i] = tmp
-    }
+    reverse(nums,0,k-1)
     // 3.翻转后n-k个
-    for i:=length-k-1;i<length;i++{
-        if i == length-1-i + length-k-1{
-            break
-        }
-        tmp := nums[i]
-        nums[i] = nums[length-1-i + length-k-1]
-        nums[length-1-i + length-k-1] = tmp
-    }
+    reverse(nums,k,length-1)
 }
