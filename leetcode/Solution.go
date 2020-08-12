@@ -704,3 +704,33 @@ func rotate(nums []int, k int)  {
     // 3.翻转后n-k个
     reverse(nums,k,length-1)
 }
+
+func factorial(n int64) int64{
+    if n == 0 {
+        return 1
+    }
+    return factorial(n-1)*n
+}
+func combination(n1, m1 int) int64 {
+    n := int64(n1)
+    m := int64(m1)
+    if m == 0 {
+        return 1
+    }
+    fn := factorial(n)
+    fm := factorial(m)
+    fnm := factorial(n-m)
+    return (fn/fm)*(fn/fnm)
+}
+func getRow(rowIndex int) []int {
+    // 只要计算一半便可
+    half := rowIndex/2
+    nums := make([]int,rowIndex + 1)
+    for i:=0;i<=half;i++{
+        nums[i] = int(combination(rowIndex,i))
+    }
+    for i:= half+1;i < rowIndex + 1;i++{
+        nums[i] = nums[rowIndex - i]
+    }
+    return nums
+}

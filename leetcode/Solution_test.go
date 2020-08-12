@@ -219,7 +219,8 @@ func TestGenerator(t *testing.T) {
     fmt.Println(generate(5))
 }
 func TestRotate(t *testing.T) {
-    rotate([]int{17},3)
+    //rotate([]int{17},3)
+    getRow(3)
 }
 func printNode(head *ListNode){
     for cur:=head;cur!=nil;cur=cur.Next{
