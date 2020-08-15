@@ -734,3 +734,69 @@ func getRow(rowIndex int) []int {
     }
     return nums
 }
+// node插入到head的对应的位置
+func insertNode(head *ListNode,node *ListNode){
+    for cur := head;cur != nil;cur = cur.Next {
+        if cur.Next != nil {
+            if node.Val >= cur.Val && node.Val < cur.Next.Val {
+                node.Next = cur.Next
+                cur.Next = node
+                break
+            }
+        }else{
+            node.Next = nil
+            cur.Next = node
+            break
+        }
+    }
+}
+func partitionOld(head *ListNode, x int) *ListNode {
+    // 构建两条链表,分别存放符合要求的。最后连接起来
+    first,second := &ListNode{},&ListNode{}
+    firstTail := first
+    for cur:=head;cur!=nil;{
+        if cur.Val <= x {
+            // 搜索插入first表
+            tmp := cur
+            cur = cur.Next
+            insertNode(first,tmp)
+        }else{
+            // 搜索插入second表
+            tmp := cur
+            cur = cur.Next
+            insertNode(second,tmp)
+        }
+    }
+    for cur:=first;cur!=nil;cur=cur.Next{
+        firstTail = cur
+    }
+    // 重新连结
+    firstTail.Next= second.Next
+    return first.Next
+}
+func partition(head *ListNode, x int) *ListNode {
+    first,second := &ListNode{},&ListNode{}
+    firstTail,secondTail := first,second
+    // 进行分割
+    for cur := head;cur!= nil;{
+        if cur.Val < x {
+            // 添加到first链表
+            tmp := cur
+            cur = cur.Next
+            tmp.Next = nil
+            firstTail.Next = tmp
+            firstTail = tmp
+        } else {
+            // 添加到second链表
+            tmp := cur
+            cur = cur.Next
+            tmp.Next = nil
+            secondTail.Next = tmp
+            secondTail = tmp
+        }
+    }
+    
+    // 两个链表拼接
+    firstTail.Next = second.Next
+    return first.Next
+}

@@ -222,6 +222,29 @@ func TestRotate(t *testing.T) {
     //rotate([]int{17},3)
     getRow(3)
 }
+func TestPartition(t *testing.T)  {
+    l1 := &ListNode{
+        Val:  1,
+        Next: &ListNode{
+            Val:  4,
+            Next: &ListNode{
+                Val:  3,
+                Next: &ListNode{
+                    Val:  2,
+                    Next: &ListNode{
+                        Val:  5,
+                        Next: &ListNode{
+                            Val:  2,
+                            Next: nil,
+                        },
+                    },
+                },
+            },
+        },
+    }
+    partition(l1,3)
+    printNode(l1)
+}
 func printNode(head *ListNode){
     for cur:=head;cur!=nil;cur=cur.Next{
         fmt.Println(cur.Val)
