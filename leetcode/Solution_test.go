@@ -245,6 +245,9 @@ func TestPartition(t *testing.T)  {
     partition(l1,3)
     printNode(l1)
 }
+func TestArrayPairSum(t *testing.T){
+    arrayPairSum([]int{3,2,1,5,4})
+}
 func printNode(head *ListNode){
     for cur:=head;cur!=nil;cur=cur.Next{
         fmt.Println(cur.Val)

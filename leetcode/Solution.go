@@ -2,6 +2,7 @@ package leetcode
 
 import (
     "fmt"
+    "sort"
 )
 
 type ListNode struct {
@@ -799,4 +800,16 @@ func partition(head *ListNode, x int) *ListNode {
     // 两个链表拼接
     firstTail.Next = second.Next
     return first.Next
+}
+func arrayPairSum(nums []int) int {
+    // 排序
+    sort.Ints(nums)
+    // 奇数位相加
+    sum := 0
+    for i:=0;i<len(nums);i++{
+        if i % 2 == 0 {
+            sum += nums[i]
+        }
+    }
+    return sum
 }
