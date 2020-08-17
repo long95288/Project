@@ -817,16 +817,17 @@ func findPairs(nums []int, k int) int {
     if k < 0 {
         return 0
     }
-    nMap := make(map[int]int)
-    hasMap := make(map[[2]int]struct{})
-    for _,num := range nums{
-        nMap[num] ++
-    }
-
-    for _,v := range nMap {
-        if v1,ok := nMap[v + k];ok {
-            hasMap[[2]int{v1,v}]= struct{}{}
+    numsHas := make(map[int]bool)
+    diffHas := make(map[int]bool)
+    
+    for _, num := range nums {
+        if numsHas[num - k] {
+            diffHas[num - k] = true
         }
+        if numsHas[num + k] {
+            diffHas[num] = true
+        }
+        numsHas[num] = true
     }
-    return len(hasMap)
+    return len(diffHas)
 }
