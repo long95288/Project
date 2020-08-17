@@ -813,3 +813,20 @@ func arrayPairSum(nums []int) int {
     }
     return sum
 }
+func findPairs(nums []int, k int) int {
+    if k < 0 {
+        return 0
+    }
+    nMap := make(map[int]int)
+    hasMap := make(map[[2]int]struct{})
+    for _,num := range nums{
+        nMap[num] ++
+    }
+
+    for _,v := range nMap {
+        if v1,ok := nMap[v + k];ok {
+            hasMap[[2]int{v1,v}]= struct{}{}
+        }
+    }
+    return len(hasMap)
+}

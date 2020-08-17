@@ -253,3 +253,11 @@ func printNode(head *ListNode){
         fmt.Println(cur.Val)
     }
 }
+func TestFindPairs(t *testing.T) {
+    re := findPairs([]int{3, 1, 4, 1, 5},2)
+    fmt.Println(re)
+    re = findPairs([]int{1, 2, 3, 4, 5},1)
+    fmt.Println(re)
+    re = findPairs([]int{1, 3, 1, 5, 4},0)
+    fmt.Println(re)
+}
