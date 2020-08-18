@@ -831,3 +831,27 @@ func findPairs(nums []int, k int) int {
     }
     return len(diffHas)
 }
+func matrixReshape(nums [][]int, r int, c int) [][]int {
+    row := len(nums)
+    column := len(nums[0])
+    if r * c != row * column {
+        return nums
+    }
+    list := []int{}
+    for _,rowItem := range nums {
+        for _,columnItem := range rowItem {
+            list = append(list,columnItem)
+        }
+    }
+    count := 0
+    reNums := make([][]int,r)
+    for i:=0;i<r;i++ {
+        colNum := make([]int,c)
+        for j:=0;j<c;j++{
+            colNum[j] = list[count]
+            count ++
+        }
+        reNums[i] = colNum
+    }
+    return reNums
+}
