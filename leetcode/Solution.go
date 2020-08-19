@@ -855,3 +855,28 @@ func matrixReshape(nums [][]int, r int, c int) [][]int {
     }
     return reNums
 }
+
+func findUnsortedSubarray(nums []int) int {
+    newNum := make([]int,len(nums))
+    for i,num := range nums {
+        newNum[i] = num
+    }
+    sort.Ints(newNum)
+    fmt.Println(nums)
+    fmt.Println(newNum)
+    head := 0
+    for i,num := range nums {
+        if num != newNum[i] {
+            head = i
+            break
+        }
+    }
+    tail := len(nums) -1
+    for i:=tail;i>=0;i--{
+        if nums[i] != newNum[i] {
+            tail = i
+            break
+        }
+    }
+    return tail - head + 1
+}

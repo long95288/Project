@@ -261,3 +261,6 @@ func TestFindPairs(t *testing.T) {
     re = findPairs([]int{1, 3, 1, 5, 4},0)
     fmt.Println(re)
 }
+func TestFindUnsortedSubarray(t *testing.T){
+    fmt.Printf("%d\n",findUnsortedSubarray([]int{2, 6, 4, 8, 10, 9, 15}))
+}
