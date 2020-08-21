@@ -880,3 +880,17 @@ func findUnsortedSubarray(nums []int) int {
     }
     return tail - head + 1
 }
+func canPlaceFlowers(flowerbed []int, n int) bool {
+    f := append([]int{0},append(flowerbed,0)...)
+    count := 0
+    for i := 1;i <len(f)-1;i++ {
+        if count == n {
+            return true
+        }
+        if f[i-1] == 0 && f[i] == 0 && f[i+1] == 0 {
+            count ++
+            f[i] = 1
+        }
+    }
+    return count == n
+}

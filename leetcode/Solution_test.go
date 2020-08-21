@@ -264,3 +264,6 @@ func TestFindPairs(t *testing.T) {
 func TestFindUnsortedSubarray(t *testing.T){
     fmt.Printf("%d\n",findUnsortedSubarray([]int{2, 6, 4, 8, 10, 9, 15}))
 }
+func TestCanPlaceFlowers(t *testing.T) {
+    fmt.Printf("%t",canPlaceFlowers([]int{1,0,0,0,1,0,0},2))
+}
