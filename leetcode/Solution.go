@@ -894,3 +894,50 @@ func canPlaceFlowers(flowerbed []int, n int) bool {
     }
     return count == n
 }
+/**
+给定链表 1->2->3->4, 重新排列为 1->4->2->3.
+示例 2:
+
+给定链表 1->2->3->4->5, 重新排列为 1->5->2->4->3.
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/reorder-list
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+ */
+func reorderList(head *ListNode)  {
+    // 分割 倒序 重连
+    // 寻找中间节点
+    slow,fast := head,head
+    for ;fast != nil && fast.Next != nil;{
+        fast = fast.Next.Next
+        slow =slow.Next
+    }
+    // 从中间分割
+    cur := slow.Next
+    slow.Next = nil
+    // 后面的链表倒置
+    var newListHead *ListNode = nil
+    for ; cur != nil;{
+        tmp := cur
+        cur = cur.Next
+        tmp.Next = nil
+        tmp.Next = newListHead
+        newListHead = tmp
+    }
+    // 连接
+    cur = head
+    for cur2 := newListHead;cur2 != nil;{
+        temp := cur2
+        cur2 = cur2.Next
+        temp.Next = cur.Next
+        cur.Next = temp
+        cur = cur.Next.Next
+    }
+}
+func length(head *ListNode) int  {
+    length :=0
+    for cur:=head;cur!=nil;cur = cur.Next{
+        length++
+    }
+    return length
+}
