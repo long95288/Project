@@ -2,6 +2,7 @@ package leetcode
 
 import (
     "fmt"
+    "math"
     "sort"
 )
 
@@ -940,4 +941,23 @@ func length(head *ListNode) int  {
         length++
     }
     return length
+}
+
+func findMaxAverage(nums []int, k int) float64 {
+    sum := 0
+    max := math.MinInt64
+    for i:=0;i<k;i++{
+        sum += nums[i]
+    }
+    if sum > max{
+        max = sum
+    }
+    for i := k;i < len(nums);i++{
+        sum += nums[i]
+        sum = sum - nums[i-k]
+        if sum > max {
+            max = sum
+        }
+    }
+    return float64(max) / float64(k)
 }
