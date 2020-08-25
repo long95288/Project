@@ -314,3 +314,9 @@ func TestFindMaxAverage(t *testing.T)  {
     fmt.Println(re)
     
 }
+func TestString(t *testing.T)   {
+    s := "Hello World"
+    for i,c := range s{
+        fmt.Println(i,c)
+    }
+}

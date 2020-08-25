@@ -961,3 +961,22 @@ func findMaxAverage(nums []int, k int) float64 {
     }
     return float64(max) / float64(k)
 }
+func isValid(s string) bool {
+    stack := make([]int32,len(s))
+    top := -1
+    for _,c := range s {
+       if top == -1 {
+           top ++
+           stack[top] = c
+       }else{
+            // '(' ')' '{' '}' '[' ']'
+           if (stack[top] == '(' && c == ')') || (stack[top] == '{' && c == '}') || (stack[top] == '[' && c == ']') {
+               top --
+           }else{
+               top ++
+               stack[top] = c
+           }
+       }
+    }
+    return top < 0
+}
