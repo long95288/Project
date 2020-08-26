@@ -980,3 +980,61 @@ func isValid(s string) bool {
     }
     return top < 0
 }
+type MinStack struct {
+    Val []int
+    Min []int
+    TopVal int
+}
+
+
+/** initialize your data structure here. */
+func Constructor() MinStack {
+    stack := MinStack{
+        Val : []int{},
+        Min : []int{},
+        TopVal : 0,
+    }
+    stack.Val = append(stack.Val,-1)
+    stack.Min = append(stack.Min,math.MinInt32)
+    return stack
+}
+
+
+func (this *MinStack) Push(x int)  {
+    if this.TopVal == 0{
+        this.Min = append(this.Min,x)
+    }else if x < this.Min[this.TopVal] {
+        this.Min = append(this.Min,x)
+    }else{
+        this.Min = append(this.Min,math.MinInt32)
+        this.Min[this.TopVal + 1] = this.Min[this.TopVal]
+    }
+    this.TopVal += 1
+    this.Val = append(this.Val,x)
+}
+
+func (this *MinStack) Pop()  {
+    this.TopVal -= 1
+    this.Val = this.Val[:this.TopVal + 1]
+    this.Min = this.Min[:this.TopVal + 1]
+}
+
+
+func (this *MinStack) Top() int {
+    return this.Val[this.TopVal]
+}
+
+
+func (this *MinStack) GetMin() int {
+    return this.Min[this.TopVal]
+}
+
+
+/**
+ * Your MinStack object will be instantiated and called as such:
+ * obj := Constructor();
+ * obj.Push(x);
+ * obj.Pop();
+ * param_3 := obj.Top();
+ * param_4 := obj.GetMin();
+ */
