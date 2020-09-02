@@ -1077,3 +1077,48 @@ func romanToInt(s string) int {
     sum += pre
     return sum
 }
+/**
+图片平滑器
+ */
+func imageSmoother(M [][]int) [][]int {
+    row := len(M)
+    column := len(M[0])
+    re := make([][]int,row)
+    for i:=0;i<row;i++{
+        re[i] = make([]int,column)
+        for j := 0; j < column; j++ {
+            count := 0
+            sum := 0
+            // 获得周围8格的数据
+            for i1:=-1; i1 < 2; i1 ++{
+                for j1:=-1;j1 < 2;j1++{
+                    if i1 + i >= 0 && i1 + i < row  && j1 + j >= 0 && j1+ j < column{
+                        sum += M[i1+i][j1+j]
+                        count ++
+                    }
+                }
+            }
+            // 除以平均数
+             re[i][j] = int(math.Floor(float64(sum) / float64(count)))
+        }
+    }
+    return re
+}
+func checkPossibility(nums []int) bool {
+    if len(nums) <=1 {
+        return true
+    }
+    count := 0
+    for i:=1;i<len(nums) && count < 2;i ++{
+        if nums[i-1] <= nums[i]{
+            continue
+        }
+        count ++
+        if i-2 >=0 &&nums[i-2] > nums[i] {
+            nums[i] = nums[i-1]
+        }else {
+            nums[i -1] = nums[i]
+        }
+    }
+    return count <= 1
+}

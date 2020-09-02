@@ -320,3 +320,28 @@ func TestString(t *testing.T)   {
         fmt.Println(i,c)
     }
 }
+func TestImageSmoother(t *testing.T)  {
+    //[1,1,1],
+    // [1,0,1],
+    // [1,1,1]
+    //向下舍入
+    re := imageSmoother([][]int{{1,1,1},{1,0,1},{1,1,1}})
+    fmt.Println(re)
+    m := [][]int{
+        {2, 3, 4},
+        {5, 6, 7},
+        {8, 9, 10},
+        {11, 12, 13},
+        {14,15,16},
+    }
+    re = imageSmoother(m)
+    fmt.Println(re)
+}
+func TestCheckPossibility(t *testing.T)  {
+   re := checkPossibility([]int{4,2,3})
+   fmt.Println(re)
+   re = checkPossibility([]int{4,2,1})
+   fmt.Println(re)
+   re = checkPossibility([]int{3,4,2,3})
+   fmt.Println(re) // false
+}
