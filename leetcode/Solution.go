@@ -1122,3 +1122,56 @@ func checkPossibility(nums []int) bool {
     }
     return count <= 1
 }
+
+type MyStack struct {
+    top int
+    p1 []int
+}
+
+
+/** Initialize your data structure here. */
+func Constructor1() MyStack {
+    return MyStack{p1: []int{}}
+}
+
+
+/** Push element x onto stack. */
+func (this *MyStack) Push(x int)  {
+    this.p1 = append(this.p1,x)
+    this.top = x
+}
+
+
+/** Removes the element on top of the stack and returns that element. */
+func (this *MyStack) Pop() int {
+    top := this.top
+    this.p1 = this.p1[:len(this.p1)-1]
+    if len(this.p1) <= 0{
+        this.top = -1
+    }else {
+        this.top = this.p1[len(this.p1)-1]
+    }
+    return top
+}
+
+
+/** Get the top element. */
+func (this *MyStack) Top() int {
+    return this.top
+}
+
+
+/** Returns whether the stack is empty. */
+func (this *MyStack) Empty() bool {
+    return len(this.p1) <= 0
+}
+
+
+/**
+ * Your MyStack object will be instantiated and called as such:
+ * obj := Constructor();
+ * obj.Push(x);
+ * param_2 := obj.Pop();
+ * param_3 := obj.Top();
+ * param_4 := obj.Empty();
+ */

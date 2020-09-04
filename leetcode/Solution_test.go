@@ -345,3 +345,13 @@ func TestCheckPossibility(t *testing.T)  {
    re = checkPossibility([]int{3,4,2,3})
    fmt.Println(re) // false
 }
+func TestSlice(t *testing.T) {
+    p := []int{1,2,3,4,5,6}
+    fmt.Println("size = ",len(p))
+    p = p[:0]
+    fmt.Println("size = ",len(p))
+    s := Constructor1()
+    s.Push(1)
+    s.Pop()
+    fmt.Println("size = ",s.Empty())
+}
