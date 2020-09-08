@@ -1175,3 +1175,28 @@ func (this *MyStack) Empty() bool {
  * param_3 := obj.Top();
  * param_4 := obj.Empty();
  */
+
+func nextGreaterElement(nums1 []int, nums2 []int) []int {
+    
+    // 先计算num2每个元素更大的
+    indexMap := make(map[int]int)
+    for i:=0;i<len(nums2);i++{
+        search := false
+        for j:=i+1;j<len(nums2);j++{
+            if nums2[j] > nums2[i] {
+                indexMap[nums2[i]] = nums2[j]
+                search = true
+                break
+            }
+        }
+        if !search{
+            indexMap[nums2[i]] = -1
+        }
+    }
+    ret := []int{}
+    for _,v := range nums1{
+       mv,_ := indexMap[v]
+       ret = append(ret,mv)
+    }
+    return ret
+}

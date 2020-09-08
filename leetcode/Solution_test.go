@@ -355,3 +355,9 @@ func TestSlice(t *testing.T) {
     s.Pop()
     fmt.Println("size = ",s.Empty())
 }
+func TestNextGreaterElement(t *testing.T)  {
+    nums11 := []int{4,1,2}
+    nums21 := []int{1,3,4,2}
+    ret := nextGreaterElement(nums11,nums21)
+    fmt.Println(ret)
+}
