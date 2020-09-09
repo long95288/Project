@@ -4,6 +4,7 @@ import (
     "fmt"
     "math"
     "sort"
+    "strconv"
 )
 
 type ListNode struct {
@@ -1199,4 +1200,46 @@ func nextGreaterElement(nums1 []int, nums2 []int) []int {
        ret = append(ret,mv)
     }
     return ret
+}
+/**
+数字入栈
++ 两个数出栈相加并入栈
+D 出栈*2入栈
+C 最上面的出栈
+ */
+func calPoints(ops []string) int {
+    stack := make([]int,len(ops))
+    re := 0
+    top := -1
+    for _,v := range ops{
+        //fmt.Println(v)
+        switch v {
+        case "C":
+            re -= stack[top]
+            top --
+            
+        case "D":
+            tmp := 2 * stack[top]
+            top ++
+            stack[top] = tmp
+            re += tmp
+        case "+":
+            tmp1 := stack[top]
+            tmp2 := 0
+            if top > 0 {
+                top --
+                tmp2 = stack[top]
+                top ++
+            }
+            top ++
+            stack[top] = tmp1 + tmp2
+            re = re + tmp1 + tmp2
+        default:
+            d,_ := strconv.Atoi(v)
+            top ++
+            stack[top] = d
+            re += d
+        }
+    }
+    return re
 }
