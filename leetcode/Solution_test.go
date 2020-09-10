@@ -365,3 +365,7 @@ func TestCalPoints(t *testing.T)  {
     fmt.Println(calPoints([]string{"5","2","C","D","+"}))
     fmt.Println(calPoints([]string{"5","-2","4","C","D","9","+","+"}))
 }
+func TestBackspaceCompare(t *testing.T)  {
+    fmt.Println(backspaceCompare("ab##","c#d#"))
+    
+}

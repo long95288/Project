@@ -1243,3 +1243,37 @@ func calPoints(ops []string) int {
     }
     return re
 }
+func backspaceCompare(S string, T string) bool {
+    stack1 := make([]rune,len(S))
+    stack2 := make([]rune,len(T))
+    top1,top2 := -1,-1
+    for _,v := range S {
+        if '#' == v{
+            if top1 >= 0{
+                top1 --
+            }
+        }else{
+            top1 ++
+            stack1[top1] = v
+        }
+    }
+    for _,v := range T {
+        if '#' == v {
+            if top2 >= 0 {
+                top2 --
+            }
+        }else{
+            top2 ++
+            stack2[top2] = v
+        }
+    }
+    if top1 == top2 {
+        for ;top1 >= 0;top1--{
+            if stack1[top1] != stack2[top1] {
+                return false
+            }
+        }
+        return true
+    }
+    return false
+}
