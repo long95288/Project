@@ -1277,3 +1277,32 @@ func backspaceCompare(S string, T string) bool {
     }
     return false
 }
+func removeOuterParentheses(S string) string {
+    stack := make([]rune,len(S))
+    s := make([]rune,len(S))
+    index := -1
+    top := -1
+    //re := ""
+    for _,v := range S{
+        if v == '('{
+            if  top >= 0 {
+                // 不是最外层括号,需要打印出
+                //re += "("
+                index ++
+                s[index] = '('
+                //是最外层括号,只要进栈
+            }
+            top ++
+            stack[top] = v
+        }else {
+            if top > 0 {
+                // 打印非最外层
+                //re += ")"
+                index ++
+                s[index] = ')'
+            }
+            top --
+        }
+    }
+    return string(s[:index+1])
+}

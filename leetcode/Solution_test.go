@@ -367,5 +367,7 @@ func TestCalPoints(t *testing.T)  {
 }
 func TestBackspaceCompare(t *testing.T)  {
     fmt.Println(backspaceCompare("ab##","c#d#"))
-    
+}
+func TestRemoveOuterParentheses(t *testing.T)  {
+    fmt.Println(removeOuterParentheses("(()())(())(()(()))"))
 }
