@@ -1306,3 +1306,22 @@ func removeOuterParentheses(S string) string {
     }
     return string(s[:index+1])
 }
+func removeDuplicates(S string) string {
+    // 入栈,相同出栈
+    stack := make([]rune,len(S))
+    top := -1
+    for _,v := range S{
+        if top < 0{
+            top++
+            stack[top] = v
+        }else{
+            if stack[top] == v {
+                top --
+            }else{
+                top++
+                stack[top] = v
+            }
+        }
+    }
+    return string(stack[:top+1])
+}
