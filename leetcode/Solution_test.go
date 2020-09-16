@@ -371,3 +371,18 @@ func TestBackspaceCompare(t *testing.T)  {
 func TestRemoveOuterParentheses(t *testing.T)  {
     fmt.Println(removeOuterParentheses("(()())(())(()(()))"))
 }
+func TestAddBinary(t *testing.T)  {
+    fmt.Println(addBinary("1","111"))
+}
+func TestIsPalindrome2(t *testing.T)  {
+    fmt.Println(isPalindrome2("A man, a plan, a canal: Panama"))
+    fmt.Println(isPalindrome2("race a car"))
+    fmt.Println(isPalindrome2("0P"))
+    fmt.Println(isPalindrome2("9,8"))
+    fmt.Println(isPalindrome2("Zeus was deified, saw Suez."))
+}
+func TestLongestCommonPrefix(t *testing.T)  {
+    fmt.Println(longestCommonPrefix([]string{"flower","flow","flight"}))
+    // "dog","racecar","car"
+    fmt.Println(longestCommonPrefix([]string{"dog","racecar","car"}))
+}

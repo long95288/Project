@@ -1325,3 +1325,115 @@ func removeDuplicates(S string) string {
     }
     return string(stack[:top+1])
 }
+func addBinary(a string, b string) string {
+    aBit := make([]int,len(a))
+    bBit := make([]int,len(b))
+    stack := make([]int,len(a)+len(b))
+    top := -1
+    for i, v := range a {
+       d,_ := strconv.Atoi(string(v))
+       aBit[i] = d
+    }
+    for i, v := range b {
+        d,_ := strconv.Atoi(string(v))
+        bBit[i] = d
+    }
+    i,j := len(a)-1,len(b)-1
+    
+    tmpa := aBit[0]
+    tmpb := bBit[0]
+    carry := 0
+    for i >= 0 || j >=0 {
+        if i < 0 {
+            tmpa = 0
+        }else{
+            tmpa = aBit[i]
+        }
+        if j < 0 {
+            tmpb = 0
+        }else {
+            tmpb = bBit[j]
+        }
+        sum := tmpa + tmpb + carry
+        carry = sum / 2
+        top ++
+        stack[top] = sum % 2
+        i --
+        j --
+    }
+    if carry > 0 {
+        top ++
+        stack[top] = carry
+    }
+    ret := make([]rune,top+1)
+    stack_size := top
+    for top >= 0 {
+        ret[stack_size - top] = rune(48 + stack[top])
+        top --
+    }
+    return string(ret[:stack_size + 1])
+}
+
+func isPalindrome2(s string) bool {
+    if "" == s {
+        return true
+    }
+    stack := make([]rune,len(s))
+    top := -1
+    
+    tmp_s := make([]rune,len(s))
+    index_tmp := -1
+    for _,v := range s {
+        if (v >= '0' && v <= '9') || (v >= 'a' && v <='z') || (v >='A' && v <= 'Z') {
+            top ++
+            stack[top] = v
+            
+            index_tmp ++
+            tmp_s[index_tmp] = v
+        }
+    }
+    
+    for i:=0;i<= top;i++{
+        v := tmp_s[i]
+        tmp := stack[top - i]
+        if (v >= 'a' && v <='z') || (v >='A' && v <= 'Z') {
+            sub := math.Abs(float64(tmp - v))
+            if sub == 0 || sub == 32{
+                continue
+            }else {
+                return false
+            }
+        }else{
+            if v == tmp {
+                continue
+            }
+            return false
+        }
+    }
+    return true
+}
+
+func longestCommonPrefix(strs []string) string {
+    prefix := ""
+    if len(strs) == 1 {
+        return strs[0]
+    }
+    if len(strs) == 2 {
+        first := strs[0]
+        second := strs[1][:]
+        for i,v := range first {
+            if i < len(second){
+                if uint8(v) == second[i] {
+                    prefix += string(v)
+                }else{
+                    break
+                }
+            }else{
+                break
+            }
+        }
+        return prefix
+    }
+    prefix = longestCommonPrefix(strs[:2])
+    return longestCommonPrefix(append([]string{prefix},strs[2:]...))
+}
