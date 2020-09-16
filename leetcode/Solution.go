@@ -1437,3 +1437,32 @@ func longestCommonPrefix(strs []string) string {
     prefix = longestCommonPrefix(strs[:2])
     return longestCommonPrefix(append([]string{prefix},strs[2:]...))
 }
+
+func strStr(haystack string, needle string) int {
+    if "" == needle {
+        return 0
+    }
+    // 思路,for循环,比较needle。完全匹配才可以
+    needle_ := needle[:]
+    haystack_ := haystack[:]
+    for i:=0;i<len(haystack);i++{
+        v := haystack_[i]
+        if v == needle_[0]{
+            // 开始进行匹配
+            j := i
+            index_needle := 0
+            for index_needle < len(needle) && j < len(haystack) {
+                if index_needle == len(needle) -1 && needle_[index_needle] == haystack_[j] {
+                    return i
+                }
+                if haystack_[j] != needle_[index_needle]  {
+                    break
+                }else{
+                    j ++
+                    index_needle ++
+                }
+            }
+        }
+    }
+    return -1
+}

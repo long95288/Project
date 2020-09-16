@@ -386,3 +386,9 @@ func TestLongestCommonPrefix(t *testing.T)  {
     // "dog","racecar","car"
     fmt.Println(longestCommonPrefix([]string{"dog","racecar","car"}))
 }
+func TestStrStr(t *testing.T)  {
+    fmt.Println(strStr("hello","ll"))
+    fmt.Println(strStr("aaaaaaa","bba"))
+    fmt.Println(strStr("",""))
+    fmt.Println(strStr("mississippi","issip"))
+}
