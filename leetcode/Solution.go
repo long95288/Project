@@ -1466,3 +1466,104 @@ func strStr(haystack string, needle string) int {
     }
     return -1
 }
+func Max(nums []int) int {
+    max := math.MinInt32
+    for _,v := range nums {
+        if v > max {
+            max = v
+        }
+    }
+    return max
+}
+func maxSlidingWindow(nums []int, k int) []int {
+    if len(nums) <= 0 {
+        return []int{0}
+    }
+    if len(nums) <= k {
+        return []int{Max(nums)}
+    }
+    slideWindows := make([]int,k)
+    baseMax := math.MinInt32
+    ret := make([]int, len(nums) - k + 1)
+    retIndex := 0
+    for i:=0;i<k && i <len(nums);i++{
+        if nums[i] > baseMax {
+            baseMax = nums[i]
+        }
+        slideWindows[i] = nums[i]
+    }
+    ret[retIndex] = baseMax
+    for i:=k;i<len(nums);i++{
+        slideWindows = append(slideWindows[1:],nums[i])
+        baseMax = Max(slideWindows)
+        retIndex ++
+        ret[retIndex] = baseMax
+    }
+    return ret
+}
+func isHappy(n int) bool {
+    strn := strconv.FormatInt(int64(n),10)
+    result := 0
+    for _,v := range strn{
+        tmp,_ := strconv.Atoi(string(v))
+        result += tmp * tmp
+    }
+    if result == 1 {
+        return true
+    }else if result == 4{
+        return false
+    }
+    return isHappy(result)
+}
+func countAndSay(n int) string {
+    if n <= 1 {
+        return "1"
+    }
+    result := ""
+    tmpStr := countAndSay(n - 1)
+    tmp := tmpStr[:]
+    count := 0
+    tmpChar := tmp[0]
+    // 数数
+    for i := 0; i < len(tmp); i++{
+        if tmpChar == tmp[i] {
+            count ++
+        }else{
+            // 出现不同
+            result += strconv.Itoa(count) + string(tmpChar)
+            tmpChar = tmp[i]
+            count = 1
+        }
+    }
+    if count > 0 {
+        result += strconv.Itoa(count) + string(tmpChar)
+    }
+    return result
+}
+func mySqrt(x int) int {
+    if x == 1 {
+        return 1
+    }
+    half := x/2
+    start := 1
+    end := half
+    mid :=  (start + end) / 2
+    for i:=1;i <= 1000;i++{
+        if start * start == x {
+            return start
+        }
+        if end * end == x {
+            return end
+        }
+        if start*start < x && end * end > x && end - start == 1 {
+            return start
+        }
+        mid = (start + end) / 2
+        if mid * mid < x {
+            start = mid
+        }else {
+            end = mid
+        }
+    }
+    return half
+}

@@ -392,3 +392,18 @@ func TestStrStr(t *testing.T)  {
     fmt.Println(strStr("",""))
     fmt.Println(strStr("mississippi","issip"))
 }
+func TestMaxSlidingWindow(t *testing.T)  {
+    fmt.Println(maxSlidingWindow([]int{1,3,-1,-3,5,3,6,7},3))
+}
+func TestIsHappy(t *testing.T)  {
+    fmt.Println(isHappy(19))
+}
+func TestCountAndSay(t *testing.T)  {
+    fmt.Println(countAndSay(11))
+    fmt.Println("11131221133112132113212221")
+}
+func TestMySqrt(t *testing.T)  {
+    fmt.Println(mySqrt(4))
+    fmt.Println(mySqrt(8))
+    fmt.Println(mySqrt(1085817232))
+}
