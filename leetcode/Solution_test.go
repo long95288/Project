@@ -407,3 +407,9 @@ func TestMySqrt(t *testing.T)  {
     fmt.Println(mySqrt(8))
     fmt.Println(mySqrt(1085817232))
 }
+func TestCountPrimes(t *testing.T)  {
+    fmt.Println(countPrimes(2))
+    fmt.Println(countPrimes(10))
+    fmt.Println(countPrimes2(2))
+    fmt.Println(countPrimes2(10))
+}

@@ -1567,3 +1567,44 @@ func mySqrt(x int) int {
     }
     return half
 }
+func isPrimes(n int) bool{
+    for i:=2; i<n; i++{
+        if (float64(n)/float64(i) - float64(n/i)) == 0 {
+            return false
+        }
+    }
+    return true
+}
+func countPrimes(n int) int {
+    count := 0
+    if n < 2 {
+        return 0
+    }
+    if n == 2 {
+        return 1
+    }
+    count ++
+    for i := 3;i<n;i++{
+        if isPrimes(i) {
+            count++
+        }
+    }
+    return count
+}
+func countPrimes2(n int) int {
+    count := 0
+    if n <= 2 {
+        return 0
+    }
+    count ++
+    arr := make([]bool,n)
+    for i := 3;i < n;i += 2{
+        if !arr[i] {
+            for j:=3;i*j <n;j+= 2{
+                arr[i*j] = true
+            }
+            count ++
+        }
+    }
+    return count
+}
