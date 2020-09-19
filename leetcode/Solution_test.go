@@ -413,3 +413,29 @@ func TestCountPrimes(t *testing.T)  {
     fmt.Println(countPrimes2(2))
     fmt.Println(countPrimes2(10))
 }
+func TestSumOddLengthSubarrays(t *testing.T)  {
+    fmt.Println(sumOddLengthSubarrays([]int{1,4,2,5,3}))
+    fmt.Println(sumOddLengthSubarrays([]int{1,2}))
+    fmt.Println(sumOddLengthSubarrays([]int{2}))
+    fmt.Println(sumOddLengthSubarrays([]int{10,11,12}))
+}
+func TestMinSubarray(t *testing.T){
+    // 1
+    fmt.Println(minSubarray([]int{3,1,4,2},6))
+    // 2
+    fmt.Println(minSubarray([]int{6,3,5,2},9))
+    // 0
+    fmt.Println(minSubarray([]int{1,2,3},3))
+    // -1
+    fmt.Println(minSubarray([]int{1,2,3},7))
+    
+    // 1
+    fmt.Println(minSubarray([]int{4,5,8,5,4},7))
+    
+    // -1
+    fmt.Println(minSubarray([]int{4,4,2},7))
+    
+    // 0
+    fmt.Println(minSubarray([]int{1},1))
+    
+}

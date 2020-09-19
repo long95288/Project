@@ -1608,3 +1608,92 @@ func countPrimes2(n int) int {
     }
     return count
 }
+func sumArray(arr []int) int {
+    result := 0
+    for _,v := range arr{
+        result += v
+    }
+    return result
+}
+func sumOddLengthSubarrays(arr []int) int {
+    result := 0
+    if len(arr) <= 0 {
+        return 0
+    }
+    // 设置滑动窗口
+    slide_window := make([]int,1)
+    slide_index := 0
+    slide_size := 1
+    for ;slide_size <= len(arr);slide_size += 2{
+        slide_index = 0
+        slide_window = make([]int,slide_size)
+        for _,v := range arr {
+            // 先填充滑动窗口
+            if slide_index <= slide_size -1 {
+                slide_window[slide_index] = v
+                slide_index ++
+            }
+            if slide_index == slide_size {
+                // 填满之后计算结果
+                result += sumArray(slide_window)
+                slide_window = append(slide_window[1:],0)
+                slide_index -= 1
+            }
+        }
+    }
+    return result
+}
+
+func minSubarray(nums []int, p int) int {
+    // 先进行简化数组
+    for i:=0;i < len(nums);i++{
+        nums[i] = nums[i] % p
+    }
+    sum := 0
+    setSum := false
+    for _,v := range nums{
+        sum += v
+        if sum >= p {
+            setSum = true
+        }
+        if sum % p == 0 {
+            sum = 0
+            setSum = true
+        }
+        
+    }
+    if !setSum {
+        return -1
+    }
+    
+    if sum == 0 {
+        return 0
+    }
+    sum = sum % p
+    // 最后剩余的值看能不能通过寻找子数组找出来
+    removeSize := -1
+
+    subSum := 0
+    i := 0
+    for j:=i;j<len(nums);j++{
+        subSum += nums[j]
+        subSum = subSum % p
+        if subSum == 0 {
+            i = j
+        }
+        if sum == nums[j] {
+            return 1
+        }else if sum == subSum {
+             tmp := j - i
+             if removeSize == -1 {
+                 removeSize = tmp
+             }else if tmp < removeSize {
+                 removeSize = tmp
+             }
+        }
+    }
+    if removeSize >= len(nums) -1 {
+        return -1
+    }
+    return removeSize
+}
