@@ -439,3 +439,82 @@ func TestMinSubarray(t *testing.T){
     fmt.Println(minSubarray([]int{1},1))
     
 }
+func TestLongestUnivaluePath(t *testing.T){
+    tree := TreeNode{
+       Val:   5,
+       Left:  &TreeNode{
+           Val:   4,
+           Left:  &TreeNode{
+               Val:   1,
+               Left:  nil,
+               Right: nil,
+           },
+           Right: &TreeNode{
+               Val:   1,
+               Left:  nil,
+           },
+       },
+       Right: &TreeNode{
+           Val:   5,
+           Left:  nil,
+           Right: &TreeNode{
+               Val:   5,
+               Left:  nil,
+           },
+       },
+    }
+    fmt.Println(longestUnivaluePath(&tree))
+    // [1,null,1,1,1,1,1,1]
+    tree2 := &TreeNode{
+       Val:   1,
+       Left:  nil,
+       Right: &TreeNode{
+           Val:   1,
+           Left:  &TreeNode{
+               Val:   1,
+               Left:  &TreeNode{
+                   Val:   1,
+                   Left:  nil,
+                   Right: nil,
+               },
+               Right: &TreeNode{
+                   Val:   1,
+                   Left:  nil,
+                   Right: nil,
+               },
+           },
+           Right: &TreeNode{
+               Val:   1,
+               Left:  &TreeNode{
+                   Val:   1,
+                   Left:  nil,
+                   Right: nil,
+               },
+               Right: nil,
+           },
+       },
+    }
+    fmt.Println(longestUnivaluePath(tree2))
+    tree3 := &TreeNode{
+        Val:   1,
+        Left:  &TreeNode{
+            Val:   2,
+            Left:  &TreeNode{
+                Val:   4,
+                Left:  nil,
+                Right: nil,
+            },
+            Right: &TreeNode{
+                Val:   2,
+                Left:  nil,
+                Right: nil,
+            },
+        },
+        Right: &TreeNode{
+            Val:   3,
+            Left:  nil,
+            Right: nil,
+        },
+    }
+    fmt.Println(longestUnivaluePath(tree3))
+}

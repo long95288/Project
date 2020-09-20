@@ -1697,3 +1697,64 @@ func minSubarray(nums []int, p int) int {
     }
     return removeSize
 }
+type TreeNode struct {
+    Val int
+    Left *TreeNode
+    Right *TreeNode
+}
+
+func Root2Leaves(root *TreeNode) int {
+    if root == nil || (root.Left == nil && root.Right == nil){
+        return 0
+    }
+    left := Root2Leaves(root.Left)
+    leftEqual := false
+    right := Root2Leaves(root.Right)
+    rightEqual := false
+    
+    if root.Left != nil && root.Left.Val == root.Val {
+        left += 1
+        leftEqual = true
+    }
+    if root.Right != nil && root.Right.Val == root.Val {
+        right += 1
+        rightEqual = true
+    }
+    if !leftEqual && !rightEqual {
+        // 都不相同,返回0
+        return 0
+    }else if(leftEqual && !rightEqual){
+        return left
+    }else if (!leftEqual && rightEqual){
+        return right
+    }
+    return int(math.Max(float64(left),float64(right)))
+}
+
+func Leave2Leave(root *TreeNode) int {
+    // 叶子到叶子节点
+    if root == nil || (root.Left == nil && root.Right == nil){
+        return 0
+    }
+    r := 0
+    // 两边的子树值和本身相等才算
+    if root.Left != nil && root.Right != nil && root.Left.Val == root.Val && root.Right.Val == root.Val {
+        // 取得两个子树的直达长度
+        left := Root2Leaves(root.Left)
+        right := Root2Leaves(root.Right)
+        r += left + right + 2
+    }else {
+        r = int(math.Max(float64(Leave2Leave(root.Left)),float64(Leave2Leave(root.Right))))
+    }
+    return r
+}
+func longestUnivaluePath(root *TreeNode) int {
+    // 两种情况,1.从根节点叶子的路径长度 2.叶子节点到叶子节点的路径长度
+    root2LeaveLength := Root2Leaves(root)
+    leave2LeaveLength := Leave2Leave(root)
+    
+    if root2LeaveLength > leave2LeaveLength{
+        return root2LeaveLength
+    }
+    return leave2LeaveLength
+}
