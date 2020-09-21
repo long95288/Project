@@ -1758,3 +1758,44 @@ func longestUnivaluePath(root *TreeNode) int {
     }
     return leave2LeaveLength
 }
+
+
+func fib(n int) int {
+    if n <= 1{
+        return n
+    }
+    nums := make([]int64,n+1)
+    for i:=0;i <= n;i++ {
+        if i == 0 {
+            nums[i] = 0
+        }else if i == 1 {
+            nums[i] = 1
+        }else{
+            nums[i] = nums[i-1]%1000000007 + nums[i-2]%1000000007
+        }
+    }
+    
+    return int(nums[n]%1000000007)
+}
+func move(n int, A *[]int, B *[]int, C *[]int){
+    if n == 0 {
+        return
+    }
+    if n == 1 {
+        // 一个盘子,只需要从A->C
+        *C = append(*C,(*A)[len(*A)-1])
+        (*A) = (*A)[:len(*A)-1]
+    }else{
+        // 2以上个盘子 A->B A->C B->C
+        move(n-1,A,C,B)
+        move(1,A,B,C)
+        move(n-1,B,A,C)
+    }
+}
+func hanota(A []int, B []int, C []int) []int {
+    if A == nil{
+        return nil
+    }
+    move(len(A),&A,&B,&C)
+    return C
+}
