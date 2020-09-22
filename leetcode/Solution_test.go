@@ -2,8 +2,6 @@ package leetcode
 
 import (
     "fmt"
-    "github.com/go-playground/assert/v2"
-    "github.com/stretchr/testify/assert"
     "testing"
 )
 var list *ListNode = &ListNode{
@@ -523,4 +521,14 @@ func TestLongestUnivaluePath(t *testing.T){
 
 func TestFib(t *testing.T) {
 
+}
+func TestMissingNumber(t *testing.T){
+    fmt.Println(missingNumber([]int{0,1,3}))
+    
+    fmt.Println(missingNumber([]int{0,1,2,3,4,5,6,7,9}))
+    
+    
+    fmt.Println(missingNumber([]int{1}))
+    
+    fmt.Println(missingNumber([]int{0}))
 }

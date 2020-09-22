@@ -1799,3 +1799,16 @@ func hanota(A []int, B []int, C []int) []int {
     move(len(A),&A,&B,&C)
     return C
 }
+
+func missingNumber(nums []int) int {
+    first,last,mid := 0,len(nums)-1,(len(nums)/2)
+    for first <= last {
+        mid = (first + last)/2
+        if mid == nums[mid] {
+            first = mid + 1
+        }else{
+            last = mid -1
+        }
+    }
+    return first
+}
