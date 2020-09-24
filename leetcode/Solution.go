@@ -1812,3 +1812,41 @@ func missingNumber(nums []int) int {
     }
     return first
 }
+func isSameTree(p *TreeNode, q *TreeNode) bool {
+    if p == nil && q == nil {
+        return true
+    }else if p != nil && q != nil {
+        if p.Val == q.Val {
+            return isSameTree(p.Left,q.Left) && isSameTree(p.Right,q.Right)
+        }
+    }
+    return false
+}
+func isSymmetricTrees(p *TreeNode,q *TreeNode) bool{
+    if p ==nil && q == nil {
+        return true;
+    }else if p!= nil && q != nil {
+        if  p.Val == q.Val {
+            return isSymmetricTrees(p.Left,q.Right) && isSymmetricTrees(p.Right,q.Left)
+        }
+    }
+    return false
+}
+func isSymmetric(root *TreeNode) bool {
+    if root == nil {
+        return true
+    }
+    return isSymmetricTrees(root.Left,root.Right)
+}
+func max(a,b int) int{
+    if a > b {
+        return a
+    }
+    return b
+}
+func maxDepth(root *TreeNode) int {
+    if root == nil {
+        return 0
+    }
+    return 1 + max(maxDepth(root.Left),maxDepth(root.Right))
+}
