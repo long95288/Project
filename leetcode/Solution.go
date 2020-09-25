@@ -1861,20 +1861,15 @@ func levelOrderBottom(root *TreeNode) [][]int {
     right := levelOrderBottom(root.Right)
     i,j := 0,0
     for i < len(left) || j < len(right) {
-        layout := []int{}
         if (len(left)-1 - i) == (len(right)-1 - j) {
-            layout = append(layout,left[i]...)
-            layout = append(layout,right[j]...)
-            ret = append(ret,layout)
+            ret = append(ret,append(left[i],right[j]...))
             i ++
             j ++
         }else if (len(left)-1 - i) > (len(right)-1 - j){
-            layout = append(layout,left[i]...)
-            ret = append(ret,layout)
+            ret = append(ret,left[i])
             i ++
         }else {
-            layout = append(layout,right[j]...)
-            ret = append(ret,layout)
+            ret = append(ret,right[j])
             j ++
         }
         
