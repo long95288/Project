@@ -1850,3 +1850,35 @@ func maxDepth(root *TreeNode) int {
     }
     return 1 + max(maxDepth(root.Left),maxDepth(root.Right))
 }
+
+
+func levelOrderBottom(root *TreeNode) [][]int {
+    if root == nil {
+        return [][]int{}
+    }
+    ret := [][]int{}
+    left := levelOrderBottom(root.Left)
+    right := levelOrderBottom(root.Right)
+    i,j := 0,0
+    for i < len(left) || j < len(right) {
+        layout := []int{}
+        if (len(left)-1 - i) == (len(right)-1 - j) {
+            layout = append(layout,left[i]...)
+            layout = append(layout,right[j]...)
+            ret = append(ret,layout)
+            i ++
+            j ++
+        }else if (len(left)-1 - i) > (len(right)-1 - j){
+            layout = append(layout,left[i]...)
+            ret = append(ret,layout)
+            i ++
+        }else {
+            layout = append(layout,right[j]...)
+            ret = append(ret,layout)
+            j ++
+        }
+        
+    }
+    ret = append(ret,[]int{root.Val})
+    return ret
+}
