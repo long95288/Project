@@ -1877,3 +1877,13 @@ func levelOrderBottom(root *TreeNode) [][]int {
     ret = append(ret,[]int{root.Val})
     return ret
 }
+func hasPathSum(root *TreeNode, sum int) bool {
+    if root == nil {
+        return false
+    }
+    if root.Left == nil && root.Right == nil && root.Val == sum {
+        return true
+    }
+    target := sum - root.Val
+    return hasPathSum(root.Left,target) || hasPathSum(root.Right,target)
+}
