@@ -1887,3 +1887,23 @@ func hasPathSum(root *TreeNode, sum int) bool {
     target := sum - root.Val
     return hasPathSum(root.Left,target) || hasPathSum(root.Right,target)
 }
+
+func pathSum(root *TreeNode, sum int) [][]int {
+    if root == nil {
+        return [][]int{}
+    }
+    if root.Left == nil && root.Right == nil && root.Val == sum {
+        return [][]int{{root.Val}}
+    }
+    target := sum - root.Val
+    left := pathSum(root.Left,target)
+    right := pathSum(root.Right,target)
+    ret := [][]int{}
+    for i:= 0;i<len(left);i++{
+        ret = append(ret,append([]int{root.Val},left[i]...))
+    }
+    for i:= 0;i<len(right);i++{
+        ret = append(ret,append([]int{root.Val},right[i]...))
+    }
+    return ret
+}
