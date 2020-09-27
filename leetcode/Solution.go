@@ -1907,3 +1907,17 @@ func pathSum(root *TreeNode, sum int) [][]int {
     }
     return ret
 }
+
+func sortedArrayToBST(nums []int) *TreeNode {
+    return dfs(nums,0, len(nums) -1)
+}
+func dfs(nums []int, first int, last int) *TreeNode{
+    if first > last {
+        return nil
+    }
+    mid := (first +last) / 2
+    root := TreeNode{Val: nums[mid]}
+    root.Left = dfs(nums, first, mid -1)
+    root.Right = dfs(nums,mid +1 ,last)
+    return &root
+}
