@@ -1921,3 +1921,26 @@ func dfs(nums []int, first int, last int) *TreeNode{
     root.Right = dfs(nums,mid +1 ,last)
     return &root
 }
+
+func min(x,y int) int {
+    if x > y{
+        return y
+    }
+    return x
+}
+func minDepth(root *TreeNode) int {
+    if root == nil {
+        return 0
+    }
+    if nil == root.Left && nil == root.Right {
+        return 1
+    }
+    minDep := math.MaxInt32
+    if root.Left != nil {
+        minDep = min(minDepth(root.Left), minDep)
+    }
+    if root.Right != nil{
+        minDep =  min(minDepth(root.Right),minDep)
+    }
+    return minDep + 1
+}
