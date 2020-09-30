@@ -556,3 +556,6 @@ func TestLevelOrderBottom(t *testing.T)  {
     }
     fmt.Println(levelOrderBottom(&tree))
 }
+func TestUncommonFromSentences(t *testing.T)  {
+    fmt.Println(uncommonFromSentences("this apple is sweet", "this apple is sour"))
+}

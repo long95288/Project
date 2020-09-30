@@ -5,6 +5,7 @@ import (
     "math"
     "sort"
     "strconv"
+    "strings"
 )
 
 type ListNode struct {
@@ -1943,4 +1944,31 @@ func minDepth(root *TreeNode) int {
         minDep =  min(minDepth(root.Right),minDep)
     }
     return minDep + 1
+}
+
+func uncommonFromSentences(A string, B string) []string {
+    m1 := make(map[string]int)
+    m2 := make(map[string]int)
+    for _,v := range strings.Split(A, " ") {
+        m1[v] += 1
+    }
+    for _,v := range strings.Split(B, " ") {
+        m2[v] += 1
+    }
+    ret := []string{}
+    for k,v := range m1 {
+        if v == 1 {
+            if _, ok := m2[k]; !ok{
+                ret = append(ret,k)
+            }
+        }
+    }
+    for k,v := range m2 {
+        if v == 1 {
+            if _, ok := m1[k]; !ok{
+                ret = append(ret,k)
+            }
+        }
+    }
+    return ret
 }
