@@ -1972,3 +1972,22 @@ func uncommonFromSentences(A string, B string) []string {
     }
     return ret
 }
+func mapping(s,t string) bool  {
+    n := len(s)
+    map1 := make(map[uint8]uint8)
+    for i:=0 ;i< n;i ++{
+        s1 := s[i]
+        t1 := t[i]
+        if _, ok := map1[s1];ok {
+            if v,_ := map1[s1];v != t1 {
+                return false
+            }
+        } else {
+            map1[s1] = t1
+        }
+    }
+    return true
+}
+func isIsomorphic(s string, t string) bool {
+   return mapping(s, t) && mapping(t, s)
+}

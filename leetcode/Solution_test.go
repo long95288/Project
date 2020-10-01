@@ -559,3 +559,11 @@ func TestLevelOrderBottom(t *testing.T)  {
 func TestUncommonFromSentences(t *testing.T)  {
     fmt.Println(uncommonFromSentences("this apple is sweet", "this apple is sour"))
 }
+
+func TestIsIsomorphic(t *testing.T)  {
+    fmt.Println(isIsomorphic("egg", "add"))
+    fmt.Println(isIsomorphic("foo", "bar"))
+    fmt.Println(isIsomorphic("paper", "title"))
+    fmt.Println(isIsomorphic("", ""))
+    fmt.Println(isIsomorphic("ab", "aa"))
+}
