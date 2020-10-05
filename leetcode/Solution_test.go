@@ -567,3 +567,8 @@ func TestIsIsomorphic(t *testing.T)  {
     fmt.Println(isIsomorphic("", ""))
     fmt.Println(isIsomorphic("ab", "aa"))
 }
+func TestCanConstruct(t *testing.T)  {
+    fmt.Println(canConstruct("a","b"))
+    fmt.Println(canConstruct("aa", "ab"))
+    fmt.Println(canConstruct("aa","aab"))
+}

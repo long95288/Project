@@ -1991,3 +1991,21 @@ func mapping(s,t string) bool  {
 func isIsomorphic(s string, t string) bool {
    return mapping(s, t) && mapping(t, s)
 }
+func canConstruct(ransomNote string, magazine string) bool {
+    // 两个map,记录字母个数
+    rMap := make(map[rune]int)
+    mMap := make(map[rune]int)
+    for _, v := range ransomNote {
+        rMap[v] += 1
+    }
+    for _, v := range magazine {
+        mMap[v] += 1
+    }
+    for k,v := range rMap{
+        if mV,ok := mMap[k];ok && mV >= v{
+        }else{
+            return false
+        }
+    }
+    return true
+}
