@@ -572,3 +572,8 @@ func TestCanConstruct(t *testing.T)  {
     fmt.Println(canConstruct("aa", "ab"))
     fmt.Println(canConstruct("aa","aab"))
 }
+func TestFirstUniqChar(t *testing.T)  {
+    fmt.Println(firstUniqChar("leetcode"))
+    fmt.Println(firstUniqChar("loveleetcode"))
+    fmt.Println(firstUniqChar("aadadaad"))
+}

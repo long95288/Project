@@ -2009,3 +2009,15 @@ func canConstruct(ransomNote string, magazine string) bool {
     }
     return true
 }
+func firstUniqChar(s string) int {
+    numMap:= make(map[rune]int)
+    for _, v := range s {
+        numMap[v] += 1
+    }
+    for i,v := range s {
+       if n,_ := numMap[v]; n == 1 {
+           return i
+       }
+    }
+    return -1
+}
