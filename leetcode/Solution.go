@@ -2021,3 +2021,15 @@ func firstUniqChar(s string) int {
     }
     return -1
 }
+
+func reverseString(s []byte)  {
+    // 思路,一个指向末尾的指针，一个指向首个地址的指针。相互交换数据
+    firstIndex,lastIndex := 0, len(s) -1
+    for firstIndex < lastIndex {
+        tmp := s[firstIndex]
+        s[firstIndex] = s[lastIndex]
+        s[lastIndex] = tmp
+        firstIndex ++
+        lastIndex --
+    }
+}

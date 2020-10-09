@@ -577,3 +577,8 @@ func TestFirstUniqChar(t *testing.T)  {
     fmt.Println(firstUniqChar("loveleetcode"))
     fmt.Println(firstUniqChar("aadadaad"))
 }
+func TestReverseString(t *testing.T)  {
+    a := []byte("Hello")
+    reverseString(a)
+    fmt.Println(string(a))
+}
