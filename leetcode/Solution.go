@@ -2033,3 +2033,29 @@ func reverseString(s []byte)  {
         lastIndex --
     }
 }
+func isVowel(c rune) bool  {
+    if c == 'a' || c == 'A' || c == 'e' || c == 'E'  || c == 'i' || c == 'I'|| c == 'o' || c == 'O' || c == 'u' || c=='U'{
+        return true
+    }
+    return false
+}
+func reverseVowels(s string) string {
+    sb := []rune(s)
+    firstIndex,lastIndex := 0, len(sb) -1
+    for firstIndex < lastIndex {
+        if isVowel(sb[firstIndex]) && isVowel(sb[lastIndex]){
+            tmp := sb[firstIndex]
+            sb[firstIndex] = sb[lastIndex]
+            sb[lastIndex] = tmp
+            firstIndex ++
+            lastIndex --
+        }
+        if !isVowel(sb[firstIndex]) {
+            firstIndex ++
+        }
+        if !isVowel(sb[lastIndex]) {
+            lastIndex --
+        }
+    }
+    return string(sb)
+}

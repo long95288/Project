@@ -582,3 +582,7 @@ func TestReverseString(t *testing.T)  {
     reverseString(a)
     fmt.Println(string(a))
 }
+func TestReverseVowels(t *testing.T)  {
+    fmt.Println(reverseVowels("leetcode"))
+    fmt.Println(reverseVowels("hello"))
+}
