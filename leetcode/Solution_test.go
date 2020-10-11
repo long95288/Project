@@ -586,3 +586,7 @@ func TestReverseVowels(t *testing.T)  {
     fmt.Println(reverseVowels("leetcode"))
     fmt.Println(reverseVowels("hello"))
 }
+func TestAddStrings(t *testing.T)  {
+    fmt.Println(addStrings("109","1"))
+    fmt.Println(addStrings("999999999999999999999", "1"))
+}

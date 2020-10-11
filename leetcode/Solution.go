@@ -2059,3 +2059,30 @@ func reverseVowels(s string) string {
     }
     return string(sb)
 }
+func addStrings(num1 string, num2 string) string {
+    // 从个位数开始相加,保存进位,一个个相加
+    num1B := []rune(num1)
+    num2B := []rune(num2)
+    carry := 0
+    l1,l2:= len(num1)-1,len(num2)-1
+    resultB := []rune{}
+    for l1 >= 0 || l2 >= 0 {
+        tmp1 := 0
+        tmp2 := 0
+        if l1 >= 0 {
+            tmp1,_ = strconv.Atoi(string(num1B[l1]))
+            l1 --
+        }
+        if l2 >= 0 {
+            tmp2, _ = strconv.Atoi(string(num2B[l2]))
+            l2 --
+        }
+        result := (tmp1 + tmp2 + carry) % 10
+        carry = (tmp1 + tmp2 + carry) / 10
+        resultB = append([]rune{rune(result + '0')}, resultB...)
+    }
+    if carry > 0 {
+        resultB = append([]rune{rune(carry + '0')}, resultB...)
+    }
+    return string(resultB)
+}
