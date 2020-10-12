@@ -11,6 +11,14 @@ import (
 func main() {
     e:= gin.Default()
     e.GET("/cmd",HandleController)
+    e.GET("/", func(context *gin.Context) {
+        context.JSON(200, gin.H{
+            "command_list":[]string{
+                "http://localhost:9999/cmd?id=1",
+                "http://localhost:9999/cmd?id=2",
+            },
+        })
+    })
     err := e.Run(":9999")
     if err != nil {
         log.Fatal(err)
