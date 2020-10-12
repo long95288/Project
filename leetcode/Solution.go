@@ -2086,3 +2086,20 @@ func addStrings(num1 string, num2 string) string {
     }
     return string(resultB)
 }
+func countSegments(s string) int {
+    num := 0
+    if s == "" {
+        return num
+    }
+    flag := false
+    for _,v := range s {
+        if v != ' ' && !flag {
+            flag = true
+            num ++
+        }
+        if v == ' ' {
+            flag = false
+        }
+    }
+    return num
+}

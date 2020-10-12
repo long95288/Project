@@ -590,3 +590,7 @@ func TestAddStrings(t *testing.T)  {
     fmt.Println(addStrings("109","1"))
     fmt.Println(addStrings("999999999999999999999", "1"))
 }
+func TestCountSegments(t *testing.T)  {
+    fmt.Println(countSegments("world,"))
+    fmt.Println(countSegments("Hello, my name is John"))
+}
