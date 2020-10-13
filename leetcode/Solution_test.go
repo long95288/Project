@@ -594,3 +594,8 @@ func TestCountSegments(t *testing.T)  {
     fmt.Println(countSegments("world,"))
     fmt.Println(countSegments("Hello, my name is John"))
 }
+func TestRepeatedSubstringPattern(t *testing.T)  {
+    fmt.Println(repeatedSubstringPattern("abab"))
+    fmt.Println(repeatedSubstringPattern("aba"))
+    fmt.Println(repeatedSubstringPattern("abcabcabcabc"))
+}

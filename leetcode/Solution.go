@@ -2103,3 +2103,9 @@ func countSegments(s string) int {
     }
     return num
 }
+func repeatedSubstringPattern(s string) bool {
+    if "" == s {
+        return true
+    }
+    return strings.Index(string((s+s)[1:]), s) < len(s) -1
+}
