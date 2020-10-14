@@ -599,3 +599,13 @@ func TestRepeatedSubstringPattern(t *testing.T)  {
     fmt.Println(repeatedSubstringPattern("aba"))
     fmt.Println(repeatedSubstringPattern("abcabcabcabc"))
 }
+func TestDetectCapitalUse(t *testing.T)  {
+    fmt.Println(detectCapitalUse("FFFFFf")) // false
+    fmt.Println(detectCapitalUse("USA")) // true
+    fmt.Println(detectCapitalUse("AaS")) // false
+    fmt.Println(detectCapitalUse("Aaa")) // true
+    fmt.Println(detectCapitalUse("usa")) // true
+    fmt.Println(detectCapitalUse("aaaaaA")) // false
+    
+    
+}

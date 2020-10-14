@@ -2109,3 +2109,21 @@ func repeatedSubstringPattern(s string) bool {
     }
     return strings.Index(string((s+s)[1:]), s) < len(s) -1
 }
+func detectCapitalUse(word string) bool {
+    if len(word) <= 1 {
+        return true
+    }
+    capitalNum := 0
+    index := -1
+    for i,v := range word{
+        if v < 'a' {
+            capitalNum ++
+        }
+        // 大写,只有第一个或者全为大写的时候才会变更index
+        if v < 'a' && (i == 0 || i == index){
+            index ++
+        }
+    }
+    // 全大写,全小写,第一个为大写
+    return capitalNum == len(word) || capitalNum == 0 || (capitalNum == 1 && index == 0)
+}
