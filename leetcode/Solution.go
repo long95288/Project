@@ -2127,3 +2127,14 @@ func detectCapitalUse(word string) bool {
     // 全大写,全小写,第一个为大写
     return capitalNum == len(word) || capitalNum == 0 || (capitalNum == 1 && index == 0)
 }
+func findLUSlength(a string, b string) int {
+    if a == b {
+        return -1
+    }
+    return max(len(a), len(b))
+}
+
+
+func reverseStr(s string, k int) string {
+
+}

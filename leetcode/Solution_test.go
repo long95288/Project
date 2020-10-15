@@ -606,6 +606,8 @@ func TestDetectCapitalUse(t *testing.T)  {
     fmt.Println(detectCapitalUse("Aaa")) // true
     fmt.Println(detectCapitalUse("usa")) // true
     fmt.Println(detectCapitalUse("aaaaaA")) // false
-    
-    
+}
+func TestReverseStr(t *testing.T)  {
+    fmt.Println(reverseStr("abcdefg",2))
+    fmt.Println(reverseStr("abcde",2))
 }
