@@ -2136,5 +2136,20 @@ func findLUSlength(a string, b string) int {
 
 
 func reverseStr(s string, k int) string {
-
+    // 按k分割, 0k 2k 4k 6k 8k 10k 反转
+    ret := []byte(s)
+    // ab cd ef g
+    // 0  2  4  6
+    for i :=0; i< len(ret) -1;i += 2*k {
+        l,r := i, min(i + k -1, len(ret) -1)
+        for l < r {
+            tmp := ret[l]
+            ret[l] = ret[r]
+            ret[r] = tmp
+            l ++
+            r --
+        }
+    }
+    return string(ret)
 }
+
