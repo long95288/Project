@@ -2153,3 +2153,16 @@ func reverseStr(s string, k int) string {
     return string(ret)
 }
 
+func checkRecord(s string) bool {
+    absentNum := 0
+    for _,v := range s {
+        if v == 'A' {
+            if absentNum >= 1 {
+                return false
+            }
+            absentNum ++
+        }
+    }
+    return !strings.Contains(s,"LLL")
+}
+
