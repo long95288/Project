@@ -611,3 +611,15 @@ func TestReverseStr(t *testing.T)  {
     fmt.Println(reverseStr("abcdefg",2))
     fmt.Println(reverseStr("abcde",2))
 }
+func TestMaxLengthBetweenEqualCharacters(t *testing.T)  {
+    //fmt.Println(maxLengthBetweenEqualCharacters("aa"))
+    //fmt.Println(maxLengthBetweenEqualCharacters("abbccdda"))
+    //fmt.Println(maxLengthBetweenEqualCharacters("abc"))
+    fmt.Println(maxLengthBetweenEqualCharacters("mgntdygtxrvxjnwksqhxuxtrv"))
+}
+func TestFindLexSmallestString(t *testing.T)  {
+    fmt.Println(findLexSmallestString("43987654", 7, 3))
+    fmt.Println(findLexSmallestString("0011", 4,2))
+    fmt.Println(findLexSmallestString("74", 5, 1))
+    fmt.Println(findLexSmallestString("5525", 9, 2))
+}

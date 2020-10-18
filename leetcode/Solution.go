@@ -2166,3 +2166,86 @@ func checkRecord(s string) bool {
     return !strings.Contains(s,"LLL")
 }
 
+func maxLengthBetweenEqualCharacters(s string) int {
+    // 两个循环,计算相同元素之间的长度
+    tmp := []rune(s)
+    maxLength := -1
+    for i:= 0;i < len(tmp); i++{
+        for j := i + 1;j < len(tmp);j ++{
+            if tmp[i] == tmp[j] {
+                if j - i - 1 > maxLength {
+                    maxLength = j - i - 1
+                }
+            }
+        }
+    }
+    return maxLength
+}
+// 累加操作
+func aF(s string, a int) string {
+    tmp2 := []byte(s)
+    for i := 1 ; i < len(s); i += 2 {
+        tmp2N,_ := strconv.Atoi(string(tmp2[i]))
+        tmp2[i] = byte('0' + (tmp2N + a)%10)
+    }
+    return string(tmp2)
+}
+// 轮转操作
+func bF(s string, b int) string {
+    tmp2 := []byte(s)
+    tmp2B := []byte{}
+    for _,v := range tmp2[len(tmp2) - b:] {
+        tmp2B = append(tmp2B, v)
+    }
+    tmp2B = append(tmp2B, tmp2[:len(tmp2) - b]...)
+    return string(tmp2B)
+}
+func findLexSmallestString(s string, a int, b int) string {
+    // 两个操作,累加,轮转
+    // 关于轮转: 如果b为偶数 所有轮转的结果0，2，4，6，.....
+    //         如果b为奇数,所有的轮转结果1，2，3，4，5，6，，，
+    // 关于累加:由于a的范围为0-9。每个轮转都可以进行10轮累加
+    // 需要寻找最小的那么操作后的值应该会变小才对
+    // 尝试累加,比最小值还小就加
+    // 尝试轮转,比最小值还小就轮转,
+    // 退出条件:无法比最小的还小了
+    min := []byte(s)
+    minNum, _ := strconv.ParseInt(s,10,64)
+    //tmp := -1
+
+    for {
+        // 只累加
+        aS := aF(string(min), a)
+        aSNum,_ :=  strconv.ParseInt(aS, 10, 64)
+    
+        // 只轮转
+        bS := bF(string(min), b)
+        bSNum,_ := strconv.ParseInt(bS, 10, 64)
+    
+        // 先累加后轮转
+        bS1 := bF(aS, b)
+        bS1Num,_ := strconv.ParseInt(bS1, 10, 64)
+        
+        // 先轮转后累加
+        aS1 := aF(bS, a)
+        aS1Num,_ := strconv.ParseInt(aS1, 10, 64)
+        
+        // 取最小值
+        opMin := int64(math.Min(float64(aSNum), math.Min(float64(bSNum), math.Min(float64(bS1Num),float64(aS1Num)))))
+        if opMin < minNum{
+            minNum = opMin
+            if opMin == aSNum {
+                min = []byte(aS)
+            }else if opMin == aS1Num {
+                min = []byte(aS1)
+            }else if opMin == bSNum {
+                min = []byte(bS)
+            }else{
+                min = []byte(bS1)
+            }
+        }else{
+            break
+        }
+    }
+    return string(min)
+}
