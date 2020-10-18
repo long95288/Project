@@ -2201,51 +2201,43 @@ func bF(s string, b int) string {
     return string(tmp2B)
 }
 func findLexSmallestString(s string, a int, b int) string {
-    // 两个操作,累加,轮转
-    // 关于轮转: 如果b为偶数 所有轮转的结果0，2，4，6，.....
-    //         如果b为奇数,所有的轮转结果1，2，3，4，5，6，，，
-    // 关于累加:由于a的范围为0-9。每个轮转都可以进行10轮累加
-    // 需要寻找最小的那么操作后的值应该会变小才对
-    // 尝试累加,比最小值还小就加
-    // 尝试轮转,比最小值还小就轮转,
-    // 退出条件:无法比最小的还小了
-    min := []byte(s)
-    minNum, _ := strconv.ParseInt(s,10,64)
-    //tmp := -1
-
-    for {
-        // 只累加
-        aS := aF(string(min), a)
-        aSNum,_ :=  strconv.ParseInt(aS, 10, 64)
-    
-        // 只轮转
-        bS := bF(string(min), b)
-        bSNum,_ := strconv.ParseInt(bS, 10, 64)
-    
-        // 先累加后轮转
-        bS1 := bF(aS, b)
-        bS1Num,_ := strconv.ParseInt(bS1, 10, 64)
-        
-        // 先轮转后累加
-        aS1 := aF(bS, a)
-        aS1Num,_ := strconv.ParseInt(aS1, 10, 64)
-        
-        // 取最小值
-        opMin := int64(math.Min(float64(aSNum), math.Min(float64(bSNum), math.Min(float64(bS1Num),float64(aS1Num)))))
-        if opMin < minNum{
-            minNum = opMin
-            if opMin == aSNum {
-                min = []byte(aS)
-            }else if opMin == aS1Num {
-                min = []byte(aS1)
-            }else if opMin == bSNum {
-                min = []byte(bS)
-            }else{
-                min = []byte(bS1)
+    // 两个操作,累加,轮转，枚举所有可能,取最大值
+    totalStr := []string{}
+    totalStr = append(totalStr, s)
+    tmp := []byte(s)
+    for i := 0; i < 10; i ++ {
+        astr := aF(string(tmp), a)
+        totalStr = append(totalStr, astr)
+        tmp2 := []byte(astr)
+        for j := 0; j < len(s); j++{
+            bstr := bF(string(tmp2), b)
+            totalStr = append(totalStr, bstr)
+            
+            tmp3 := []byte(bstr)
+            for k := 0; k < 10;k ++ {
+                astr2 := aF(string(tmp3), a)
+                totalStr = append(totalStr, astr2)
+                tmp4 := []byte(astr2)
+                for f:=0; f < len(s); f ++ {
+                    bstr2 := bF(string(tmp4),b)
+                    totalStr = append(totalStr, bstr2)
+                    tmp4 = []byte(bstr2)
+                }
+                tmp3 = []byte(astr2)
             }
-        }else{
-            break
+            tmp2 = []byte(bstr)
+        }
+        tmp = []byte(astr)
+    }
+    // 计算最小值
+    var minNum = totalStr[0]
+    minNumIndex := 0
+    for i,v := range totalStr {
+        if strings.Compare(minNum, v) == 1 {
+            minNum = v
+            tmpIndex := i
+            minNumIndex = tmpIndex
         }
     }
-    return string(min)
+    return totalStr[minNumIndex]
 }

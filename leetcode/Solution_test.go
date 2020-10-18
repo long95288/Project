@@ -622,4 +622,5 @@ func TestFindLexSmallestString(t *testing.T)  {
     fmt.Println(findLexSmallestString("0011", 4,2))
     fmt.Println(findLexSmallestString("74", 5, 1))
     fmt.Println(findLexSmallestString("5525", 9, 2))
+    fmt.Println(findLexSmallestString("87144140372271458627",4,8))
 }
