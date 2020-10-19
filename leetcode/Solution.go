@@ -2202,42 +2202,51 @@ func bF(s string, b int) string {
 }
 func findLexSmallestString(s string, a int, b int) string {
     // 两个操作,累加,轮转，枚举所有可能,取最大值
-    totalStr := []string{}
-    totalStr = append(totalStr, s)
-    tmp := []byte(s)
-    for i := 0; i < 10; i ++ {
-        astr := aF(string(tmp), a)
-        totalStr = append(totalStr, astr)
-        tmp2 := []byte(astr)
-        for j := 0; j < len(s); j++{
-            bstr := bF(string(tmp2), b)
-            totalStr = append(totalStr, bstr)
-            
-            tmp3 := []byte(bstr)
-            for k := 0; k < 10;k ++ {
-                astr2 := aF(string(tmp3), a)
-                totalStr = append(totalStr, astr2)
-                tmp4 := []byte(astr2)
-                for f:=0; f < len(s); f ++ {
-                    bstr2 := bF(string(tmp4),b)
-                    totalStr = append(totalStr, bstr2)
-                    tmp4 = []byte(bstr2)
+    // 如果是轮转是o数
+    minNum := s
+    tmp := s
+    for i:=0;i< len(s);i ++ {
+        // 轮转
+        bStr := bF(tmp, b)
+        // 对轮转之后的数据进行累加
+        for j :=0; j < 10;j ++ {
+            bStr = aF(bStr, a)
+            // 如果b是奇数,需要再次轮转累加
+            if b%2 == 1 {
+                for k:=0; k < 10;k ++{
+                    for m := 0;m < len(s);m += 2{
+                        aF(bStr,a)
+                    }
                 }
-                tmp3 = []byte(astr2)
+                
+            }else{
+                if strings.Compare(bStr, minNum) == 1 {
+                    minNum = bStr
+                }
             }
-            tmp2 = []byte(bstr)
+            
         }
-        tmp = []byte(astr)
+        
     }
-    // 计算最小值
-    var minNum = totalStr[0]
-    minNumIndex := 0
-    for i,v := range totalStr {
-        if strings.Compare(minNum, v) == 1 {
-            minNum = v
-            tmpIndex := i
-            minNumIndex = tmpIndex
+    return minNum
+}
+func reverseWords(s string) string {
+    ret := []rune{}
+    arr := strings.Split(s, " ")
+    for i,v := range arr{
+        l,r := 0, len(v) -1
+        tmpV := []rune(v)
+        for l < r {
+            tmp := tmpV[l]
+            tmpV[l] = tmpV[r]
+            tmpV[r] = tmp
+            l ++
+            r --
         }
+        if i != len(arr) -1 {
+            tmpV = append(tmpV, ' ')
+        }
+        ret = append(ret, tmpV...)
     }
-    return totalStr[minNumIndex]
+    return string(ret)
 }

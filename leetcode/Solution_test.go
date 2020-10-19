@@ -624,3 +624,6 @@ func TestFindLexSmallestString(t *testing.T)  {
     fmt.Println(findLexSmallestString("5525", 9, 2))
     fmt.Println(findLexSmallestString("87144140372271458627",4,8))
 }
+func TestReverseWords(t *testing.T)  {
+    fmt.Println(reverseWords("Let's take LeetCode contest"))
+}
