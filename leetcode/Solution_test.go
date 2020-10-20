@@ -627,3 +627,42 @@ func TestFindLexSmallestString(t *testing.T)  {
 func TestReverseWords(t *testing.T)  {
     fmt.Println(reverseWords("Let's take LeetCode contest"))
 }
+func TestTree2str(t *testing.T)  {
+    tree := &TreeNode{
+        Val:   1,
+        Left:  &TreeNode{
+            Val:   2,
+            Left:  &TreeNode{
+                Val:   4,
+                Left:  nil,
+                Right: nil,
+            },
+            Right: nil,
+        },
+        Right: &TreeNode{
+            Val:   3,
+            Left:  nil,
+            Right: nil,
+        },
+    }
+    fmt.Println(tree2str(tree))
+    // "1(2(4))(3)"
+    tree2 := &TreeNode{
+        Val:   1,
+        Left:  &TreeNode{
+            Val:   2,
+            Left:  nil,
+            Right: nil,
+        },
+        Right: &TreeNode{
+            Val:   3,
+            Left:  nil,
+            Right: &TreeNode{
+                Val:   4,
+                Left:  nil,
+                Right: nil,
+            },
+        },
+    }
+    fmt.Println(tree2str(tree2))
+}

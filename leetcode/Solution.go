@@ -2250,3 +2250,18 @@ func reverseWords(s string) string {
     }
     return string(ret)
 }
+
+func tree2str(t *TreeNode) string {
+    if nil == t {
+        return ""
+    }
+    if nil != t.Left && nil != t.Right {
+        return strconv.Itoa(t.Val) +"(" + tree2str(t.Left)+")" +"("+ tree2str(t.Right)+")"
+    }else if nil != t.Left && nil == t.Right {
+        return strconv.Itoa(t.Val) +"("+ tree2str(t.Left) + ")"
+    }else if nil == t.Left && nil != t.Right {
+        return strconv.Itoa(t.Val) + "()"+ "(" + tree2str(t.Right) +")"
+    }else{
+        return strconv.Itoa(t.Val)
+    }
+}
