@@ -2265,3 +2265,33 @@ func tree2str(t *TreeNode) string {
         return strconv.Itoa(t.Val)
     }
 }
+func isPalindrome3(s string) bool{
+    right := len(s) -1
+    sb := []rune(s)
+    for i := 0;i < right; {
+        if sb[i] == sb[right] {
+            right --
+            i ++
+        }else{
+            return false
+        }
+    }
+    return true
+}
+func validPalindrome(s string) bool {
+    // 双指针,夹逼。
+    // 出现不一致,尝试删除左边或者右边看是否相等
+    right := len(s) -1
+    sb := []rune(s)
+    for i := 0; i < right ;{
+        if sb[i] == sb[right] {
+            right --
+            i ++
+            continue
+        } else {
+            // 去除左边数据
+            return isPalindrome3(string(sb[i+1: right + 1])) || isPalindrome3(string(sb[i: right]))
+        }
+    }
+    return true
+}

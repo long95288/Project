@@ -666,3 +666,11 @@ func TestTree2str(t *testing.T)  {
     }
     fmt.Println(tree2str(tree2))
 }
+func TestValidPalindrome(t *testing.T)  {
+    fmt.Println(validPalindrome("aba"))
+    fmt.Println(validPalindrome("abba"))
+    fmt.Println(validPalindrome("abcadba"))
+    fmt.Println(validPalindrome("aguokepatgbnvfqmgmlcupuufxoohdfpgjdmysgvhmvffcnqxjjxqncffvmhvgsymdjgpfdhooxfuupuculmgmqfvnbgtapekouga"))
+    // aguokepatgbnvfqmgmlcupuufxoohdfpgjdmysgvhmvffcnqxjjxqncffvmhvgsymdjgpfdhooxfuupuculmgmqfvnbgtapekouga
+    
+}
