@@ -674,3 +674,8 @@ func TestValidPalindrome(t *testing.T)  {
     // aguokepatgbnvfqmgmlcupuufxoohdfpgjdmysgvhmvffcnqxjjxqncffvmhvgsymdjgpfdhooxfuupuculmgmqfvnbgtapekouga
     
 }
+func TestIsFlipedString(t *testing.T)  {
+    fmt.Println(isFlipedString("aa","aa"))
+    fmt.Println(isFlipedString("aba","aab"))
+    fmt.Println(isFlipedString("aa","aba"))
+}

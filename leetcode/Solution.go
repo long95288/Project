@@ -2295,3 +2295,22 @@ func validPalindrome(s string) bool {
     }
     return true
 }
+func isFlipedString(s1 string, s2 string) bool {
+    if s1 == s2 {
+        return true
+    }
+    s1bytes := []rune(s1)
+    for i := 0; i < len(s1bytes); i++{
+        // 轮转
+        tmp := s1bytes[:i+1]
+        ret := s1bytes[i+1:]
+        for j:=0;j<len(tmp);j++ {
+            ret = append(ret, tmp[j])
+        }
+        if string(ret) == s2 {
+            return true
+        }
+    }
+    return false
+    
+}
