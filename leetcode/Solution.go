@@ -2314,3 +2314,20 @@ func isFlipedString(s1 string, s2 string) bool {
     return false
     
 }
+func intersection(nums1 []int, nums2 []int) []int {
+    map1 := make(map[int]int)
+    map2 := make(map[int]int)
+    for _,v := range nums1{
+        map1[v] += 1
+    }
+    for _,v := range nums2 {
+        map2[v] += 1
+    }
+    ret := []int{}
+    for k,_ := range map1{
+        if _,ok := map2[k];ok {
+            ret = append(ret, k)
+        }
+    }
+    return ret
+}
