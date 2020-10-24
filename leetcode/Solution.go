@@ -2331,3 +2331,26 @@ func intersection(nums1 []int, nums2 []int) []int {
     }
     return ret
 }
+func intersect(nums1 []int, nums2 []int) []int {
+    map1 := make(map[int]int)
+    map2 := make(map[int]int)
+    for _,v := range nums1{
+        map1[v] += 1
+    }
+    for _,v := range nums2 {
+        map2[v] += 1
+    }
+    ret := []int{}
+    for k,v1 := range map1{
+        if v2,ok := map2[k];ok {
+            v := v1
+            if v1 > v2 {
+                v = v2
+            }
+            for i:=v; v >0; i--{
+                ret = append(ret, k)
+            }
+        }
+    }
+    return ret
+}
