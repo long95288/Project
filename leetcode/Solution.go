@@ -2354,3 +2354,19 @@ func intersect(nums1 []int, nums2 []int) []int {
     }
     return ret
 }
+func findTheDifference(s string, t string) byte {
+    map1 := make(map[byte]int)
+    map2 := make(map[byte]int)
+    for _,v := range s {
+        map1[byte(v)] += 1
+    }
+    for _,v := range t {
+        map2[byte(v)] += 1
+    }
+    for k,v := range map2{
+        if v2,ok := map1[k];!ok || v != v2 {
+            return k
+        }
+    }
+    return 0
+}
