@@ -1,8 +1,10 @@
 package leetcode
 
 import (
+    "bufio"
     "fmt"
     "math"
+    "os"
     "sort"
     "strconv"
     "strings"
@@ -2369,4 +2371,16 @@ func findTheDifference(s string, t string) byte {
         }
     }
     return 0
+}
+func CountCharNum()  {
+    in := bufio.NewReader(os.Stdin)
+    input,_,_ := in.ReadLine()
+    target,_,_ := in.ReadLine()
+    
+    map1 := make(map[byte]int)
+    for _,v := range input {
+        map1[v] += 1
+    }
+    v,_ := map1[target[0]]
+    fmt.Println(v)
 }

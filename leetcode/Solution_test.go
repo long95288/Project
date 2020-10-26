@@ -679,3 +679,6 @@ func TestIsFlipedString(t *testing.T)  {
     fmt.Println(isFlipedString("aba","aab"))
     fmt.Println(isFlipedString("aa","aba"))
 }
+func TestCountCharNum(t *testing.T)  {
+    CountCharNum()
+}
