@@ -2384,3 +2384,26 @@ func CountCharNum()  {
     v,_ := map1[target[0]]
     fmt.Println(v)
 }
+
+func wordPattern(pattern string, s string) bool {
+    // 分割字符串,先建立起pattern和s的映射,然后再进行顺序判断
+    patternMap := make(map[rune]string)
+    sMap := make(map[string]rune)
+    
+    arr := strings.Split(s, " ")
+    if len(arr) != len(pattern){
+        return false
+    }
+    for i, v := range pattern {
+        if _,ok := patternMap[v];!ok {
+            patternMap[v] = arr[i]
+            sMap[arr[i]] = v
+        }
+    }
+    for i, v := range pattern {
+        if v2, ok := sMap[arr[i]]; !ok || v2 != v {
+            return false
+        }
+    }
+    return true
+}

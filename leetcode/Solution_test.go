@@ -682,3 +682,9 @@ func TestIsFlipedString(t *testing.T)  {
 func TestCountCharNum(t *testing.T)  {
     CountCharNum()
 }
+func TestWordPattern(t *testing.T)  {
+    fmt.Println(wordPattern("abba", "dog cat cat dog"))
+    fmt.Println(wordPattern("abba", "dog cat cat fish"))
+    fmt.Println(wordPattern("aaaa", "dog cat cat dog"))
+    fmt.Println(wordPattern("abba", "dog dog dog dog"))
+}
