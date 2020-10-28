@@ -2407,3 +2407,17 @@ func wordPattern(pattern string, s string) bool {
     }
     return true
 }
+func longestPalindrome(s string) int {
+  mapP := make(map[rune]int)
+  for _,v := range s {
+      mapP[v] += 1
+  }
+  ret := 0
+  for _,v := range mapP{
+        ret += (v/2)*2
+  }
+  if ret == len(s) {
+      return ret
+  }
+  return ret + 1
+}
