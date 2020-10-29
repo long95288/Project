@@ -91,3 +91,16 @@ func main() {
         }
     }
 }
+func firstUniqChar(s string) byte {
+    // 两次遍历
+    sMap := make(map[rune]int)
+    for _, v:= range s {
+        sMap[v] += 1
+    }
+    for _,v := range s {
+        if v2,_ := sMap[v];v2 == 1{
+            return byte(v)
+        }
+    }
+    return ' '
+}
