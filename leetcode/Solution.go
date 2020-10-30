@@ -2421,3 +2421,29 @@ func longestPalindrome(s string) int {
   }
   return ret + 1
 }
+func islandPerimeter(grid [][]int) int {
+    // 如果是陆地，计算相邻的四个格子，如果相邻的格子是0或者是边界,添加一条边
+    m := len(grid)
+    n := len(grid[0])
+    ret := 0
+    for i:=0;i< m;i++{
+        for j:=0;j<n;j++{
+            if grid[i][j] == 1 {
+                // 左 上 右 下
+                if j - 1 < 0 || (j - 1 >= 0 && grid[i][j -1] == 0) {
+                    ret += 1
+                }
+                if i - 1 < 0 || (i - 1 >= 0 && grid[i-1][j] == 0) {
+                    ret += 1
+                }
+                if j + 1 >= n || (j + 1 < n && grid[i][j + 1] == 0){
+                    ret += 1
+                }
+                if i + 1 >= m || (i + 1 < m && grid[i+ 1][j] == 0) {
+                    ret += 1
+                }
+            }
+        }
+    }
+    return ret
+}
