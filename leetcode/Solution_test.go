@@ -694,3 +694,12 @@ func TestLongestPalindrome(t *testing.T)  {
 func TestIslandPerimeter(t *testing.T)  {
     fmt.Println(islandPerimeter([][]int{{0,1,0,0},{1,1,1,0},{0,1,0,0},{1,1,0,0}}))
 }
+func TestFrequencySort(t *testing.T)  {
+    fmt.Println(frequencySort([]int{1,1,2,2,2,3}))
+    fmt.Println(frequencySort([]int{2,3,1,3,2}))
+    fmt.Println(frequencySort([]int{-1,1,-6,4,5,-6,1,4,1}))
+    
+}
+func TestCountSubstrings(t *testing.T)  {
+    fmt.Println(countSubstrings("aba","baba"))
+}

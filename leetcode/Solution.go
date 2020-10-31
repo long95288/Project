@@ -2505,3 +2505,39 @@ func findWords(words []string) []string {
     }
     return ret
 }
+func frequencySort(nums []int) []int {
+    // 计算出现频率
+    nMap := make(map[int]int)
+    for _,v := range nums {
+        nMap[v] += 1
+    }
+    nLen := len(nMap)
+    ret := []int{}
+    
+    for i :=0; i < nLen; i++{
+        minVal := 101
+        tmp := []int{}
+        for _, v := range nMap{
+            if v < minVal {
+                minVal = v
+            }
+        }
+        for k, v := range nMap {
+            if v == minVal {
+                for j := 0 ; j < minVal; j++{
+                    tmpV := k
+                    tmp = append(tmp, tmpV)
+                    delete(nMap, k)
+                }
+            }
+        }
+        sort.Ints(tmp)
+        for y := len(tmp) -1; y >= 0; y--{
+            ret = append(ret, tmp[y])
+        }
+    }
+    return ret
+}
+func countSubstrings(s string, t string) int {
+    return 0
+}
