@@ -2447,3 +2447,61 @@ func islandPerimeter(grid [][]int) int {
     }
     return ret
 }
+func findWords(words []string) []string {
+    m1Str := "qwertyuiopQWERTYUIOP"
+    m2Str := "asdfghjklASDFGHJKL"
+    m3Str := "zxcvbnmZXCVBNM"
+    
+    m1 := make(map[rune]int)
+    m2 := make(map[rune]int)
+    m3 := make(map[rune]int)
+    for _,v := range m1Str{
+        m1[v] = 1
+    }
+    for _,v := range m2Str{
+        m2[v] = 2
+    }
+    for _, v := range m3Str {
+        m3[v] = 3
+    }
+    ret := []string{}
+    for _, item := range words {
+        
+        flag := -1
+        count := 0
+        if _,ok := m1[rune(item[0])];ok {
+            flag = 1
+        }
+        if _,ok := m2[rune(item[0])];ok {
+            flag = 2
+        }
+        if _,ok := m3[rune(item[0])];ok {
+            flag = 3
+        }
+        for _,v := range item {
+            switch flag {
+            case 1:
+                if _,ok := m1[v];ok{
+                    count ++
+                }
+                continue
+            case 2:
+                if _,ok := m2[v];ok{
+                    count ++
+                }
+                continue
+            case 3:
+                if _,ok := m3[v];ok{
+                    count ++
+                }
+                continue
+            default:
+            }
+        }
+        
+        if flag != -1 && count == len(item) {
+            ret = append(ret, item)
+        }
+    }
+    return ret
+}
