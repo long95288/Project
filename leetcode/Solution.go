@@ -2541,3 +2541,10 @@ func frequencySort(nums []int) []int {
 func countSubstrings(s string, t string) int {
     return 0
 }
+func distributeCandies(candies []int) int {
+    m := make(map[int]struct{})
+    for _,v := range candies {
+        m[v] = struct{}{}
+    }
+    return min(len(m), len(candies) / 2)
+}
