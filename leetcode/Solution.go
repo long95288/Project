@@ -2548,3 +2548,24 @@ func distributeCandies(candies []int) int {
     }
     return min(len(m), len(candies) / 2)
 }
+func findLHS(nums []int) int {
+    // 和谐数组
+    nMap := make(map[int]int)
+    max := -1 << (32 -1)
+    for _,v := range nums {
+        nMap[v] += 1
+    }
+    for k,v := range nMap {
+        if v2,ok := nMap[k - 1];ok {
+            if v2 + v > max {
+                max = v2 + v
+            }
+        }
+        if v2, ok := nMap[k + 1];ok {
+            if v2 + v > max {
+                max = v2 + v
+            }
+        }
+    }
+    return max
+}
