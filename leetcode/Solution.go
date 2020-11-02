@@ -2597,3 +2597,21 @@ func findRestaurant(list1 []string, list2 []string) []string {
     }
     return ret
 }
+func findErrorNums(nums []int) []int {
+    // 寻找重复值
+    nMap := make(map[int]int)
+    ret := []int{}
+    sum := 0
+    for _,v := range nums {
+        nMap[v] += 1
+        sum += v
+        if mv,_ := nMap[v];mv == 2 {
+            tmp := v
+            ret = append(ret, tmp)
+        }
+    }
+    // 计算差值
+    standard := (len(nums) * (len(nums) + 1)) / 2
+    ret = append(ret, (ret[0] + (standard - sum)))
+    return ret
+}

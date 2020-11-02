@@ -706,3 +706,6 @@ func TestCountSubstrings(t *testing.T)  {
 func TestFindRestaurant(t *testing.T)  {
     fmt.Println(findRestaurant([]string{"Shogun","Tapioca Express","Burger King","KFC"}, []string{"KFC","Shogun","Burger King"}))
 }
+func TestFindErrorNums(t *testing.T)  {
+    fmt.Println(findErrorNums([]int{1,2,2,4}))
+}
