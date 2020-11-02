@@ -703,3 +703,6 @@ func TestFrequencySort(t *testing.T)  {
 func TestCountSubstrings(t *testing.T)  {
     fmt.Println(countSubstrings("aba","baba"))
 }
+func TestFindRestaurant(t *testing.T)  {
+    fmt.Println(findRestaurant([]string{"Shogun","Tapioca Express","Burger King","KFC"}, []string{"KFC","Shogun","Burger King"}))
+}

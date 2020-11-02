@@ -2569,3 +2569,31 @@ func findLHS(nums []int) int {
     }
     return max
 }
+func findRestaurant(list1 []string, list2 []string) []string {
+    //
+    m1 := make(map[string]int)
+    m2 := make(map[string]int)
+    for i,v := range list1 {
+        index := i
+        m1[v] = index
+    }
+    for i,v := range list2 {
+        index := i
+        m2[v] = index
+    }
+    ret := []string{}
+    minIndex := 1 << (32 -1)
+    for k,v := range m1 {
+        if v2, ok := m2[k];ok {
+            if minIndex > v + v2 {
+                minIndex = v + v2
+            }
+        }
+    }
+    for k,v := range m1 {
+        if v2, ok := m2[k];ok && (v2 + v == minIndex) {
+            ret = append(ret, k)
+        }
+    }
+    return ret
+}
