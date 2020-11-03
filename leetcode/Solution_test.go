@@ -709,3 +709,8 @@ func TestFindRestaurant(t *testing.T)  {
 func TestFindErrorNums(t *testing.T)  {
     fmt.Println(findErrorNums([]int{1,2,2,4}))
 }
+func TestValidMountainArray(t *testing.T)  {
+    fmt.Println(validMountainArray([]int{0,3,2,1}))
+    fmt.Println(validMountainArray([]int{2,1}))
+    fmt.Println(validMountainArray([]int{3, 5, 5}))
+}

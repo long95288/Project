@@ -2615,3 +2615,22 @@ func findErrorNums(nums []int) []int {
     ret = append(ret, (ret[0] + (standard - sum)))
     return ret
 }
+func validMountainArray(A []int) bool {
+    // 两端往中间,最后重合,说明是山峰
+    if len(A) <= 2 {
+        return false
+    }
+    start := 0
+    end := len(A) -1
+    for start < end {
+        if start + 1 <= end && A[start + 1] > A[start]{
+            start ++
+        } else if end - 1 >= start && A[end] < A[end -1] {
+            end --
+        } else {
+            break
+        }
+    }
+    return start == end && start != 0 && end != len(A) -1
+}
+
