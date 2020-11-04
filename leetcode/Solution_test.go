@@ -714,3 +714,27 @@ func TestValidMountainArray(t *testing.T)  {
     fmt.Println(validMountainArray([]int{2,1}))
     fmt.Println(validMountainArray([]int{3, 5, 5}))
 }
+func TestGetImportance(t *testing.T)  {
+    fmt.Println(getImportance( []*Employee{
+        &Employee{
+            Id:           1,
+            Importance:   5,
+            Subordinates: []int{2, 3},
+        },
+        &Employee{
+            Id:           2,
+            Importance:   3,
+            Subordinates: []int{4},
+        },
+        &Employee{
+            Id:           3,
+            Importance:   4,
+            Subordinates: nil,
+        },
+        &Employee{
+            Id:           4,
+            Importance:   1,
+            Subordinates: nil,
+        },
+    }, 1))
+}

@@ -2634,3 +2634,23 @@ func validMountainArray(A []int) bool {
     return start == end && start != 0 && end != len(A) -1
 }
 
+
+type Employee struct {
+     Id int
+     Importance int
+     Subordinates []int
+}
+
+func getImportance(employees []*Employee, id int) int {
+    eMap := make(map[int]*Employee)
+    for _,v := range employees{
+        eMap[v.Id] = v
+    }
+    e,_ := eMap[id]
+    ret := 0
+    ret += e.Importance
+    for _,v := range e.Subordinates{
+       ret += getImportance(employees,v)
+    }
+    return ret
+}
