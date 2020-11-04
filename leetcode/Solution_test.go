@@ -738,3 +738,8 @@ func TestGetImportance(t *testing.T)  {
         },
     }, 1))
 }
+func TestLongestWord(t *testing.T)  {
+    fmt.Println(longestWord([]string{"a", "banana", "app", "appl", "ap", "apply", "apple"}))
+    fmt.Println(longestWord([]string{"k","lg","it","oidd","oid","oiddm","kfk","y","mw","kf","l","o","mwaqz","oi","ych","m","mwa"}))
+    fmt.Println("oiddm" > "mwaqz")
+}

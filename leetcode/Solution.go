@@ -2654,3 +2654,36 @@ func getImportance(employees []*Employee, id int) int {
     }
     return ret
 }
+func longestWord(words []string) string {
+    sMap := make(map[string]int)
+    for _, v := range words {
+        sMap[v] = len(v)
+    }
+    result := ""
+    haveResult := false
+    for k,_ := range sMap {
+        setable := true
+        tmp := k
+        for i := 1;i < len(tmp);i ++{
+            if _,ok := sMap[string(tmp[:i])]; !ok{
+                setable = false
+            }
+        }
+        if setable && !haveResult {
+            result = tmp
+            haveResult = true
+        }
+        if setable && haveResult {
+            if len(result) < len(tmp){
+                result = tmp
+            }
+            if len(result) == len(tmp) && result > tmp {
+                result = tmp
+            }
+        }
+    }
+    if haveResult {
+        return result
+    }
+    return ""
+}
