@@ -2687,3 +2687,36 @@ func longestWord(words []string) string {
     }
     return ""
 }
+func shortestCompletingWord(licensePlate string, words []string) string {
+    lMap := make(map[rune]int)
+    ulicensePlate  := strings.ToUpper(licensePlate)
+    for _,v := range ulicensePlate {
+        if v >= 'A' && v <= 'Z' {
+            lMap[v] += 1
+        }
+    }
+    result := ""
+    minLen := 1 << (32 -1)
+    for _, str := range words {
+        uStr := strings.ToUpper(str)
+        uStrMap := make(map[rune]int)
+        for _, v := range uStr {
+            if v >= 'A' && v <= 'Z' {
+                uStrMap[v] += 1
+            }
+        }
+        setAble := true
+        for k, v := range lMap {
+            if v2,ok := uStrMap[k]; !ok || v2 < v {
+                setAble = false
+            }
+        }
+        if setAble {
+            if len(str) < minLen {
+                minLen = len(str)
+                result = str
+            }
+        }
+    }
+    return result
+}

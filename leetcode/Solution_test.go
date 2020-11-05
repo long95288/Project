@@ -743,3 +743,11 @@ func TestLongestWord(t *testing.T)  {
     fmt.Println(longestWord([]string{"k","lg","it","oidd","oid","oiddm","kfk","y","mw","kf","l","o","mwaqz","oi","ych","m","mwa"}))
     fmt.Println("oiddm" > "mwaqz")
 }
+func TestShortestCompletingWord(t *testing.T)  {
+    fmt.Println(shortestCompletingWord("1s3 PSt",[]string{"step", "steps", "stripe", "stepple"}))
+    /**
+    "1s3 456"
+    ["looks","pest","stew","show"]
+     */
+    fmt.Println(shortestCompletingWord("1s3 456",[]string{"looks","pest","stew","show"}))
+}
