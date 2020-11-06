@@ -2720,3 +2720,41 @@ func shortestCompletingWord(licensePlate string, words []string) string {
     }
     return result
 }
+type MyHashSet struct {
+    keys []int
+}
+func Constructor2() MyHashSet {
+    return MyHashSet{}
+}
+func (this *MyHashSet) Add(key int)  {
+    for _,v := range this.keys{
+        if key == v {
+            return
+        }
+    }
+    this.keys = append(this.keys, key)
+}
+
+
+func (this *MyHashSet) Remove(key int)  {
+    tmp := []int{}
+    for _, v := range this.keys {
+        if key == v {
+            continue
+        }else{
+            tmp = append(tmp, v)
+        }
+    }
+    this.keys = tmp
+}
+
+
+/** Returns true if this set contains the specified element */
+func (this *MyHashSet) Contains(key int) bool {
+    for _,v := range this.keys {
+        if v == key {
+            return true
+        }
+    }
+    return false
+}
