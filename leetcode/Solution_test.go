@@ -751,3 +751,8 @@ func TestShortestCompletingWord(t *testing.T)  {
      */
     fmt.Println(shortestCompletingWord("1s3 456",[]string{"looks","pest","stew","show"}))
 }
+
+func TestSubdomainVisits(t *testing.T) {
+    fmt.Println(subdomainVisits([]string{"900 google.mail.com", "50 yahoo.com", "1 intel.mail.com", "5 wiki.org"}))
+    fmt.Println(subdomainVisits([]string{"9001 discuss.leetcode.com"}))
+}

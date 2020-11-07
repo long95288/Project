@@ -2804,3 +2804,25 @@ func (this *MyHashMap) Remove(key int)  {
     this.keys = newKeys
     this.values = newValues
 }
+
+func subdomainVisits(cpdomains []string) []string {
+    // 依次解析
+    cMap := make(map[string]int)
+    for _,v := range cpdomains{
+        count,_ :=strconv.Atoi(strings.Split(v," ")[0])
+        cMap[strings.Split(v," ")[1]] += count
+        tmp := v
+        index := strings.Index(tmp, ".")
+        for index != -1 {
+            tmp = string(tmp[index + 1:])
+            cMap[tmp] += count
+            index = strings.Index(tmp, ".")
+        }
+    }
+    ret := []string{}
+    for k, v := range cMap{
+        tmp := strconv.Itoa(v)
+        ret = append(ret, tmp + " " + k)
+    }
+    return ret
+}
