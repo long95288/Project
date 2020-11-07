@@ -2758,3 +2758,49 @@ func (this *MyHashSet) Contains(key int) bool {
     }
     return false
 }
+
+type MyHashMap struct {
+    // 双数组
+    keys []int
+    values []int
+}
+
+
+/** value will always be non-negative. */
+func (this *MyHashMap) Put(key int, value int)  {
+    for i,v := range this.keys{
+        if v == key {
+            this.values[i] = value
+            return
+        }
+    }
+    this.keys = append(this.keys, key)
+    this.values = append(this.values, value)
+}
+
+
+/** Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key */
+func (this *MyHashMap) Get(key int) int {
+    for i,v := range this.keys{
+        if v == key {
+            return this.values[i]
+        }
+    }
+    return -1
+}
+
+
+/** Removes the mapping of the specified value key if this map contains a mapping for the key */
+func (this *MyHashMap) Remove(key int)  {
+    newKeys := []int{}
+    newValues := []int{}
+    for i,v := range this.keys {
+        if v == key{
+            continue
+        }
+        newKeys = append(newKeys,v)
+        newValues = append(newValues, this.values[i])
+    }
+    this.keys = newKeys
+    this.values = newValues
+}
