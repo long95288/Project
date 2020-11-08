@@ -2826,3 +2826,29 @@ func subdomainVisits(cpdomains []string) []string {
     }
     return ret
 }
+func getMaximumGenerated(n int) int {
+    nums := make([]int, n + 1)
+    max := -1 << (32 -1)
+    for i := 0;i<len(nums);i++{
+        if i ==0 {
+            nums[i] = 0
+        }
+        if i == 1{
+            nums[i] = 1
+        }
+        if n >= 2 * i && 2 * i >= 2 {
+            if 2 * i < len(nums) {
+                nums[2 * i] = nums[i]
+            }
+        }
+        if n >= (2 * i + 1) && (2 * i + 1) >= 2{
+            if (2 * i + 1) < len(nums) {
+                nums[2 * i + 1] = nums[i] + nums[i + 1]
+            }
+        }
+        if nums[i] > max {
+            max = nums[i]
+        }
+    }
+    return max
+}
