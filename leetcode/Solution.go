@@ -2852,3 +2852,27 @@ func getMaximumGenerated(n int) int {
     }
     return max
 }
+func minDeletions(s string) int {
+    sMap := make(map[rune]int)
+    for _,v := range s {
+        sMap[v] += 1
+    }
+    nums := make([]int, len(sMap))
+    //
+    index := 0
+    for _,v := range sMap {
+        nums[index] = v
+        index ++
+    }
+    // 排序
+    sort.Ints(nums)
+    // 删除
+    step := 0
+    for i := len(nums) -2; i >= 0; i -- {
+        for nums[i] > 0 && nums[i] >= nums[i + 1]{
+            step += 1
+            nums[i] -= 1
+        }
+    }
+    return step
+}

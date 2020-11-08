@@ -756,3 +756,12 @@ func TestSubdomainVisits(t *testing.T) {
     fmt.Println(subdomainVisits([]string{"900 google.mail.com", "50 yahoo.com", "1 intel.mail.com", "5 wiki.org"}))
     fmt.Println(subdomainVisits([]string{"9001 discuss.leetcode.com"}))
 }
+
+func TestMinDeletions(t *testing.T)  {
+    fmt.Println(minDeletions("aab"))
+    fmt.Println(minDeletions("aaabbbcc"))
+    fmt.Println(minDeletions("aaabbbcc"))
+    fmt.Println(minDeletions("ceabaacb"))
+    // "bbcebab"
+    fmt.Println(minDeletions("bbcebab"))
+}
