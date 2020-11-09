@@ -2876,3 +2876,66 @@ func minDeletions(s string) int {
     }
     return step
 }
+func repeatedNTimes(A []int) int {
+    n := len(A) / 2
+    aMap := make(map[int]int)
+    for _, v := range A {
+        aMap[v] += 1
+        v2,_ := aMap[v]
+        if v2 >= n {
+            return v
+        }
+    }
+    return 0
+}
+func isAlienSorted(words []string, order string) bool {
+    // 字典序,
+    indexMap := make(map[rune]int)
+    for i,v := range order {
+        indexMap[v] = i
+    }
+    for i := 1;i<len(words);i++{
+        first := words[i - 1]
+        second := words[i]
+        wlen := len(first)
+        wflag := false
+        if len(second) < wlen {
+            wlen = len(second)
+            wflag = true
+        }
+        for j := 0; j < wlen;j ++ {
+            indexFirst,_ := indexMap[rune(first[j])]
+            indexSecond,_:= indexMap[rune(second[j])]
+            if indexFirst > indexSecond {
+                return false
+            }else if indexFirst < indexSecond {
+                // 字典序
+                wflag = false
+                break
+            }
+        }
+        
+        //// 相同的地方[aab aa]
+        if wflag {
+           return false
+        }
+    }
+    return true
+}
+func powerfulIntegers(x int, y int, bound int) []int {
+    rMap := make(map[int]struct{})
+    for i := 0; i < 20 && int(math.Pow(float64(y),float64(i))) <= bound;i++{
+        for j := 0;j < 20 && int(math.Pow(float64(x),float64(j)))<=bound;j ++{
+            a := int(math.Pow(float64(y),float64(i))) + int(math.Pow(float64(x),float64(j)))
+            if a <= bound {
+                rMap[a] = struct{}{}
+            }
+        }
+    
+    }
+    ret := []int{}
+    for k,_ := range rMap{
+        ret = append(ret, k)
+    }
+    return ret
+}

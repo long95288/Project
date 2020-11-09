@@ -2,6 +2,7 @@ package leetcode
 
 import (
     "fmt"
+    "github.com/go-playground/assert/v2"
     "testing"
 )
 var list *ListNode = &ListNode{
@@ -764,4 +765,21 @@ func TestMinDeletions(t *testing.T)  {
     fmt.Println(minDeletions("ceabaacb"))
     // "bbcebab"
     fmt.Println(minDeletions("bbcebab"))
+}
+func TestIsAlienSorted(t *testing.T)  {
+    
+    assert.Equal(t,isAlienSorted([]string{"hello","leetcode"}, "hlabcdefgijkmnopqrstuvwxyz"),true) // true
+    // h < l
+    assert.Equal(t,isAlienSorted([]string{"word","world","row"}, "worldabcefghijkmnpqstuvxyz"), false) // false
+    assert.Equal(t,isAlienSorted([]string{"apple","app"}, "abcdefghijklmnopqrstuvwxyz"), false) //
+    assert.Equal(t,isAlienSorted([]string{"app","apple"}, "abcdefghijklmnopqrstuvwxyz"),true) //
+    //["fxasxpc","dfbdrifhp","nwzgs","cmwqriv","ebulyfyve","miracx","sxckdwzv","dtijzluhts","wwbmnge","qmjwymmyox"]
+    //"zkgwaverfimqxbnctdplsjyohu"
+    // false
+    assert.Equal(t,isAlienSorted(
+        []string{"fxasxpc","dfbdrifhp","nwzgs","cmwqriv","ebulyfyve","miracx","sxckdwzv","dtijzluhts","wwbmnge","qmjwymmyox"},
+    "zkgwaverfimqxbnctdplsjyohu"),false)
+}
+func TestPowerfulIntegers(t *testing.T)  {
+    fmt.Println(powerfulIntegers(2,3,10))
 }
