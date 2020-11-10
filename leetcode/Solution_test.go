@@ -783,3 +783,18 @@ func TestIsAlienSorted(t *testing.T)  {
 func TestPowerfulIntegers(t *testing.T)  {
     fmt.Println(powerfulIntegers(2,3,10))
 }
+func TestCommonChars(t *testing.T)  {
+    fmt.Println(commonChars([]string{"bella","label","roller"}))
+    fmt.Println(commonChars([]string{"cool","lock","cook"}))
+}
+func TestCountCharacters(t *testing.T){
+    assert.Equal(t, 6, countCharacters([]string{"cat","bt","hat","tree"},"atach"))
+}
+func TestFindOcurrences(t *testing.T)  {
+   assert.Equal(t, findOcurrences("alice is a good girl she is a good student","a", "good"),[]string{"girl","student"})
+}
+func TestMaxNumberOfBalloons(t *testing.T)  {
+    assert.Equal(t, maxNumberOfBalloons("nlaebolko"), 1)
+    assert.Equal(t, maxNumberOfBalloons("loonbalxballpoon"), 2)
+    assert.Equal(t, maxNumberOfBalloons("leetcode"), 0)
+}

@@ -2939,3 +2939,101 @@ func powerfulIntegers(x int, y int, bound int) []int {
     }
     return ret
 }
+func commonChars(A []string) []string {
+    // 为每个字符串建立map,然后取map中元素的并集
+    mapArr := []map[rune]int{}
+    for _,v := range A {
+        tempMap := make(map[rune]int)
+        for _,c := range v {
+            tempMap[c] += 1
+        }
+        mapArr = append(mapArr, tempMap)
+    }
+    tmpM := mapArr[0]
+    retMap := make(map[rune]int)
+    for k,v := range tmpM {
+        minVal := v
+        addAble := true
+        for i := 1;i<len(mapArr);i++{
+            if v2, ok := (mapArr[i])[k];!ok {
+                addAble = false
+            }else{
+                if v2 < minVal {
+                    minVal = v2
+                }
+            }
+        }
+        if addAble {
+            retMap[k] = minVal
+        }
+    }
+    ret := []string{}
+    for k,v := range retMap{
+        for i := 0;i < v; i++{
+            ret = append(ret, string(k))
+        }
+    }
+    return ret
+}
+func countCharacters(words []string, chars string) int {
+    cMap := make(map[rune]int)
+    for _,v := range chars {
+        cMap[v] += 1
+    }
+    ret := 0
+    for _, v := range words {
+        vMap := make(map[rune]int)
+        for _, c := range v {
+            vMap[c] += 1
+        }
+        addAble := true
+        for k2, v2 := range vMap{
+            if v3,ok := cMap[k2]; !ok || v3 < v2 {
+                addAble = false
+                break
+            }
+        }
+        if addAble {
+            ret += len(v)
+        }
+    }
+    return ret
+}
+func findOcurrences(text string, first string, second string) []string {
+    words := strings.Split(text, " ")
+    ret := []string{}
+    for i := 1;i < len(words);{
+        if words[i -1] == first && words[i] == second {
+            if i + 1 < len(words) {
+                ret = append(ret, words[i + 1])
+                i += 1
+                continue
+            }
+        }
+        i ++
+    }
+    return ret
+}
+func maxNumberOfBalloons(text string) int {
+    bMap := make(map[rune]int)
+    for _,v := range "balloon"{
+        bMap[v] += 1
+    }
+    ret := 1 << (32 -1)
+    tMap := make(map[rune]int)
+    for _,v := range text {
+        if _, ok := bMap[v];ok {
+            tMap[v] += 1
+        }
+    }
+    for k,v := range bMap{
+        if v2,ok := tMap[k];!ok {
+            return 0
+        }else{
+            if v2 / v < ret {
+                ret = v2 / v
+            }
+        }
+    }
+    return ret
+}
