@@ -798,3 +798,6 @@ func TestMaxNumberOfBalloons(t *testing.T)  {
     assert.Equal(t, maxNumberOfBalloons("loonbalxballpoon"), 2)
     assert.Equal(t, maxNumberOfBalloons("leetcode"), 0)
 }
+func TestCanPermutePalindrome(t *testing.T) {
+    assert.Equal(t, canPermutePalindrome("aabc"), false)
+}

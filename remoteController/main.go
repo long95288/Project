@@ -3,21 +3,76 @@ package main
 import (
     "fmt"
     "github.com/gin-gonic/gin"
+    "html/template"
     "log"
     "net/http"
     "os/exec"
+    "strconv"
+    "time"
 )
+
+type status struct {
+    Status string
+}
+var globalStatus = status{Status: "正常"}
+const TIME_LAYOUT = "2006-01-02T15:04"
 
 func main() {
     e:= gin.Default()
     e.GET("/cmd",HandleController)
     e.GET("/", func(context *gin.Context) {
-        context.JSON(200, gin.H{
-            "command_list":[]string{
-                "http://localhost:9999/cmd?id=1",
-                "http://localhost:9999/cmd?id=2",
-            },
-        })
+        t,err := template.ParseFiles("index.html")
+        if err != nil {
+            log.Println("err : ", err)
+            return
+        }
+        globalStatus.Status = "正常"
+        log.Println(t.Execute(context.Writer, globalStatus))
+    })
+    
+    e.POST("/SetShutdownTime", func(context *gin.Context) {
+        t,err := template.ParseFiles("index.html")
+        if err != nil {
+            log.Println("err : ", err)
+            return
+        }
+        r := context.Request
+        err = r.ParseForm()
+        if err != nil {
+            t.Execute(context.Writer, status{Status: err.Error()})
+            return
+        }
+        arrTime := r.Form["time"]
+        if len(arrTime) < 1 {
+            t.Execute(context.Writer, status{Status: "未设置关机时间"})
+            return
+        }
+        shutdownTime := arrTime[0]
+        if "" == shutdownTime {
+            t.Execute(context.Writer, status{Status: "错误时间格式"})
+            return
+        }
+        times , err := time.Parse(TIME_LAYOUT,shutdownTime)
+        if nil != err {
+            t.Execute(context.Writer, status{Status: "错误时间格式"})
+            return
+        }
+        d := times.Unix() - time.Now().Unix()
+        if d > 0 {
+            args :=[]string{"-s","-t"}
+            args = append(args, strconv.FormatInt(d, 10))
+            cmd := exec.Command("shutdown",args...)
+            err := cmd.Run()
+            if err != nil {
+                t.Execute(context.Writer, status{"设置关机任务失败"})
+            }else{
+                globalStatus.Status = "电脑将于:"+ shutdownTime + "关闭"
+                t.Execute(context.Writer, globalStatus)
+            }
+            return
+        }
+        t.Execute(context.Writer, status{Status: "错误时间格式"})
+        return
     })
     err := e.Run(":9999")
     if err != nil {
@@ -28,16 +83,18 @@ func main() {
 
 func shutdown(c *gin.Context){
     args :=[]string{"-s","-t","30"}
-    cmd := exec.Command("shutdown",args...)
-    err := cmd.Run()
+    t,err := template.ParseFiles("index.html")
     if err != nil {
-        c.JSON(http.StatusInternalServerError,gin.H{
-            "message":fmt.Sprintf("关机失败,err : %v",err),
-        })
+        log.Println("err : ", err)
+        return
+    }
+    cmd := exec.Command("shutdown",args...)
+    err = cmd.Run()
+    if err != nil {
+        t.Execute(c.Writer, status{"设置关机任务失败"})
     }else{
-        c.JSON(http.StatusOK,gin.H{
-            "message": "电脑将在30s后关机",
-        })
+        globalStatus.Status = "电脑将在30s后关机"
+        t.Execute(c.Writer,globalStatus )
     }
 }
 func cancelShutdown(c *gin.Context){
