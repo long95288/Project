@@ -1648,57 +1648,54 @@ func sumOddLengthSubarrays(arr []int) int {
 }
 
 func minSubarray(nums []int, p int) int {
-    // 先进行简化数组
-    for i:=0;i < len(nums);i++{
-        nums[i] = nums[i] % p
-    }
+    // 一个数x能够被p除尽,x % p == 0
+    // 一个数x不能被p除尽,x % p == y 可以知道(x - y) % p = 0,其中x = n * p
+    // 由已知可以求得y,然后在数组中寻找y,或者加起来得数据除上p，余数等于y的数组
     sum := 0
-    setSum := false
     for _,v := range nums{
         sum += v
-        if sum >= p {
-            setSum = true
-        }
-        if sum % p == 0 {
-            sum = 0
-            setSum = true
+    }
+    y := sum % p
+    // 在数组中寻求y值
+    if y == 0 {
+        return 0
+    }
+    for i := 0; i<len(nums); i++{
+        nums[i] = nums[i] % p
+    }
+    for i := 1; i < len(nums);i++ {
+        // i滑动窗口的大小
+        // [1] [2] [3] [4] ...
+        // [1,2] [2,3]
+        // [1,2,3]
+        init := false // 是否初始化滑动窗口
+        windows := 0
+        for j := i;j < len(nums);j ++{
+            // 根据滑动窗口的大小,计算滑动窗口中的值
+            if !init {
+                for k := 0; k < i; k ++{
+                    windows += nums[k]
+                }
+                if windows % p == y {
+                    return i
+                }
+                init = true
+            }
+            if init {
+                // 初始化:[1]
+                // 右移:[1,2] [2]
+                if j < len(nums){
+                    windows -= nums[j - i]
+                    windows += nums[j]
+                }
+                if windows % p == y {
+                    return i
+                }
+            }
         }
         
     }
-    if !setSum {
-        return -1
-    }
-    
-    if sum == 0 {
-        return 0
-    }
-    sum = sum % p
-    // 最后剩余的值看能不能通过寻找子数组找出来
-    removeSize := -1
-
-    subSum := 0
-    i := 0
-    for j:=i;j<len(nums);j++{
-        subSum += nums[j]
-        subSum = subSum % p
-        if subSum == 0 {
-            i = j
-        }
-        if sum == nums[j] {
-            return 1
-        }else if sum == subSum {
-             tmp := j - i
-             if removeSize == -1 {
-                 removeSize = tmp
-             }else if tmp < removeSize {
-                 removeSize = tmp
-             }
-        }
-    }
-    if removeSize >= len(nums) -1 {
-        return -1
-    }
-    return removeSize
+    return -1
 }
 type TreeNode struct {
     Val int

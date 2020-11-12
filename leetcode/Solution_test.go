@@ -422,11 +422,11 @@ func TestSumOddLengthSubarrays(t *testing.T)  {
 }
 func TestMinSubarray(t *testing.T){
     // 1
-    fmt.Println(minSubarray([]int{3,1,4,2},6))
+    assert.Equal(t,minSubarray([]int{3,1,4,2},6),1) // 10 % 6 == 4
     // 2
-    fmt.Println(minSubarray([]int{6,3,5,2},9))
+    assert.Equal(t,minSubarray([]int{6,3,5,2},9),2)
     // 0
-    fmt.Println(minSubarray([]int{1,2,3},3))
+    fmt.Println(minSubarray([]int{1,2,3},3), 0)
     // -1
     fmt.Println(minSubarray([]int{1,2,3},7))
     
@@ -438,6 +438,12 @@ func TestMinSubarray(t *testing.T){
     
     // 0
     fmt.Println(minSubarray([]int{1},1))
+    
+    /**
+    [26,19,11,14,18,4,7,1,30,23,19,8,10,6,26,3]
+    26
+     */
+    assert.Equal(t, minSubarray([]int{26,19,11,14,18,4,7,1,30,23,19,8,10,6,26,3}, 26), 3)
     
 }
 func TestLongestUnivaluePath(t *testing.T){
