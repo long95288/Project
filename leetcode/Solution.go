@@ -2183,10 +2183,19 @@ func maxLengthBetweenEqualCharacters(s string) int {
     }
     return maxLength
 }
-// 累加操作
+// 累加偶数位操作
 func aF(s string, a int) string {
     tmp2 := []byte(s)
     for i := 1 ; i < len(s); i += 2 {
+        tmp2N,_ := strconv.Atoi(string(tmp2[i]))
+        tmp2[i] = byte('0' + (tmp2N + a)%10)
+    }
+    return string(tmp2)
+}
+// 累加奇数位
+func aF2(s string, a int) string  {
+    tmp2 := []byte(s)
+    for i := 0 ; i < len(s); i += 2 {
         tmp2N,_ := strconv.Atoi(string(tmp2[i]))
         tmp2[i] = byte('0' + (tmp2N + a)%10)
     }
@@ -2203,34 +2212,41 @@ func bF(s string, b int) string {
     return string(tmp2B)
 }
 func findLexSmallestString(s string, a int, b int) string {
-    // 两个操作,累加,轮转，枚举所有可能,取最大值
-    // 如果是轮转是o数
-    minNum := s
+    minNumstr := s
+    // 一个数 经过10次累加之后,回到初始状态
+    // 一个数 经过len(s)次轮转之后,回到初始状态
+    // 对于偶数轮转来说: 累加只能改变奇数位,偶数位不会被累加。所有的枚举结果: len(s) * 10
+    // 对于奇数轮转来说: 虽然累加只能改变奇数位,但是经过轮转之后,奇数位变成偶数位,偶数位变成奇数位。这时候,奇数位，偶数位都应该累加。
+    
     tmp := s
-    for i:=0;i< len(s);i ++ {
+    for i := 0;i < len(s);i ++{
         // 轮转
-        bStr := bF(tmp, b)
-        // 对轮转之后的数据进行累加
-        for j :=0; j < 10;j ++ {
-            bStr = aF(bStr, a)
-            // 如果b是奇数,需要再次轮转累加
-            if b%2 == 1 {
-                for k:=0; k < 10;k ++{
-                    for m := 0;m < len(s);m += 2{
-                        aF(bStr,a)
-                    }
-                }
-                
-            }else{
-                if strings.Compare(bStr, minNum) == 1 {
-                    minNum = bStr
-                }
-            }
-            
+        tmp = bF(tmp, b)
+        if tmp < minNumstr {
+            minNumstr = tmp
         }
-        
+        //fmt.Println(tmp)
+        //// 对轮转之后的结果进行累加
+        addStr := tmp
+        for j := 0;j < 10;j ++{
+           // 累加完偶数位
+           addStr= aF(addStr, a)
+           if addStr < minNumstr {
+               minNumstr = addStr
+           }
+           // 如果是奇数,把奇数位也累加
+           if b % 2 != 0 {
+               for k := 0;k < 10;k ++ {
+                   addStr = aF2(addStr, a)
+                   if addStr < minNumstr{
+                       minNumstr = addStr
+                   }
+               }
+           }
+        }
+       
     }
-    return minNum
+    return minNumstr
 }
 func reverseWords(s string) string {
     ret := []rune{}

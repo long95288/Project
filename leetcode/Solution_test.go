@@ -619,11 +619,16 @@ func TestMaxLengthBetweenEqualCharacters(t *testing.T)  {
     fmt.Println(maxLengthBetweenEqualCharacters("mgntdygtxrvxjnwksqhxuxtrv"))
 }
 func TestFindLexSmallestString(t *testing.T)  {
-    fmt.Println(findLexSmallestString("43987654", 7, 3))
-    fmt.Println(findLexSmallestString("0011", 4,2))
-    fmt.Println(findLexSmallestString("74", 5, 1))
-    fmt.Println(findLexSmallestString("5525", 9, 2))
-    fmt.Println(findLexSmallestString("87144140372271458627",4,8))
+    assert.Equal(t, findLexSmallestString("43987654", 7, 3), "00553311")
+    assert.Equal(t, findLexSmallestString("0011", 4,2), "0011")
+    assert.Equal(t, findLexSmallestString("74", 5, 1), "24")
+    assert.Equal(t, findLexSmallestString("5525", 9, 2), "2050")
+    assert.Equal(t, findLexSmallestString("87144140372271458627",4,8), "31267549802181184544")
+    /*
+    "87144140372271458627"
+    4
+    8
+     */
 }
 func TestReverseWords(t *testing.T)  {
     fmt.Println(reverseWords("Let's take LeetCode contest"))
