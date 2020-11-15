@@ -3114,3 +3114,92 @@ func numIdenticalPairs(nums []int) int {
     }
     return ret
 }
+func relativeSortArray(arr1 []int, arr2 []int) []int {
+    a1Map := make(map[int]int)
+    for _,v := range arr1{
+        a1Map[v] += 1
+    }
+    ret := []int{}
+    for _,v := range arr2 {
+        if v2,ok := a1Map[v];ok {
+            for i := 0;i < v2 ;i ++{
+                ret = append(ret, v)
+            }
+        }
+        delete(a1Map, v)
+    }
+    tmp := []int{}
+    for k,v := range a1Map{
+        for i := 0;i<v;i ++{
+            tmp = append(tmp, k)
+        }
+    }
+    sort.Ints(tmp)
+    ret = append(ret, tmp...)
+    return ret
+}
+func decrypt(code []int, k int) []int {
+    //
+    tmp := []int{}
+    if k > 0 {
+        for i := 0; i < len(code);i++{
+            replace := 0
+            for j := i + 1; j < k + i + 1;j ++{
+                replace += code[j % len(code)]
+            }
+            tmp = append(tmp, replace)
+        }
+    }else if k < 0 {
+        for i := 0;i < len(code);i ++{
+            replace := 0
+            for j := i - 1;j > i + k - 1;j --{
+                replace += code[(j + len(code)) % len(code)]
+            }
+            tmp = append(tmp, replace)
+        }
+    }else if k == 0{
+        for i := 0;i <len(code);i ++{
+            tmp = append(tmp,0)
+        }
+    }
+    return tmp
+}
+func minimumDeletions(s string) int {
+    minDelete := len(s)
+    // 计算分割点0....n时a的个数
+    // 计算分割点0....n时b的个数
+    // 对于a,当前值为a,对应的分割点a值等于(i-1) + 1
+    
+    // 对于b,从后往前数,计算过程和a一致
+    alen := make([]int, len(s))
+    blen := make([]int, len(s))
+    //计算a
+    if s[0] == 'a'{
+        alen[0] = 1
+    }
+    for i := 1; i < len(s);i ++{
+        if s[i] == 'a' {
+            alen[i] = alen[i -1] + 1
+        }else{
+            alen[i] = alen[i -1]
+        }
+    }
+    // 计算b
+    if s[len(s) - 1] == 'b'{
+        blen[len(s) -1] = 1
+    }
+    for i := len(s) - 2; i >= 0;i --{
+        if s[i] == 'b'{
+            blen[i] = blen[i + 1] + 1
+        }else{
+            blen[i] = blen[i + 1]
+        }
+    }
+    for i := 0; i < len(s); i++{
+        if len(s) - (alen[i] + blen[i]) < minDelete{
+            minDelete = len(s) - (alen[i] + blen[i])
+        }
+    }
+    
+    return minDelete
+}

@@ -812,3 +812,20 @@ func TestMaxNumberOfBalloons(t *testing.T)  {
 func TestCanPermutePalindrome(t *testing.T) {
     assert.Equal(t, canPermutePalindrome("aabc"), false)
 }
+func TestRelativeSortArray(t *testing.T) {
+    assert.Equal(t, relativeSortArray([]int{2,3,1,3,2,4,6,7,9,2,19}, []int{2,1,4,3,9,6}), []int{2,2,2,1,4,3,3,9,6,7,19})
+}
+func TestDecrypt(t *testing.T)  {
+    assert.Equal(t, decrypt([]int{5,7,1,4},3),[]int{12,10,16,13})
+    assert.Equal(t, decrypt([]int{2,4,9,3},-2),[]int{12,5,6,13})
+    assert.Equal(t, decrypt([]int{2,4,9,3},0),[]int{0,0,0,0})
+}
+func TestMinimumDeletions(t *testing.T)  {
+    assert.Equal(t, minimumDeletions("aababbab"), 2)
+    assert.Equal(t, minimumDeletions("bbaaaaabb"), 2)
+    assert.Equal(t, minimumDeletions("baababbaabbaaabaabbabbbabaaaaaabaabababaaababbb"), 18)
+    assert.Equal(t, minimumDeletions("ababaaaabbbbbaaababbbbbbaaabbaababbabbbbaabbbbaabbabbabaabbbababaa"), 25)
+    assert.Equal(t, minimumDeletions("a"), 0)
+    assert.Equal(t, minimumDeletions("b"), 0)
+    
+}
