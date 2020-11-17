@@ -3203,3 +3203,71 @@ func minimumDeletions(s string) int {
     
     return minDelete
 }
+func removeKdigits(num string, k int) string {
+    tmp := []rune(num)
+    for i := 0;i < k;i ++{
+        // 删除高位肯定是赚的
+        for j := 0;j < len(tmp);j++{
+            if j == len(tmp) - 1 {
+                tmp = tmp[:j]
+                break
+            }else {
+                if tmp[j] > tmp[j + 1]{
+                    tmp = append(tmp[:j], tmp[j + 1:]...)
+                    break
+                }
+            }
+        }
+    }
+    // 去零输出
+    ret := []rune{}
+    deleteable := true
+    for _,v := range tmp{
+        if v == '0' && deleteable{
+            continue
+        }else{
+            deleteable = false
+            ret = append(ret, v)
+        }
+    }
+    if len(ret) <= 0{
+        return "0"
+    }
+    return string(ret)
+}
+func threesum()  {
+    
+}
+func abs(x int) int {
+    if x < 0 {
+        return -x
+    }
+    return x
+}
+func allCellsDistOrder(R int, C int, r0 int, c0 int) [][]int {
+    // 距离计算: |r0 - Rn| + |c0 - Cn|。其中Rn(0-R), Cn(0 - C)。
+    ret := [][]int{}
+    tmp := [][]int{}
+    dis := []int{} // 距离
+    for i := 0;i < R;i ++{
+        for j := 0;j < C;j ++{
+            d := abs(i - r0) + abs(j - c0)
+            tmp = append(tmp, []int{i, j})
+            dis = append(dis, d)
+        }
+    }
+    for i := 0; i < len(dis);i ++{
+        minIndex := 0
+        minDis := 1 << (32 - 1)
+        for j := 0;j < len(dis); j ++{
+            if dis[j] < minDis {
+                minDis = dis[j]
+                minIndex = j
+            }
+        }
+        ret = append(ret, tmp[minIndex])
+        dis[minIndex] = 1 << (32 - 1)
+    }
+    
+    return ret
+}

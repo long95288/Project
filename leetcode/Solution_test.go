@@ -829,3 +829,13 @@ func TestMinimumDeletions(t *testing.T)  {
     assert.Equal(t, minimumDeletions("b"), 0)
     
 }
+func TestRemoveKdigits(t *testing.T){
+    assert.Equal(t, removeKdigits("1432219",3), "1219")
+    assert.Equal(t, removeKdigits("10200",1), "200")
+    assert.Equal(t, removeKdigits("10",2), "0")
+    assert.Equal(t, removeKdigits("10",1), "0")
+    assert.Equal(t, removeKdigits("1000000",1), "0")
+}
+func TestAllCellsDistOrder(t *testing.T)  {
+    assert.Equal(t, allCellsDistOrder(1,2,0,0), [][]int{{0,0},{0,1}})
+}
