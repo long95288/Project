@@ -3271,3 +3271,30 @@ func allCellsDistOrder(R int, C int, r0 int, c0 int) [][]int {
     
     return ret
 }
+func threeSum(nums []int) [][]int {
+    ret := [][]int{}
+    sort.Ints(nums)
+    nMap := make(map[int]int)
+    for i,v := range nums{
+        nMap[v] = i
+    }
+    for first := 0; first < len(nums); first++{
+        // 定位第一个元素
+        if first > 0 && nums[first] == nums[first - 1]{
+            // 去掉重复的
+            continue
+        }
+        for second := first + 1;second < len(nums); second ++{
+            // 定位第二个元素
+            if second > first + 1 && nums[second] == nums[second - 1]{
+                continue
+            }
+            k := -1 * (nums[first] + nums[second])
+            if v,ok := nMap[k];ok && v > second {
+                ret = append(ret, []int{nums[first], nums[second], k})
+            }
+        }
+    }
+    return ret
+}
+
