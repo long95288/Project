@@ -12,3 +12,4 @@
 /.*/deploy/
 /noveldownload/deploy/
 *.html
+/remoteController/js/jquery.js

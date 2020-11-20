@@ -3297,4 +3297,31 @@ func threeSum(nums []int) [][]int {
     }
     return ret
 }
-
+func fourSum(nums []int, target int) [][]int {
+    n := len(nums)
+    sort.Ints(nums)
+    ret := [][]int{}
+    nMap := make(map[int]int)
+    for i, v := range nums {
+        nMap[v] = i
+    }
+    for first := 0; first < n; first ++{
+        for second := first + 1;second < n;second ++{
+            for third := second + 1;third < n; third ++{
+                if v, ok := nMap[target - (nums[first] + nums[second] + nums[third])];ok && v > third {
+                    addAble := true
+                    tmp := []int{nums[first], nums[second], nums[third], nums[v]}
+                    for _,v := range ret {
+                        if v[0] == tmp[0] && v[1] == tmp[1] && v[2] == tmp[2] && v[3] == tmp[3] {
+                            addAble = false
+                        }
+                    }
+                    if addAble {
+                        ret = append(ret, tmp)
+                    }
+                }
+            }
+        }
+    }
+    return ret
+}
