@@ -3325,3 +3325,25 @@ func fourSum(nums []int, target int) [][]int {
     }
     return ret
 }
+func sortList(head *ListNode) *ListNode {
+    tmp := []int{}
+    for cur :=head;cur != nil;cur = cur.Next {
+        tmp = append(tmp, cur.Val)
+    }
+    sort.Ints(tmp)
+    index := 0
+    for cur := head;cur != nil;cur = cur.Next{
+        cur.Val = tmp[index]
+        index ++
+    }
+    return head
+}
+func sumNums(n int) int {
+    ret := 0
+    var sum func(int)bool
+    sum = func(i int) bool {
+        ret += n
+        return n > 0 && sum(n - 1)
+    }
+    return ret
+}
