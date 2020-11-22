@@ -3347,3 +3347,14 @@ func sumNums(n int) int {
     }
     return ret
 }
+func reverseWords2(s string) string {
+    tmp := strings.Split(s, " ")
+    ret := ""
+    for i := len(tmp) - 1;i >=0;i --{
+        if tmp[i] == "" {
+            continue
+        }
+        ret += " " + tmp[i]
+    }
+    return strings.TrimSpace(ret)
+}

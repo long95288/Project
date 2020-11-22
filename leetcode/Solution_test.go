@@ -847,3 +847,8 @@ func TestFourSum(t *testing.T)  {
     assert.Equal(t, fourSum([]int{1, 0, -1, 0, -2, 2}, 0), [][]int{{-2, -1, 1, 2},{-2,  0, 0, 2},{-1,  0, 0, 1}})
     assert.Equal(t, fourSum([]int{-2,-1,-1,1,1,2,2}, 0), [][]int{{-2, -1, 1, 2},{-2,  0, 0, 2},{-1,  0, 0, 1}})
 }
+func TestReverseWords2(t *testing.T) {
+    assert.Equal(t, reverseWords2("the sky is blue"), "blue is sky the")
+    assert.Equal(t, reverseWords2("  hello world!  "), "world! hello")
+    assert.Equal(t, reverseWords2("a good   example"), "example good a")
+}
