@@ -3402,3 +3402,30 @@ func findMinArrowShots(points [][]int) int {
     }
     return len(pMap)
 }
+func modifyString(s string) string {
+    sb := []rune(s)
+    for i := 0; i < len(sb);i ++{
+        if sb[i] == '?' {
+            for j := 'a'; j < 'z';j ++{
+               if i > 0 && sb[i - 1] != j {
+                   if (i + 1 < len(sb) && sb[i + 1] != j) || i + 1 >= len(sb) {
+                       // a?b || a?
+                       sb[i] = j
+                       break
+                   }
+               }else if i == 0 {
+                   if i + 1 >= len(sb){
+                       sb[i] = j
+                       break
+                   }else{
+                       if sb[i + 1] != j{
+                           sb[i] = j
+                           break
+                       }
+                   }
+               }
+            }
+        }
+    }
+    return string(sb)
+}

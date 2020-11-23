@@ -860,3 +860,9 @@ func TestFindMinArrowShots(t *testing.T)  {
     
     assert.Equal(t, findMinArrowShots([][]int{{3,9},{7,12},{3,8},{6,8},{9,10},{2,9},{0,9},{3,9},{0,6},{2,8}}),2)
 }
+func TestModifyString(t *testing.T)  {
+    //assert.Equal(t, modifyString("?a?ub???w?b"),"cacubacawab")
+    assert.Equal(t, modifyString("?"),"a")
+    assert.Equal(t, modifyString("?a"),"ba")
+    assert.Equal(t, modifyString("a?"),"ab")
+}
