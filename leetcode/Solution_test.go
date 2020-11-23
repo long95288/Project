@@ -852,3 +852,11 @@ func TestReverseWords2(t *testing.T) {
     assert.Equal(t, reverseWords2("  hello world!  "), "world! hello")
     assert.Equal(t, reverseWords2("a good   example"), "example good a")
 }
+func TestFindMinArrowShots(t *testing.T)  {
+    assert.Equal(t, findMinArrowShots([][]int{{10,16},{2,8},{1,6},{7,12}}), 2)
+    assert.Equal(t, findMinArrowShots([][]int{{1,2},{3,4},{5,6},{7,8}}), 4)
+    assert.Equal(t, findMinArrowShots([][]int{{1,2},{2,3},{3,4},{4,5}}), 2)
+    assert.Equal(t, findMinArrowShots([][]int{{1,2}}), 1)
+    
+    assert.Equal(t, findMinArrowShots([][]int{{3,9},{7,12},{3,8},{6,8},{9,10},{2,9},{0,9},{3,9},{0,6},{2,8}}),2)
+}

@@ -3358,3 +3358,47 @@ func reverseWords2(s string) string {
     }
     return strings.TrimSpace(ret)
 }
+func findMinArrowShots(points [][]int) int {
+    // 求数组的交集,通过交集计算之后,独立的数组每一个都需要一根箭
+    // pMap 存储气球的信息,k 为开始,v 为结束
+    // 排序
+    sort.Slice(points, func(i, j int) bool { return points[i][1] < points[j][1] })
+    pMap := make(map[int]int)
+    for _, p := range points {
+        addAble := true
+        for k,v := range pMap{
+            if p[0] < k && p[1] >= k && p[1] <= v {
+                //  [2 ,  8]
+                //[1, 6]
+                //[1.     8]
+                // 新的数组为:(k, p[1)
+                pMap[k] = p[1]
+                addAble = false
+                break
+            } else if p[0] <= k && p[1] >= v {
+                //  [2,8]
+                //[1,     9]
+                // 交集:[2,8]
+                addAble = false
+                break
+            } else if p[0] >= k && p[0] < v && p[1] <= v {
+                //[2,   8]
+                //  [3,7]
+                delete(pMap,k)
+                pMap[p[0]] = p[1]
+                addAble = false
+                break
+            } else if p[0] > k && p[0] <= v && p[1] > v {
+                // [2, 8]
+                //    [8, 12]
+                delete(pMap, k)
+                pMap[p[0]] = v
+                addAble = false
+            }
+        }
+        if addAble {
+            pMap[p[0]] = p[1]
+        }
+    }
+    return len(pMap)
+}
