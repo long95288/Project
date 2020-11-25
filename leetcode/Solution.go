@@ -3429,3 +3429,50 @@ func modifyString(s string) string {
     }
     return string(sb)
 }
+
+func isPalindrome4(s string) bool {
+    start,end := 0, len(s) - 1
+    for start < end {
+        if s[start] != s[end] {
+            return false
+        }else{
+            start ++
+            end --
+        }
+    }
+    return true
+}
+func longestPalindrome2(s string) string {
+    max := ""
+    if isPalindrome4(s) {
+        return s
+    }
+    n := len(s)
+    dp := make([][]bool, n)
+    for i := 0;i < n;i++{
+        dp[i] = make([]bool, n)
+    }
+    for i := 1;i < n;i -- {
+        // 滑动窗口
+        initWindows := false
+        windows := []byte{}
+        for j := i;j < len(s);{
+            if !initWindows {
+                for k := 0;k < i;k ++{
+                    windows = append(windows, s[k])
+                }
+                initWindows = true
+            }else{
+                // 滑动
+                windows = append([]byte{}, windows[1:]...)
+                windows = append(windows, s[j])
+                j++
+            }
+            if isPalindrome4(string(windows)) && len(windows) > len(max) {
+                max = string(windows)
+                break
+            }
+        }
+    }
+    return max
+}
