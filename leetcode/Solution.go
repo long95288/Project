@@ -3476,3 +3476,21 @@ func longestPalindrome2(s string) string {
     }
     return max
 }
+
+func fourSumCount(A []int, B []int, C []int, D []int) int {
+    ans := 0
+    abMap := make(map[int]int)
+    for _,v := range A {
+        for _,v2 := range B {
+            abMap[v + v2] += 1
+        }
+    }
+    for _,c := range C {
+        for _,d := range D {
+            if v,ok := abMap[-(c + d)];ok {
+                ans += v
+            }
+        }
+    }
+    return ans
+}
