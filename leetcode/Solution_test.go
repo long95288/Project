@@ -866,3 +866,13 @@ func TestModifyString(t *testing.T)  {
     assert.Equal(t, modifyString("?a"),"ba")
     assert.Equal(t, modifyString("a?"),"ab")
 }
+
+func TestBuildTree(t *testing.T)  {
+    cur := buildTree([]int{3,9,20,15,7}, []int{9,3,15,20,7})
+    if cur != nil {
+        fmt.Println("root : ", cur.Val)
+    }
+}
+func TestReversePairs(t *testing.T)  {
+    assert.Equal(t, reversePairs([]int{1,3,2,3,1}), 2)
+}

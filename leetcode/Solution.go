@@ -3494,3 +3494,69 @@ func fourSumCount(A []int, B []int, C []int, D []int) int {
     }
     return ans
 }
+
+func mergeTrees(t1 *TreeNode, t2 *TreeNode) *TreeNode {
+    tree := &TreeNode{
+        Val:   0,
+        Left:  nil,
+        Right: nil,
+    }
+    if t1 == nil && t2 == nil {
+        return nil
+    }
+    if t1 != nil && t2 != nil {
+        tree.Val = t1.Val + t2.Val
+        tree.Left = mergeTrees(t1.Left,t2.Left)
+        tree.Right = mergeTrees(t1.Right,t2.Right)
+    }else if t1 != nil && t2 == nil{
+        tree.Val = t1.Val
+        tree.Left = mergeTrees(t1.Left,nil)
+        tree.Right = mergeTrees(t1.Right, nil)
+    }else if t1 == nil && t2 != nil {
+        tree.Val = t2.Val
+        tree.Left = mergeTrees(nil,t2.Left)
+        tree.Right = mergeTrees(nil, t2.Right)
+    }
+    return tree
+}
+
+func buildTree(preorder []int, inorder []int) *TreeNode {
+    // 前序定节点,中序定左右
+    if len(preorder) <= 0 {
+        return nil
+    }
+    nodeVal := preorder[0]
+    left := []int{}
+    right := []int{}
+    // 取中序左右
+    for i := 0;i < len(inorder);i ++{
+        if inorder[i] == nodeVal {
+            left = inorder[:i]
+            right = inorder[i + 1:]
+        }
+    }
+    // 取前序左右
+    tree := &TreeNode{
+        Val:   nodeVal,
+        Left:  buildTree(preorder[1: len(left) + 1], left),
+        Right: buildTree(preorder[1 + len(left):], right),
+    }
+    return tree
+}
+
+func reversePairs(nums []int) int {
+    // map记录值和索引,
+    n := len(nums)
+    ans := 0
+    // 将第i位的最大值记录下来,
+    for i := 0;i < n;i ++{
+        
+        
+        for j := i + 1;j < n;j ++{
+            if nums[i] > 2 *nums[j] {
+                ans += 1
+            }
+        }
+    }
+    return ans
+}
