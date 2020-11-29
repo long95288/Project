@@ -876,3 +876,8 @@ func TestBuildTree(t *testing.T)  {
 func TestReversePairs(t *testing.T)  {
     assert.Equal(t, reversePairs([]int{1,3,2,3,1}), 2)
 }
+func TestMostCompetitive(t *testing.T)  {
+    assert.Equal(t, mostCompetitive([]int{3,5,2,6}, 2), []int{2,6})
+    assert.Equal(t, mostCompetitive([]int{2,4,3,3,5,4,9,6}, 4),[]int{2,3,3,4})
+    
+}

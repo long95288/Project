@@ -3560,3 +3560,22 @@ func reversePairs(nums []int) int {
     }
     return ans
 }
+func mostCompetitive(nums []int, k int) []int {
+    if len(nums) <= k {
+       return nums
+    }
+    ans := []int{}
+    stack := make([]int, len(nums))
+    top := -1
+    for i := 0;i < len(nums);i ++{
+        for top >= 0 && nums[i] < stack[top] && len(nums) - i + top >= k/*剩余的要够K*/  {
+            top --
+        }
+        top ++
+        stack[top] = nums[i]
+    }
+    for i := 0;i < k;i ++{
+       ans = append(ans, stack[i])
+    }
+    return ans
+}
