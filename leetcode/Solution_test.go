@@ -881,3 +881,6 @@ func TestMostCompetitive(t *testing.T)  {
     assert.Equal(t, mostCompetitive([]int{2,4,3,3,5,4,9,6}, 4),[]int{2,3,3,4})
     
 }
+func TestRob(t *testing.T)  {
+    assert.Equal(t, rob([]int{1, 2, 3, 4, 5, 1, 2, 3, 4, 5}),16)
+}

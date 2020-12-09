@@ -3620,3 +3620,56 @@ func (this *MaxQueue) Pop_front() int {
     }
     return ans
 }
+
+func rob(nums []int) int {
+    n := len(nums)
+    if n < 2 {
+        return nums[0]
+    }
+    ans := 0
+    dp1 := make([]int, n)
+    dp2 := make([]int, n)
+    for i,v := range nums[1:] {
+        if i == 0 {
+            dp1[i] = v
+        }else if i == 1 {
+            if dp1[i - 1] > v {
+                dp1[i] = dp1[i -1]
+            }else{
+                dp1[i] = v
+            }
+        }else{
+            if dp1[i - 2] + v > dp1[i - 1] {
+                dp1[i] = dp1[i - 2] + v
+            }else{
+                dp1[i] = dp1[i - 1]
+            }
+        }
+        if ans < dp1[i]{
+            ans = dp1[i]
+        }
+    }
+    
+    for i,v := range nums[: n-1] {
+        if i == 0 {
+            dp2[i] = v
+        }else if i == 1 {
+            if dp2[i - 1] >  v{
+                dp2[i] = dp2[i -1]
+            }else{
+                dp2[i] = v
+            }
+        }else{
+            if dp2[i - 2] + v > dp2[i - 1] {
+                dp2[i] = dp2[i - 2] + v
+            }else{
+                dp2[i] = dp2[i - 1]
+            }
+        }
+        if ans < dp2[i] {
+            ans = dp2[i]
+        }
+    }
+    
+    return ans
+}
