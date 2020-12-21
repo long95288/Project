@@ -3689,3 +3689,15 @@ func rotate2(matrix [][]int)  {
     }
     
 }
+func reverseLeftWords(s string, n int) string {
+    //
+    l := len(s)
+    if l <= 1 {
+        return s
+    }
+    n %= l
+    return s[n:] + s[:n]
+}
+
+
+

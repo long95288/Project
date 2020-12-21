@@ -884,3 +884,6 @@ func TestMostCompetitive(t *testing.T)  {
 func TestRob(t *testing.T)  {
     assert.Equal(t, rob([]int{1, 2, 3, 4, 5, 1, 2, 3, 4, 5}),16)
 }
+func TestReverseLeftWords(t *testing.T)  {
+    assert.Equal(t, reverseLeftWords("abcdefg", 2), "cdefgab")
+}
