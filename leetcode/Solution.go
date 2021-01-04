@@ -3699,5 +3699,36 @@ func reverseLeftWords(s string, n int) string {
     return s[n:] + s[:n]
 }
 
-
-
+func sortedSquares(nums []int) []int {
+    // O(n)算法
+    n1 := []int{}
+    n2 := []int{}
+    for _,v := range nums {
+        if v < 0 {
+            n1 = append(n1, v * v)
+        }else{
+            n2 = append(n2, v * v)
+        }
+    }
+    ans := []int{}
+    i,j := len(n1) - 1, 0
+    for i >= 0 || j <= len(n2) - 1 {
+        if i >= 0 && j <= len(n2) -1{
+            if n1[i] > n2[j] {
+                ans = append(ans, n2[j])
+                j ++
+            }else{
+                ans = append(ans, n1[i])
+                i --
+            }
+        }else if i >= 0 && j >= len(n2) {
+            ans = append(ans, n1[i])
+            i --
+        }else if i < 0 && j <= len(n2) -1 {
+            ans = append(ans, n2[j])
+            j ++
+        }
+    }
+    return ans
+    
+}

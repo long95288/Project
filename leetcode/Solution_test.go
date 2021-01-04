@@ -887,3 +887,8 @@ func TestRob(t *testing.T)  {
 func TestReverseLeftWords(t *testing.T)  {
     assert.Equal(t, reverseLeftWords("abcdefg", 2), "cdefgab")
 }
+func TestSortedSquares(t *testing.T)  {
+    assert.Equal(t, sortedSquares([]int{-4,-1,0,3,10}), []int{0,1,9,16,100})
+    assert.Equal(t, sortedSquares([]int{0,3,10}), []int{0,9,100})
+    assert.Equal(t, sortedSquares([]int{-4,-1}), []int{1,16})
+}
