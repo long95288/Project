@@ -97,6 +97,18 @@ func shutdown(c *gin.Context){
         t.Execute(c.Writer,globalStatus )
     }
 }
+func shutdown2(c *gin.Context)  {
+    args :=[]string{"-s","-t","30"}
+    cmd := exec.Command("shutdown",args...)
+    err := cmd.Run()
+    if err != nil {
+       c.JSON(http.StatusInternalServerError,
+           gin.H{"message":"服务器内部错误"})
+    }else{
+        globalStatus.Status = "电脑将在30s后关机"
+        c.JSON(http.StatusOK, gin.H{"message":globalStatus.Status})
+    }
+}
 func cancelShutdown(c *gin.Context){
     args := []string{"-a"}
     cmd := exec.Command("shutdown",args...)
@@ -119,6 +131,8 @@ func HandleController(c *gin.Context)  {
         shutdown(c)
     case "2":
         cancelShutdown(c)
+    case "3":
+        shutdown2(c)
     default:
         c.JSON(
             http.StatusBadRequest,
