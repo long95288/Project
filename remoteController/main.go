@@ -81,8 +81,7 @@ func App_Server()  {
     }
 }
 
-func main() {
-    App_Server()
+func Http_Server()  {
     e:= gin.Default()
     e.GET("/cmd",HandleController)
     e.GET("/", func(context *gin.Context) {
@@ -144,6 +143,12 @@ func main() {
         log.Fatal(err)
     }
     log.Println("service start at http://localhost:9999")
+    
+}
+
+func main() {
+    go App_Server()
+    Http_Server()
 }
 
 func shutdown(c *gin.Context){

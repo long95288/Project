@@ -1,0 +1,1 @@
+copy remoteController.exe F:\tools\remoteController\
