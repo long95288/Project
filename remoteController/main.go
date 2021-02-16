@@ -49,7 +49,7 @@ func appConnHandler(conn net.Conn) {
     
     go func() {
         for !exit_app_server {
-            writebuf := []byte("SERVER SAY HELLO WORLD")
+            writebuf := []byte("SERVER SAY HELLO")
             n, err := conn.Write(writebuf)
             if nil != err || n != len(writebuf) {
                 fmt.Println("App Server write data failed.\n")
@@ -58,7 +58,6 @@ func appConnHandler(conn net.Conn) {
             time.Sleep(100*time.Millisecond)
         }
     }()
-    
 }
 
 func App_Server()  {
