@@ -19,6 +19,13 @@ var globalStatus = status{Status: "正常"}
 const TIME_LAYOUT = "2006-01-02T15:04"
 var exit_app_server = false
 
+// 连接结构体,
+type RCTLConnection struct {
+    conn net.Conn
+    readQueue []byte
+    writeQueue []byte
+}
+
 /*
 * app连接线程
 */
