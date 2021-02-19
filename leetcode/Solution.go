@@ -3732,3 +3732,32 @@ func sortedSquares(nums []int) []int {
     return ans
     
 }
+
+func longestOnes(A []int, K int) int {
+    // 翻转k个字符,算出最长的数据,
+    // 从左到右数数,碰见0用1填,填够了就退出
+    ans := 0
+    remain := K
+    start,end := 0, 0
+    for i := 0; i < len(A); i ++ {
+        if A[i] == 1 {
+            end ++
+        }else{
+            if remain > 0 {
+                remain --
+                end ++
+            }else{
+                // 没有能填充的了,就只能把前面的不断收缩,碰见0就归还
+                if A[start] == 0 {
+                    remain ++
+                }
+                start ++
+                i --
+            }
+        }
+        if end - start > ans {
+            ans = end - start
+        }
+    }
+    return ans
+}
