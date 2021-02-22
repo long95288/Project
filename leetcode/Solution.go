@@ -3761,3 +3761,32 @@ func longestOnes(A []int, K int) int {
     }
     return ans
 }
+
+func isToeplitzMatrix(matrix [][]int) bool {
+    
+    // 第一列，第一行
+    row := len(matrix)
+    
+    column := len(matrix[0])
+    
+    // 1.先算第一列,第一个元素
+    for j := 0;j < row;j ++ {
+        stand := matrix[j][0]
+        for i := 0;j + i < row && i < column;i ++{
+            if matrix[j + i][i] != stand {
+                return false
+            }
+        }
+    }
+    
+    // 2.再算第一行
+    for i := 0; i < column;i ++ {
+        stand := matrix[0][i]
+        for j := 0;j < row && i + j < column;j ++ {
+            if matrix[j][i + j] != stand {
+                return false
+            }
+        }
+    }
+    return true
+}
