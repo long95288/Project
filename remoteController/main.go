@@ -151,7 +151,6 @@ func Http_Server()  {
         log.Fatal(err)
     }
     log.Println("service start at http://localhost:9999")
-    
 }
 
 type CMDCommonRequestDTO struct {
@@ -192,7 +191,7 @@ func ResponseError(c *gin.Context, status int, message string){
     return
 }
 func ResponseSuccess(c *gin.Context, message string, data interface{}){
-    c.JSON(http.StatusOK, gin.H{"OptionStatus":2000000, "Message":message, "data":data})
+    c.JSON(http.StatusOK, gin.H{"OptionStatus":2000000, "Message":message, "Data":data})
 }
 
 
@@ -265,8 +264,6 @@ func setMasterVolumeHandler(c *gin.Context,body []byte) {
 
 func main() {
     // go App_Server()
-    ret, err := CancelShutdownPlan()
-    fmt.Printf("ret %s err %v\n", ret, err)
     Http_Server()
 }
 

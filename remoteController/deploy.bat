@@ -1,1 +1,1 @@
-copy remoteController.exe F:\tools\remoteController\
+copy *.exe F:\tools\remoteController\
