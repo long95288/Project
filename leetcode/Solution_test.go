@@ -905,3 +905,8 @@ func TestIsToeplitzMatrix(t *testing.T)  {
         {1,2},{2,2},
     }), false)
 }
+func TestIsMonotonic(t *testing.T)  {
+    assert.Equal(t, isMonotonic([]int{1,2,3,4,5,6,6,6,6,7}), true)
+    assert.Equal(t, isMonotonic([]int{5,5,4,3,2,1}), true)
+    assert.Equal(t, isMonotonic([]int{1,2,3,4,3,1,3,4}), false)
+}

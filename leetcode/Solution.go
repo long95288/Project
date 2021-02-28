@@ -3790,3 +3790,24 @@ func isToeplitzMatrix(matrix [][]int) bool {
     }
     return true
 }
+
+func isMonotonic(A []int) bool {
+    // 单增或单减,让后面的减前面的，全部小于等于0，单减。全部大于等于0，单增
+    nType := 0
+    for i := len(A) -1 ;i > 0;i -- {
+        if A[i] - A[i - 1] > 0 {
+            if nType == 0 {
+                nType = 1
+            }else if nType == -1 {
+                return false
+            }
+        }else if A[i] - A[i - 1] < 0 {
+            if nType == 0 {
+                nType = -1
+            }else if nType == 1 {
+                return false
+            }
+        }
+    }
+    return true
+}
