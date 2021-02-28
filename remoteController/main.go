@@ -11,6 +11,7 @@ import (
     "net/http"
     "os/exec"
     "strconv"
+    "strings"
     "time"
 )
 
@@ -46,12 +47,6 @@ func appConnHandler(conn net.Conn) {
             }
             fmt.Printf("App server read data size = %d\n", n)
             fmt.Println("App server read data :" + string(readbuf[:n + 1]))
-            //for i := 0;i < n;i ++ {
-            //    if i > 0 && i % 16 ==0 {
-            //        fmt.Println("")
-            //    }
-            //    fmt.Printf("%x ", readbuf[i])
-            //}
             time.Sleep(100*time.Millisecond)
         }
     }()
@@ -68,13 +63,46 @@ func appConnHandler(conn net.Conn) {
         }
     }()
 }
-
+func server_notice() {
+    upd, err := net.ResolveUDPAddr("udp4", ":1400")
+    conn, err := net.ListenUDP("udp4", upd)
+    defer conn.Close()
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+    readBuf := make([]byte, 1024)
+    writeBuf := []byte("321")
+    for true {
+        time.Sleep(50 * time.Millisecond)
+        n, remoteAddr, err := conn.ReadFromUDP(readBuf)
+        if err != nil {
+            fmt.Println(err)
+            continue
+        }
+        fmt.Printf("server notice read data size = %d\n", n)
+        fmt.Println("客户端探测,ip:", remoteAddr.IP, "端口:", remoteAddr.Port, "数据:", string(readBuf[:n]))
+        peerData := string(readBuf[:n])
+        fmt.Println("peer data..", peerData)
+        if strings.Compare("123", peerData) == 0{
+            peerConn, err := net.DialUDP("udp4", nil, remoteAddr)
+            if err != nil {
+                fmt.Println(err)
+                continue
+            }
+            fmt.Println("发送响应....")
+            peerConn.Write(writeBuf)
+            peerConn.Close()
+        }else{
+            fmt.Println("未知数据....")
+        }
+    }
+}
 func App_Server()  {
-    server, err := net.Listen("tcp", ":1399")
+    server, err := net.Listen("udp", ":1399")
     if nil != err {
         fmt.Println(err)
     }
-    fmt.Println("开启APP服务器")
     for !exit_app_server {
         fmt.Println("等待连接....")
         conn, err := server.Accept()
@@ -264,6 +292,7 @@ func setMasterVolumeHandler(c *gin.Context,body []byte) {
 
 func main() {
     // go App_Server()
+    go server_notice()
     Http_Server()
 }
 
