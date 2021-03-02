@@ -3811,3 +3811,72 @@ func isMonotonic(A []int) bool {
     }
     return true
 }
+
+func checksub(bMap map[int]int, sMap map[int]int) bool {
+    for k,v := range sMap {
+        if bv,ok := bMap[k];!ok || bv < v {
+            return false
+        }
+    }
+    return true
+}
+func shortestSeq(big []int, small []int) []int {
+    if len(big) < len(small) {
+        return []int{}
+    }
+    sMap := make(map[int]int)
+    for _,v := range small{
+        sMap[v] += 1
+    }
+    windowMap := make(map[int]int)
+    sLen := len(small)
+    bLen := len(big)
+    for i := 0;i < sLen;i ++ {
+        windowMap[big[i]] += 1
+    }
+    // 进行处理
+    // results := make(map[int]int)
+    start := 0
+    finded := false
+    shortestFirstIndex,shortestLastIndex := -1,-1
+    if checksub(windowMap, sMap) {
+        return []int{0, sLen - 1}
+    }
+    for i := sLen;i <= bLen;i ++ {
+        if checksub(windowMap, sMap) {
+            for k := start;k < start + sLen;k ++{
+                if !checksub(windowMap, sMap) {
+                    // tmp := start - 1
+                    // results[tmp] = i - 1
+                    if shortestFirstIndex == -1 {
+                        finded = true
+                        shortestFirstIndex = start - 1
+                        shortestLastIndex = i - 1
+                    }
+                    if (i - 1) - (start - 1) < shortestLastIndex - shortestFirstIndex {
+                        shortestFirstIndex = start - 1
+                        shortestLastIndex = i - 1
+                    }
+                    break
+                }
+                
+                v, _ := windowMap[big[start]]
+                if v > 1 {
+                    windowMap[big[start]] -= 1
+                }else{
+                    delete(windowMap, big[start])
+                }
+                start ++
+            }
+        }
+        if i < bLen{
+            windowMap[big[i]] += 1
+        }
+    }
+    if !finded {
+        return []int{}
+    }
+    // 选最短的
+    return []int{shortestFirstIndex, shortestLastIndex}
+}
+
