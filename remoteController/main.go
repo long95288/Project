@@ -206,6 +206,8 @@ func HandleController(c *gin.Context)  {
         getMasterVolumeHandler(c, body)
     case SETMASTERVOLUME_CMD:
         setMasterVolumeHandler(c, body)
+    case GETSCREENCAPTURE_CMD:
+        getScreenCaptureHandler(c, body)
     default:
         c.JSON(
             http.StatusBadRequest,
@@ -288,6 +290,9 @@ func setMasterVolumeHandler(c *gin.Context,body []byte) {
     ResponseSuccess(c, "success", SetMasterVolumeResponseDTO{Volume: int(volume)})
 }
 
+func getScreenCaptureHandler(c *gin.Context, body []byte)  {
+
+}
 
 
 func main() {

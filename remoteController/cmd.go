@@ -4,6 +4,7 @@ import (
     "fmt"
     "github.com/gin-gonic/gin"
     "html/template"
+    "io/ioutil"
     "log"
     "net/http"
     "os/exec"
@@ -13,7 +14,8 @@ const (
     SETSHUTDOWNPLAN_CMD = 1
     CANCELSHUTDOWNPLAN_CMD = 2
     GETMASTERVOLUME_CMD = 3
-    SETMASTERVOLUME_CMD = 4
+    SETMASTERVOLUME_CMD  = 4
+    GETSCREENCAPTURE_CMD = 5
 )
 var WindowControllerCmd = "WindowsRemoteController.exe"
 func SetMasterVolume(volume float64) (float64, error) {
@@ -51,6 +53,16 @@ func CancelShutdownPlan() (string, error) {
     return string(output), err
 }
 
+func GetScreenCapture() ([]byte, error){
+    args := []string{"3", "test.bmp"}
+    cmd := exec.Command(WindowControllerCmd, args...)
+    _, err := cmd.CombinedOutput()
+    if err != nil {
+        return nil, err
+    }
+    output, err := ioutil.ReadFile(args[1])
+    return output, err
+}
 func shutdown2(c *gin.Context)  {
     args :=[]string{"-s","-t","30"}
     cmd := exec.Command("shutdown",args...)
