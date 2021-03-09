@@ -63,6 +63,7 @@ func appConnHandler(conn net.Conn) {
         }
     }()
 }
+
 func server_notice() {
     upd, err := net.ResolveUDPAddr("udp4", ":1400")
     conn, err := net.ListenUDP("udp4", upd)
@@ -293,11 +294,51 @@ func setMasterVolumeHandler(c *gin.Context,body []byte) {
 func getScreenCaptureHandler(c *gin.Context, body []byte)  {
 
 }
-
+var exit_ch chan int
+func screenCaptureServer() {
+    server, err := net.Listen("tcp", ":1401")
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+    for true {
+        select {
+        case <- exit_ch:
+                break
+        default:
+           conn, err := server.Accept()
+           if err != nil {
+               fmt.Println(err)
+           }else{
+               go func() {
+                   data, err := GetScreenCapture()
+                   if err != nil {
+                       fmt.Println(err)
+                   }else{
+                       w, err := conn.Write(data)
+                       if err != nil {
+                           fmt.Println(err)
+                       }else{
+                           fmt.Println("写回:",w,"字节")
+                       }
+                      
+                   }
+                   conn.Close()
+               }()
+           }
+           
+        }
+        
+    }
+    
+}
 
 func main() {
     // go App_Server()
     go server_notice()
+    go screenCaptureServer()
     Http_Server()
+    fmt.Println("退出")
+    close(exit_ch)
 }
 
