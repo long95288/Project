@@ -4,7 +4,6 @@ import (
     "fmt"
     "github.com/gin-gonic/gin"
     "html/template"
-    "io/ioutil"
     "log"
     "net/http"
     "os/exec"
@@ -54,14 +53,16 @@ func CancelShutdownPlan() (string, error) {
 }
 
 func GetScreenCapture() ([]byte, error){
-    args := []string{"3", "test.bmp"}
+    args := []string{"4"}
     cmd := exec.Command(WindowControllerCmd, args...)
-    _, err := cmd.CombinedOutput()
-    if err != nil {
-        return nil, err
-    }
-    output, err := ioutil.ReadFile(args[1])
+    output, err := cmd.CombinedOutput()
     return output, err
+    
+    //if err != nil {
+    //    return nil, err
+    //}
+    //output, err := ioutil.ReadFile(args[1])
+    //return output, err
 }
 func shutdown2(c *gin.Context)  {
     args :=[]string{"-s","-t","30"}

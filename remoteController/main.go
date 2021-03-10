@@ -4,7 +4,10 @@ import (
     "encoding/json"
     "fmt"
     "github.com/gin-gonic/gin"
+    "github.com/nfnt/resize"
+    "golang.org/x/image/bmp"
     "html/template"
+    "image/jpeg"
     "io/ioutil"
     "log"
     "net"
@@ -21,6 +24,38 @@ type status struct {
 var globalStatus = status{Status: "正常"}
 const TIME_LAYOUT = "2006-01-02T15:04"
 var exit_app_server = false
+
+type bmpReader struct {
+    date []byte
+}
+func (b bmpReader)Read(p []byte) (n int, err error)  {
+    copy(p, b.date)
+    return len(b.date), nil
+}
+type bmpWriter struct {
+    data []byte
+}
+func (b bmpWriter)Write(p []byte) (n int, err error){
+    b.data = make([]byte, len(p))
+    copy(b.data, p)
+    return len(b.data),nil
+}
+
+func resizeImage(input []byte) ([]byte, error) {
+    // SHORT = int16
+    // LONG = int32
+    // BYTE = uint8
+    // WORD = uint16
+    // DWORD = uint32
+    img, err := bmp.Decode(bmpReader{date: input})
+    if err != nil {
+        return nil, err
+    }
+    m := resize.Resize(1920, 1080, img, resize.Lanczos3)
+    out := bmpWriter{}
+    err = jpeg.Encode(out,m, nil)
+    return out.data, err
+}
 
 // 连接结构体,
 type RCTLConnection struct {
@@ -56,7 +91,7 @@ func appConnHandler(conn net.Conn) {
             writebuf := []byte("SERVER SAY HELLO")
             n, err := conn.Write(writebuf)
             if nil != err || n != len(writebuf) {
-                fmt.Println("App Server write data failed.\n")
+                fmt.Println("App Server write data failed.")
                 break
             }
             time.Sleep(100*time.Millisecond)
