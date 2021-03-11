@@ -347,16 +347,12 @@ func screenCaptureServer() {
            }else{
                go func() {
                    data, err := GetScreenCapture()
+                   rgba,err := bmpDecoder(data)
+                   err = jpeg.Encode(conn, rgba, nil)
                    if err != nil {
                        fmt.Println(err)
                    }else{
-                       w, err := conn.Write(data)
-                       if err != nil {
-                           fmt.Println(err)
-                       }else{
-                           fmt.Println("写回:",w,"字节")
-                       }
-                      
+                       fmt.Println("写回:")
                    }
                    conn.Close()
                }()
