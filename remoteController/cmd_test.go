@@ -9,6 +9,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	"image/jpeg"
+	"image/png"
 	"os"
 	"testing"
 )
@@ -42,6 +43,10 @@ func TestDecode2(t *testing.T) {
 	img,_ := bmpDecoder(out)
 	f ,_ := os.Create("xxx.jpg")
 	e := jpeg.Encode(f, img, nil)
+	f2,_ := os.Create("hhh.png")
+	r90 := r90d(img)
+	e = png.Encode(f2, r90)
+	
 	fmt.Println(e)
 }
 

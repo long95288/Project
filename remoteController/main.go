@@ -7,7 +7,9 @@ import (
     "github.com/nfnt/resize"
     "golang.org/x/image/bmp"
     "html/template"
+    "image"
     "image/jpeg"
+    "image/png"
     "io/ioutil"
     "log"
     "net"
@@ -329,6 +331,15 @@ func setMasterVolumeHandler(c *gin.Context,body []byte) {
 func getScreenCaptureHandler(c *gin.Context, body []byte)  {
 
 }
+func r90d(m image.Image) image.Image {
+    rotate90 := image.NewRGBA(image.Rect(0, 0, m.Bounds().Dy(), m.Bounds().Dx()))
+    for x := m.Bounds().Min.Y; x < m.Bounds().Max.Y; x++ {
+        for y := m.Bounds().Max.X - 1; y >= m.Bounds().Min.X; y-- {
+            rotate90.Set(m.Bounds().Max.Y-x, y, m.At(y, x))
+        }
+    }
+    return rotate90
+}
 var exit_ch chan int
 func screenCaptureServer() {
     server, err := net.Listen("tcp", ":1401")
@@ -348,11 +359,13 @@ func screenCaptureServer() {
                go func() {
                    data, err := GetScreenCapture()
                    rgba,err := bmpDecoder(data)
-                   err = jpeg.Encode(conn, rgba, nil)
+                   rgba = r90d(rgba)
+                   err = png.Encode(conn, rgba)
+                   //err = jpeg.Encode(conn, rgba, nil)
                    if err != nil {
                        fmt.Println(err)
                    }else{
-                       fmt.Println("写回:")
+                       fmt.Println(time.Now(), " 写回:")
                    }
                    conn.Close()
                }()
