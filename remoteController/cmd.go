@@ -4,8 +4,10 @@ import (
     "fmt"
     "github.com/gin-gonic/gin"
     "html/template"
+    "io"
     "log"
     "net/http"
+    "os"
     "os/exec"
     "strconv"
 )
@@ -105,5 +107,61 @@ func cancelShutdown(c *gin.Context){
         c.JSON(http.StatusOK,gin.H{
             "message":"取消关机成功",
         })
+    }
+}
+
+
+var exit_read bool = false
+func cmdStdOutReader(reader io.ReadCloser) {
+    buf := make([]byte, 1024, 1024)
+    f, _ := os.Create("out.h264")
+    defer f.Close()
+    
+    for !exit_read {
+        n, err := reader.Read(buf)
+        if n > 0 {
+            // fmt.Println("STDOUT read data size ", n)
+            f.Write(buf[0:n])
+        }
+        if err != nil {
+            if err == io.EOF {
+                err = nil
+            }
+        }
+    }
+}
+func cmdStdErrReader(reader io.ReadCloser) {
+    buf := make([]byte, 1024, 1024)
+    for !exit_read {
+        n, err := reader.Read(buf)
+        if n > 0 {
+            fmt.Println("STDERR read data size ", n,"value:", string(buf[:n]))
+        }
+        if err != nil {
+            if err == io.EOF {
+                err = nil
+            }
+        }
+    }
+}
+
+func ReadDesktop() {
+    args := []string{
+        "5"}
+    cmd := exec.Command(WindowControllerCmd, args...)
+    
+    cmdStdOutPipe, _ := cmd.StdoutPipe()
+    cmdStdErrPipe, _ := cmd.StderrPipe()
+    
+    err := cmd.Start()
+    if err != nil {
+        fmt.Println(err)
+    }
+    go cmdStdOutReader(cmdStdOutPipe)
+    go cmdStdErrReader(cmdStdErrPipe)
+    err = cmd.Wait()
+    if err != nil {
+        exit_read = true
+        fmt.Println(err)
     }
 }

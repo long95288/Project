@@ -90,3 +90,6 @@ func TestGetScreenCapture(t *testing.T) {
 	out, err = resizeImage(out)
 	fmt.Printf(" resize %d err : %v \n", len(out), err)
 }
+func TestReadDesktop(t *testing.T)  {
+	ReadDesktop()
+}

@@ -13,3 +13,7 @@
 /noveldownload/deploy/
 *.html
 /remoteController/js/jquery.js
+*/**/*.dll
+*/**/*.h264
+
+
