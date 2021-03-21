@@ -14,6 +14,7 @@ import (
     "log"
     "net"
     "net/http"
+    "os"
     "os/exec"
     "strconv"
     "strings"
@@ -377,10 +378,50 @@ func screenCaptureServer() {
     
 }
 
+
+func screenH264Server() {
+    server, err := net.Listen("tcp", ":1402")
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+    for true {
+        select {
+        case <- exit_ch:
+            break
+        default:
+            conn, err := server.Accept()
+            fmt.Println("H264连接了")
+            if err != nil {
+                fmt.Println(err)
+            }else{
+                go func() {
+                    file, err := os.Open("test.h264")
+                    if err != nil {
+                        fmt.Println(err)
+                    }else{
+                        data, err := ioutil.ReadAll(file)
+                        if err != nil {
+                            fmt.Println(err)
+                        }else{
+                            n, err := conn.Write(data)
+                            fmt.Println("write back ", n, "err ", err)
+                        }
+                    }
+                    conn.Close()
+                }()
+            }
+            
+        }
+        
+    }
+}
+
 func main() {
     // go App_Server()
     go server_notice()
     go screenCaptureServer()
+    go screenH264Server()
     Http_Server()
     fmt.Println("退出")
     close(exit_ch)
