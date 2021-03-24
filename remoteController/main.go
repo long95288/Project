@@ -14,7 +14,6 @@ import (
     "log"
     "net"
     "net/http"
-    "os"
     "os/exec"
     "strconv"
     "strings"
@@ -378,6 +377,19 @@ func screenCaptureServer() {
     
 }
 
+func handleStreamConn(conn net.Conn)  {
+    defer conn.Close()
+    data, _ := ioutil.ReadFile("test.h264")
+    for {
+       n, err := conn.Write(data)
+       if err != nil {
+           fmt.Println(err)
+           break
+       }
+       fmt.Println("write back ", n, " bytes")
+       time.Sleep(1000 * time.Millisecond)
+    }
+}
 
 func screenH264Server() {
     server, err := net.Listen("tcp", ":1402")
@@ -395,21 +407,42 @@ func screenH264Server() {
             if err != nil {
                 fmt.Println(err)
             }else{
-                go func() {
-                    file, err := os.Open("test.h264")
-                    if err != nil {
-                        fmt.Println(err)
-                    }else{
-                        data, err := ioutil.ReadAll(file)
-                        if err != nil {
-                            fmt.Println(err)
-                        }else{
-                            n, err := conn.Write(data)
-                            fmt.Println("write back ", n, "err ", err)
-                        }
-                    }
-                    conn.Close()
-                }()
+                //go func() {
+                //    args := []string{
+                //        "5"}
+                //    cmd := exec.Command(WindowControllerCmd, args...)
+                //
+                //    cmdStdOutPipe, _ := cmd.StdoutPipe()
+                //    cmdStdErrPipe, _ := cmd.StderrPipe()
+                //    cmdStdIn, _ := cmd.StdinPipe()
+                //
+                //    err := cmd.Start()
+                //    if err != nil {
+                //        fmt.Println(err)
+                //    }
+                //    go func() {
+                //        buf := make([]byte, 1024)
+                //        for n, err := cmdStdErrPipe.Read(buf);err == nil && n > 0; {
+                //            fmt.Println("out : ",string(buf[:n]))
+                //            time.Sleep(30 * time.Millisecond)
+                //        }
+                //    }()
+                //
+                //    buf := make([]byte, 1024)
+                //    for n, err := cmdStdOutPipe.Read(buf);err == nil && n > 0; {
+                //        n, err = conn.Write(buf[:n])
+                //        if err != nil {
+                //            fmt.Println(err)
+                //            break
+                //        }
+                //        // fmt.Println("write back ", n, " bytes")
+                //        time.Sleep(10 * time.Millisecond)
+                //    }
+                //    n,err := cmdStdIn.Write([]byte("2\r\n"))
+                //    fmt.Println("write back ", n , "err", err)
+                //    conn.Close()
+                //}()
+                go handleStreamConn(conn)
             }
             
         }

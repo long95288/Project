@@ -10,6 +10,7 @@ import (
     "os"
     "os/exec"
     "strconv"
+    "time"
 )
 const (
     SETSHUTDOWNPLAN_CMD = 1
@@ -152,13 +153,22 @@ func ReadDesktop() {
     
     cmdStdOutPipe, _ := cmd.StdoutPipe()
     cmdStdErrPipe, _ := cmd.StderrPipe()
-    
+    cmdStdInPip, _ := cmd.StdinPipe()
     err := cmd.Start()
     if err != nil {
         fmt.Println(err)
     }
     go cmdStdOutReader(cmdStdOutPipe)
     go cmdStdErrReader(cmdStdErrPipe)
+    
+    go func() {
+        time.Sleep(3 * time.Second)
+        fmt.Println("退出.....")
+        for _, err = cmdStdInPip.Write([]byte("2\r\n"));err == nil; {
+        }
+        
+        fmt.Println("执行退出...", err)
+    }()
     err = cmd.Wait()
     if err != nil {
         exit_read = true
