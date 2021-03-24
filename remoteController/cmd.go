@@ -114,7 +114,7 @@ func cancelShutdown(c *gin.Context){
 
 var exit_read bool = false
 func cmdStdOutReader(reader io.ReadCloser) {
-    buf := make([]byte, 1024, 1024)
+    buf := make([]byte, 2 * 1024 * 1024)
     f, _ := os.Create("out.h264")
     defer f.Close()
     
@@ -132,7 +132,7 @@ func cmdStdOutReader(reader io.ReadCloser) {
     }
 }
 func cmdStdErrReader(reader io.ReadCloser) {
-    buf := make([]byte, 1024, 1024)
+    buf := make([]byte, 2 * 1024 * 1024)
     for !exit_read {
         n, err := reader.Read(buf)
         if n > 0 {
@@ -153,8 +153,11 @@ func ReadDesktop() {
     
     cmdStdOutPipe, _ := cmd.StdoutPipe()
     cmdStdErrPipe, _ := cmd.StderrPipe()
-    cmdStdInPip, _ := cmd.StdinPipe()
-    err := cmd.Start()
+    cmdStdInPip, err := cmd.StdinPipe()
+    if err != nil {
+        fmt.Println(err)
+    }
+    err = cmd.Start()
     if err != nil {
         fmt.Println(err)
     }
@@ -162,9 +165,10 @@ func ReadDesktop() {
     go cmdStdErrReader(cmdStdErrPipe)
     
     go func() {
-        time.Sleep(3 * time.Second)
+        time.Sleep(10 * time.Second)
         fmt.Println("退出.....")
         for _, err = cmdStdInPip.Write([]byte("2\r\n"));err == nil; {
+            // fmt.Println("退出.....")
         }
         
         fmt.Println("执行退出...", err)

@@ -391,12 +391,56 @@ func handleStreamConn(conn net.Conn)  {
     }
 }
 
+func sendToClientH264Stream(conn net.Conn) {
+    args := []string{"5"}
+    cmd := exec.Command(WindowControllerCmd, args...)
+    
+    cmdStdOutPipe, _ := cmd.StdoutPipe()
+    
+    var ch_stderr chan int
+    ch_stderr = make(chan int)
+    cmdStdErrPipe, _ := cmd.StderrPipe()
+    cmdStdInPipe, _ := cmd.StdinPipe()
+    
+    err := cmd.Start()
+    if err != nil {
+        fmt.Println(err)
+    }
+    go func() {
+        buf := make([]byte, 1024 * 1024)
+        for n, err := cmdStdErrPipe.Read(buf);err == nil && n > 0; {
+            select {
+            case <- ch_stderr:
+                return
+            default:
+                fmt.Println("out : ",string(buf[:n]))
+                time.Sleep(30 * time.Millisecond)
+            }
+        }
+    }()
+    
+    buf := make([]byte, 1024 * 1024)
+    for n, err := cmdStdOutPipe.Read(buf);err == nil && n > 0; {
+        n, err = conn.Write(buf[:n])
+        if err != nil {
+            fmt.Println(err)
+            break
+        }
+        fmt.Println("write back ", n, " bytes")
+        time.Sleep(10 * time.Millisecond)
+    }
+    _, err = cmdStdInPipe.Write([]byte("2\r\n"))
+    fmt.Println("STOP H264 Steam ,OpErr", err)
+    close(ch_stderr)
+    conn.Close()
+}
 func screenH264Server() {
     server, err := net.Listen("tcp", ":1402")
     if err != nil {
         fmt.Println(err)
         return
     }
+    
     for true {
         select {
         case <- exit_ch:
@@ -407,42 +451,8 @@ func screenH264Server() {
             if err != nil {
                 fmt.Println(err)
             }else{
-                //go func() {
-                //    args := []string{
-                //        "5"}
-                //    cmd := exec.Command(WindowControllerCmd, args...)
-                //
-                //    cmdStdOutPipe, _ := cmd.StdoutPipe()
-                //    cmdStdErrPipe, _ := cmd.StderrPipe()
-                //    cmdStdIn, _ := cmd.StdinPipe()
-                //
-                //    err := cmd.Start()
-                //    if err != nil {
-                //        fmt.Println(err)
-                //    }
-                //    go func() {
-                //        buf := make([]byte, 1024)
-                //        for n, err := cmdStdErrPipe.Read(buf);err == nil && n > 0; {
-                //            fmt.Println("out : ",string(buf[:n]))
-                //            time.Sleep(30 * time.Millisecond)
-                //        }
-                //    }()
-                //
-                //    buf := make([]byte, 1024)
-                //    for n, err := cmdStdOutPipe.Read(buf);err == nil && n > 0; {
-                //        n, err = conn.Write(buf[:n])
-                //        if err != nil {
-                //            fmt.Println(err)
-                //            break
-                //        }
-                //        // fmt.Println("write back ", n, " bytes")
-                //        time.Sleep(10 * time.Millisecond)
-                //    }
-                //    n,err := cmdStdIn.Write([]byte("2\r\n"))
-                //    fmt.Println("write back ", n , "err", err)
-                //    conn.Close()
-                //}()
-                go handleStreamConn(conn)
+                go sendToClientH264Stream(conn)
+                // go handleStreamConn(conn)
             }
             
         }
