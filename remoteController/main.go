@@ -157,7 +157,10 @@ func App_Server()  {
 
 func Http_Server()  {
     e:= gin.Default()
-    e.POST("/cmd",HandleController)
+    e.POST("/cmd", HandleController)
+    e.POST("/file", HttpFileHandler)
+    
+    
     e.GET("/", func(context *gin.Context) {
         t,err := template.ParseFiles("index.html")
         if err != nil {
