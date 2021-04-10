@@ -921,3 +921,8 @@ func TestShortestSeq(t *testing.T)  {
     assert.Equal(t, shortestSeq([]int{210839, 955055, 464216, 284254, 950220, 726098, 609415, 482336, 132771, 282762}, []int{955055, 282762, 132771, 609415}), []int{1,9})
 }
 
+func TestIsUgly(t *testing.T) {
+    assert.Equal(t, isUgly(6), true)
+    assert.Equal(t, isUgly(8), true)
+    assert.Equal(t, isUgly(14), false)
+}
