@@ -344,6 +344,26 @@ func r90d(m image.Image) image.Image {
     return rotate90
 }
 var exit_ch chan int
+
+type PngData struct {
+    Buff []byte
+    BuffSize int64
+}
+
+func (png *PngData) init() {
+    png.Buff = make([]byte, 0)
+    png.BuffSize = 0
+}
+func (png *PngData) Write(p []byte) (n int, err error) {
+    // 写入数据
+    appendSize := len(p)
+    png.Buff = append(png.Buff, p...)
+    png.BuffSize += int64(appendSize)
+    return appendSize,nil
+}
+
+
+
 func screenCaptureServer() {
     server, err := net.Listen("tcp", ":1401")
     if err != nil {

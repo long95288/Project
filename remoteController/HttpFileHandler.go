@@ -22,6 +22,7 @@ func HttpFileHandler(context *gin.Context) {
         if err != nil {
             fmt.Println(err)
         }
+        log.Printf("上传文件:%s, 完成", file.Filename)
     }
     context.JSON(200, gin.H{
         "resp":"",

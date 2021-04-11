@@ -3894,3 +3894,24 @@ func isUgly(n int) bool {
     return n == 1
 }
 
+func nthUglyNumber(n int) int {
+    // 一个丑数 t = 2 ^ i * 3^j * 5^k
+    // 对i, j, k进行处理,处理
+    dp := make([]int, n+1)
+    dp[1] = 1
+    p2, p3, p5 := 1, 1, 1
+    for i := 2; i <= n; i++ {
+        x2, x3, x5 := dp[p2]*2, dp[p3]*3, dp[p5]*5
+        dp[i] = min(min(x2, x3), x5)
+        if dp[i] == x2 {
+            p2++
+        }
+        if dp[i] == x3 {
+            p3++
+        }
+        if dp[i] == x5 {
+            p5++
+        }
+    }
+    return dp[n]
+}
