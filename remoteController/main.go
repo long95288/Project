@@ -1,6 +1,7 @@
 package main
 
 import (
+    "encoding/binary"
     "encoding/json"
     "fmt"
     "github.com/gin-gonic/gin"
@@ -362,6 +363,54 @@ func (png *PngData) Write(p []byte) (n int, err error) {
     return appendSize,nil
 }
 
+func screenCaptureServer2() {
+    server, err := net.Listen("tcp", ":1404")
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+    for true {
+        select {
+        case <- exit_ch:
+            break
+        default:
+            conn, err := server.Accept()
+            if err != nil {
+                fmt.Println(err)
+            }else{
+                go func() {
+                    defer conn.Close()
+                    for {
+                        data, err := GetScreenCapture()
+                        rgba,err := bmpDecoder(data)
+                        rgba = r90d(rgba)
+                        pngData := PngData{}
+                        err = png.Encode(&pngData, rgba)
+                        //err = jpeg.Encode(conn, rgba, nil)
+                        if err != nil {
+                            fmt.Println(err)
+                            break
+                        }else{
+                            writeBuf := make([]byte, 4)
+                            binary.BigEndian.PutUint32(writeBuf, uint32(pngData.BuffSize+4))
+                            writeBuf = append(writeBuf, pngData.Buff...)
+                            w, err := conn.Write(writeBuf)
+                            if err != nil || w != int(pngData.BuffSize + 4) {
+                                log.Println("err", err)
+                                break
+                            }
+                            fmt.Println(time.Now(), " 写回:", pngData.BuffSize + 4, "-", len(writeBuf))
+                        }
+                        // time.Sleep(10 * time.Millisecond)
+                    }
+                }()
+            }
+            
+        }
+        
+    }
+    
+}
 
 
 func screenCaptureServer() {
@@ -488,6 +537,7 @@ func main() {
     go server_notice()
     go screenCaptureServer()
     go screenH264Server()
+    go screenCaptureServer2()
     Http_Server()
     fmt.Println("退出")
     close(exit_ch)
