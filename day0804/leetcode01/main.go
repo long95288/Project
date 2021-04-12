@@ -1,112 +1,85 @@
 package main
 
 import (
-    "fmt"
+    "bytes"
+    "crypto/aes"
+    "crypto/cipher"
+    "crypto/sha256"
+    "errors"
+    "golang.org/x/crypto/pbkdf2"
+    "log"
 )
 
-type ListNode struct{
-    Val int
-    Next *ListNode
+func PKCS7Padding(cipherText []byte, blockSize int) []byte{
+    paddingLength := blockSize - len(cipherText) % blockSize
+    paddingCtx := bytes.Repeat([]byte{byte(paddingLength)}, paddingLength)
+    return append(cipherText, paddingCtx...)
+}
+func PKCS7UnPadding(cipherText []byte) ([]byte, error) {
+    length := len(cipherText)
+    if length <= 0 {
+        return nil ,errors.New("unpadding context is invalid")
+    }
+    unPaddingLength := int(cipherText[length - 1])
+    if unPaddingLength > length {
+        return nil, errors.New("unPadding length over origin data")
+    }
+    return cipherText[:(length - unPaddingLength)], nil
+    
 }
 
-func AddTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
-    p,q,flag := l1,l2,&ListNode{Val: 0}
-    current := flag
-    carry := 0
-    for p != nil || q != nil {
-        x := 0
-        y := 0
-        if p != nil {
-            x = p.Val
-        }
-        if q != nil {
-            y = q.Val
-        }
-        sum := carry + x + y
-        carry = sum/10
-        // 创建新的节点,节点里面放的是相加之后的个位数
-        // current.Next里面可能已经有值了，但是不管.直接覆盖
-        current.Next = &ListNode{Val: sum%10}
-        current = current.Next
-        if p != nil{
-            p = p.Next
-        }
-        if q != nil {
-            q = q.Next
-        }
-        // 有进位的话会往前创建一个node,如果后面还有数据的话这个节点会被丢弃
-        if carry >0  {
-            current.Next = &ListNode{Val: carry}
-        }
+func AESCBCEncrypt(plainText []byte, key, iv []byte) ([]byte, error) {
+    block, err := aes.NewCipher(key)
+    if err != nil {
+        return nil, err
     }
-    return flag.Next
+    blockSize := block.BlockSize()
+    paddingText := PKCS7Padding(plainText, blockSize)
+    
+    blockMode := cipher.NewCBCEncrypter(block, iv)
+    encryptText := make([]byte, len(paddingText))
+    blockMode.CryptBlocks(encryptText, paddingText)
+    return encryptText, nil
 }
-func deleteDuplicates(head *ListNode) *ListNode {
-    cur := head
-    for cur != nil && cur.Next != nil {
-        if cur.Val == cur.Next.Val {
-            // 删除重复节点
-            // 跳过下一个节点
-            cur.Next = cur.Next.Next
-        }else{
-            // 不相同到下一个
-            cur = cur.Next
-        }
+
+func AesCBCDecrypt(encryptText []byte, key, iv []byte)([]byte, error) {
+    block, err := aes.NewCipher(key)
+    if err != nil {
+        return nil, err
     }
-    return head
+    blockMode := cipher.NewCBCDecrypter(block, iv)
+    decryptLen := len(encryptText)
+    decryptText := make([]byte, decryptLen)
+    blockMode.CryptBlocks(decryptText, encryptText)
+    unPaddingText, err := PKCS7UnPadding(decryptText)
+    return unPaddingText, err
 }
-// 递归的方法
-func deleteDuplicates2(head *ListNode) *ListNode{
-    // 递归出口
-    if head == nil || head.Next == nil {
-        return head
-    }
-    // 递归条件
-    head.Next = deleteDuplicates2(head.Next)
-    if head.Val == head.Next.Val {
-        head = head.Next
-    }
-    return head
+
+
+func getPbkdf2Key(securityKey, salt []byte) []byte {
+    key := pbkdf2.Key(securityKey, salt, 1, len(securityKey), sha256.New)
+    return key
 }
-func removeElements(head *ListNode, val int) *ListNode {
-    // 使用flag
-    flag := &ListNode{Val: 0}
-    flag.Next = head
-    // 前置和当前
-    pre,cur := flag,head
-    for cur != nil{
-        if cur.Val == val {
-            // 删除节点
-            pre.Next = cur.Next
-        }else{
-            pre = cur
-        }
-        cur = cur.Next
-    }
-    return flag.Next
-}
+
 func main() {
-    l1 := &ListNode{
-        Val: 9,
-        Next: &ListNode{
-            Val: 9,
-            Next: &ListNode{
-                Val: 9,
-            },
-        },
+    salt := []byte("ABCDEF0123456789")
+    iv := []byte("0123456789ABCDEF")
+    key := getPbkdf2Key([]byte("MYPasswordxfaewfaewfaewfaeafeawf"),salt)
+    plainText := "Hello World"
+    encrypt, err := AESCBCEncrypt([]byte(plainText), key, iv)
+    if err != nil {
+        log.Println(err)
+        return
     }
-    l2 := &ListNode{
-        Val: 9,
-        Next: &ListNode{
-            Val: 9,
-            Next: &ListNode{
-                Val: 9,
-            },
-        },
+    decrypt, err := AesCBCDecrypt(encrypt, key, iv)
+    
+    log.Printf("encrypt  value : %q", encrypt)
+    log.Printf("plainText value %q: ", plainText)
+    log.Printf("decrypt value %q: ", decrypt)
+    
+    if err == nil && string(decrypt) == plainText  {
+        log.Println("TEST PASS")
+    }else{
+        log.Fatal("TEST FAILED")
     }
-    _ = l2
-    //fmt.Println(AddTwoNumbers(l1,l2))
-    //fmt.Println(deleteDuplicates(l1))
-    //fmt.Println(deleteDuplicates2(l1))
-    fmt.Println(removeElements(l1,9))
 }

@@ -399,7 +399,7 @@ func screenCaptureServer2() {
                                 log.Println("err", err)
                                 break
                             }
-                            fmt.Println(time.Now(), " 写回:", pngData.BuffSize + 4, "-", len(writeBuf))
+                            // fmt.Println(time.Now(), " 写回:", pngData.BuffSize + 4, "-", len(writeBuf))
                         }
                         // time.Sleep(10 * time.Millisecond)
                     }

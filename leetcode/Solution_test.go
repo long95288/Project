@@ -3,6 +3,7 @@ package leetcode
 import (
     "fmt"
     "github.com/go-playground/assert/v2"
+    "log"
     "testing"
 )
 var list *ListNode = &ListNode{
@@ -925,4 +926,27 @@ func TestIsUgly(t *testing.T) {
     assert.Equal(t, isUgly(6), true)
     assert.Equal(t, isUgly(8), true)
     assert.Equal(t, isUgly(14), false)
+}
+func TestEncryptDecrypt(t *testing.T) {
+    salt := []byte("ABCDEF0123456789")
+    iv := []byte("0123456789ABCDEF")
+    key := getPbkdf2Key([]byte("MYPasswordxfaewfaewfaewfaeafeawf"),salt)
+    plainText := "Hello World"
+    encrypt, err := AESCBCEncrypt([]byte(plainText), key, iv)
+    if err != nil {
+        log.Println(err)
+        return
+    }
+    decrypt, err := AesCBCDecrypt(encrypt, key, iv)
+    
+    log.Printf("encrypt  value : %q", encrypt)
+    log.Printf("plainText value %q: ", plainText)
+    log.Printf("decrypt value %q: ", decrypt)
+    
+    if err == nil && string(decrypt) == plainText  {
+        log.Println("TEST PASS")
+    }else{
+        
+        log.Fatal("TEST FAILED")
+    }
 }
