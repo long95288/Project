@@ -449,17 +449,43 @@ func screenCaptureServer() {
     
 }
 
+func findNextFrame(bytes []byte, start int, totalSize int) int {
+    for i := start; i < totalSize - 4; i ++ {
+        if (bytes[i] == 0 && bytes[i + 1] == 0 && bytes[i + 2] == 1) ||
+            (bytes[i] == 0 && bytes[i + 1] == 0 && bytes[i + 2] == 0 && bytes[i + 3] == 1){
+            return i
+        }
+    }
+    return -1
+}
 func handleStreamConn(conn net.Conn)  {
     defer conn.Close()
-    data, _ := ioutil.ReadFile("test.h264")
-    for {
-       n, err := conn.Write(data)
-       if err != nil {
-           fmt.Println(err)
-           break
-       }
-       fmt.Println("write back ", n, " bytes")
-       time.Sleep(1000 * time.Millisecond)
+    data, _ := ioutil.ReadFile("out.h264")
+    dataSize := len(data)
+    info := [][]byte{}
+    
+    firstIndex := findNextFrame(data, 0, dataSize)
+    nextIndex := findNextFrame(data, firstIndex + 3, dataSize)
+    for nextIndex != -1 {
+        info = append(info, data[firstIndex: nextIndex])
+        firstIndex = nextIndex
+        nextIndex = findNextFrame(data, firstIndex + 4, dataSize)
+    }
+    i := -1
+    infoLen := len(info)
+    for infoLen > 0 {
+        i ++
+        i %= infoLen
+        writeBuf := make([]byte, 4)
+        binary.BigEndian.PutUint32(writeBuf, uint32(len(info[i]) + 4))
+        writeBuf = append(writeBuf, info[i]...)
+        w, err := conn.Write(writeBuf)
+        if err != nil || w != int(len(info[i]) + 4) {
+            log.Println("err", err)
+            break
+        }
+        fmt.Println("write back ", w, " bytes")
+        time.Sleep(40 * time.Millisecond)
     }
 }
 
@@ -506,6 +532,7 @@ func sendToClientH264Stream(conn net.Conn) {
     close(ch_stderr)
     conn.Close()
 }
+
 func screenH264Server() {
     server, err := net.Listen("tcp", ":1402")
     if err != nil {
@@ -532,12 +559,38 @@ func screenH264Server() {
     }
 }
 
+func h264StreamService()  {
+    server, err := net.Listen("tcp", ":1408")
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+    
+    for true {
+        select {
+        case <- exit_ch:
+            break
+        default:
+            conn, err := server.Accept()
+            fmt.Println("H264连接了")
+            if err != nil {
+                fmt.Println(err)
+            }else{
+                //go sendToClientH264Stream(conn)
+                go handleStreamConn(conn)
+            }
+            
+        }
+        
+    }
+}
 func main() {
     // go App_Server()
     go server_notice()
     go screenCaptureServer()
     go screenH264Server()
     go screenCaptureServer2()
+    go h264StreamService()
     Http_Server()
     fmt.Println("退出")
     close(exit_ch)
