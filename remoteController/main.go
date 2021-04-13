@@ -558,6 +558,49 @@ func screenH264Server() {
         
     }
 }
+type H264Buffer struct {
+    buffer []byte
+    bufferSize int
+}
+
+func (h *H264Buffer)init() {
+    h.buffer = make([]byte, 0)
+    h.bufferSize = 0
+}
+
+func (h *H264Buffer) AppendBuffer(data []byte, size int) bool {
+    h.buffer = append(h.buffer, data[:size]...)
+    h.bufferSize += size
+    return true
+}
+func (h *H264Buffer) GetH264Unit() []byte {
+    // 找到NALU单元
+    firstIndex := -1
+    nextIndex := -1
+    for i := 0;i < h.bufferSize - 4;i ++ {
+        if firstIndex == -1 {
+            if (h.buffer[i] == 0 && h.buffer[i + 1] == 0 && h.buffer[i + 2] == 1) ||
+                (h.buffer[i] == 0 && h.buffer[i + 1] == 0 && h.buffer[i + 2] == 0 && h.buffer[i + 3] == 1) {
+                firstIndex = i
+                i += 3
+            }
+        }else{
+            if (h.buffer[i] == 0 && h.buffer[i + 1] == 0 && h.buffer[i + 2] == 1) ||
+                (h.buffer[i] == 0 && h.buffer[i + 1] == 0 && h.buffer[i + 2] == 0 && h.buffer[i + 3] == 1) {
+                nextIndex = i
+                break
+            }
+        }
+    }
+    if firstIndex != -1 && nextIndex != -1 {
+        data := h.buffer[firstIndex : nextIndex]
+        // 删除
+        h.buffer = h.buffer[nextIndex : ]
+        h.bufferSize -= (nextIndex - firstIndex)
+        return data
+    }
+    return nil
+}
 
 func h264StreamService()  {
     server, err := net.Listen("tcp", ":1408")

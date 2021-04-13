@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"image/jpeg"
 	"image/png"
+	"log"
 	"os"
 	"testing"
 )
@@ -92,4 +93,27 @@ func TestGetScreenCapture(t *testing.T) {
 }
 func TestReadDesktop(t *testing.T)  {
 	ReadDesktop()
+}
+
+func TestParse(t *testing.T){
+	file,err := os.Open("test.h264")
+	if err != nil {
+		return
+	}
+	buf := make([]byte, 1024)
+	defer file.Close()
+	h264Buffer := H264Buffer{}
+	for {
+		data := h264Buffer.GetH264Unit()
+		if data != nil {
+			log.Println("data size ", len(data))
+			continue
+		}
+		n, err := file.Read(buf)
+		if err != nil {
+			break
+		}
+		h264Buffer.AppendBuffer(buf, n)
+		
+	}
 }
