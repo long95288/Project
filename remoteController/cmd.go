@@ -17,7 +17,7 @@ const (
     CANCELSHUTDOWNPLAN_CMD = 2
     GETMASTERVOLUME_CMD = 3
     SETMASTERVOLUME_CMD  = 4
-    GETSCREENCAPTURE_CMD = 5
+    SENDMSG_CMD = 5
 )
 var WindowControllerCmd = "WindowsRemoteController.exe"
 func SetMasterVolume(volume float64) (float64, error) {

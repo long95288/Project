@@ -248,8 +248,8 @@ func HandleController(c *gin.Context)  {
         getMasterVolumeHandler(c, body)
     case SETMASTERVOLUME_CMD:
         setMasterVolumeHandler(c, body)
-    case GETSCREENCAPTURE_CMD:
-        getScreenCaptureHandler(c, body)
+    case SENDMSG_CMD:
+        sendMsgCmdHandler(c, body)
     default:
         c.JSON(
             http.StatusBadRequest,
@@ -332,9 +332,22 @@ func setMasterVolumeHandler(c *gin.Context,body []byte) {
     ResponseSuccess(c, "success", SetMasterVolumeResponseDTO{Volume: int(volume)})
 }
 
-func getScreenCaptureHandler(c *gin.Context, body []byte)  {
 
+type SendMsgRequestDTO struct {
+    Msg string `json:"msg"`
 }
+func sendMsgCmdHandler(c *gin.Context, body []byte)  {
+    fmt.Println("body ", string(body))
+    requestDTO := SendMsgRequestDTO{}
+    err := json.Unmarshal(body, &requestDTO)
+    if err != nil {
+        ResponseError(c, 240001, "解析body参数失败")
+        return
+    }
+    log.Printf("SENDMSG_CMD RECEIVE : %s", requestDTO.Msg)
+    ResponseSuccess(c, "success", nil)
+}
+
 func r90d(m image.Image) image.Image {
     rotate90 := image.NewRGBA(image.Rect(0, 0, m.Bounds().Dy(), m.Bounds().Dx()))
     for x := m.Bounds().Min.Y; x < m.Bounds().Max.Y; x++ {
@@ -458,9 +471,28 @@ func findNextFrame(bytes []byte, start int, totalSize int) int {
     }
     return -1
 }
+
 func handleStreamConn(conn net.Conn)  {
     defer conn.Close()
-    data, _ := ioutil.ReadFile("out.h264")
+    // hasReceiveData = true
+    //    for{
+    //        select {
+    //        case data := <- h264DataStream:
+    //            writeBuf := make([]byte, 4)
+    //            binary.BigEndian.PutUint32(writeBuf, uint32(len(data) + 4))
+    //            writeBuf = append(writeBuf, data...)
+    //            w, err := conn.Write(writeBuf)
+    //            if err != nil {
+    //                log.Println("Write back failed.")
+    //                hasReceiveData = false
+    //                return
+    //            }
+    //            log.Println("Write back ", w, "size")
+    //        default:
+    //        }
+    //        time.Sleep(30 * time.Millisecond)
+    //    }
+    data, _ := ioutil.ReadFile("tmp2.h264")
     dataSize := len(data)
     info := [][]byte{}
     
@@ -484,8 +516,7 @@ func handleStreamConn(conn net.Conn)  {
             log.Println("err", err)
             break
         }
-        fmt.Println("write back ", w, " bytes")
-        time.Sleep(40 * time.Millisecond)
+        time.Sleep(10 * time.Millisecond)
     }
 }
 
@@ -546,10 +577,11 @@ func screenH264Server() {
             break
         default:
             conn, err := server.Accept()
-            fmt.Println("H264连接了")
+           
             if err != nil {
                 fmt.Println(err)
             }else{
+                fmt.Println("H264连接了")
                 go sendToClientH264Stream(conn)
                 // go handleStreamConn(conn)
             }
@@ -601,7 +633,8 @@ func (h *H264Buffer) GetH264Unit() []byte {
     }
     return nil
 }
-
+var h264DataStream chan []byte
+var hasReceiveData bool
 func h264StreamService()  {
     server, err := net.Listen("tcp", ":1408")
     if err != nil {
@@ -627,13 +660,70 @@ func h264StreamService()  {
         
     }
 }
+var h264Data H264Buffer
+
+// 推流命令
+//ffmpeg -f dshow -i
+// video="Chicony USB2.0 Camera" -vcodec libx264 -preset:v ultrafast -tune:v zerolatency -bsf:v h264_mp4toannexb -f h264 test2.h264
+func h264StreamPullService() {
+    //out, err := os.Create("test2.h264")
+    //if err != nil {
+    //    log.Println(err)
+    //    return
+    //}
+    log.Println("Start Push Service")
+    h264Data = H264Buffer{}
+    upd, err := net.ResolveUDPAddr("udp4", ":6666")
+    if err != nil {
+        log.Println(err)
+        return
+    }
+    conn, err := net.ListenUDP("udp4", upd)
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+    log.Println("监听推流端口6666")
+    defer conn.Close()
+    readBuf := make([]byte, 3 * 1024 * 1024)
+    for true {
+        nalu := h264Data.GetH264Unit()
+        if nalu != nil {
+            log.Println("Get NALU Data")
+            if hasReceiveData {
+                select {
+                case h264DataStream <- nalu:
+                default:
+                }
+            }else{
+                select {
+                case <- h264DataStream:
+                default:
+                }
+                _ = nalu
+            }
+            // out.Write(nalu)
+            continue
+        }
+        // time.Sleep(50 * time.Millisecond)
+        n, remoteAddr, err := conn.ReadFromUDP(readBuf)
+        if err != nil {
+            log.Println(err)
+            continue
+        }
+        log.Println("推流,ip:", remoteAddr.IP, "端口:", remoteAddr.Port, "数据长度:", n)
+        h264Data.AppendBuffer(readBuf, n)
+    }
+}
 func main() {
+    h264DataStream= make(chan []byte, 10)
     // go App_Server()
     go server_notice()
     go screenCaptureServer()
     go screenH264Server()
     go screenCaptureServer2()
     go h264StreamService()
+    go h264StreamPullService()
     Http_Server()
     fmt.Println("退出")
     close(exit_ch)
