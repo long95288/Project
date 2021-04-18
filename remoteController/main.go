@@ -520,8 +520,8 @@ func handleStreamConn(conn net.Conn)  {
     }
 }
 
-func sendToClientH264Stream(conn net.Conn) {
-    args := []string{"5"}
+func sendToClientH264Stream(conn net.Conn, streamType int) {
+    args := []string{fmt.Sprintf("%d", streamType + 4)}
     cmd := exec.Command(WindowControllerCmd, args...)
     
     cmdStdOutPipe, _ := cmd.StdoutPipe()
@@ -598,7 +598,8 @@ func screenH264Server() {
                 fmt.Println(err)
             }else{
                 fmt.Println("H264连接了")
-                go sendToClientH264Stream(conn)
+                conn.Close()
+                // go sendToClientH264Stream(conn)
                 // go handleStreamConn(conn)
             }
             
@@ -664,11 +665,29 @@ func h264StreamService()  {
             break
         default:
             conn, err := server.Accept()
-            fmt.Println("H264连接了")
+            fmt.Println("拉流请求....")
             if err != nil {
                 fmt.Println(err)
             }else{
-                go sendToClientH264Stream(conn)
+                buf := make([]byte, 1024)
+                r, err := conn.Read(buf)
+                if err != nil {
+                    conn.Close()
+                }else{
+                    streamType, err := strconv.Atoi(string(buf[:r]))
+                    if err != nil {
+                        log.Printf("%v", err)
+                        conn.Close()
+                    }else{
+                        if 1 == streamType || 2 == streamType  {
+                            log.Printf("STREAM TYPE %d\n", streamType)
+                            go sendToClientH264Stream(conn, streamType)
+                        }else{
+                            log.Printf("UNKNOW STREAM TYPE %d\n", streamType)
+                            conn.Close()
+                        }
+                    }
+                }
                 //go handleStreamConn(conn)
             }
             
