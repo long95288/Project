@@ -492,7 +492,7 @@ func handleStreamConn(conn net.Conn)  {
     //        }
     //        time.Sleep(30 * time.Millisecond)
     //    }
-    data, _ := ioutil.ReadFile("tmp2.h264")
+    data, _ := ioutil.ReadFile("test4.h264")
     dataSize := len(data)
     info := [][]byte{}
     
@@ -549,14 +549,30 @@ func sendToClientH264Stream(conn net.Conn) {
     }()
     
     buf := make([]byte, 1024 * 1024)
+    h264Buffer := H264Buffer{}
+    count := 0
     for n, err := cmdStdOutPipe.Read(buf);err == nil && n > 0; {
-        n, err = conn.Write(buf[:n])
-        if err != nil {
-            fmt.Println(err)
-            break
+        nalu := h264Buffer.GetH264Unit()
+        if nalu != nil {
+            writeBuf := make([]byte, 4)
+            binary.BigEndian.PutUint32(writeBuf, uint32(len(nalu) + 4))
+            writeBuf = append(writeBuf, nalu...)
+            w, err := conn.Write(writeBuf)
+            if err != nil || w != int(len(nalu) + 4) {
+                log.Println("err", err)
+                break
+            }
+            count ++
+            if count >= 120  {
+                log.Printf("Write back %d video frame", count)
+                count = 0
+            }
+            continue
         }
-        fmt.Println("write back ", n, " bytes")
-        time.Sleep(10 * time.Millisecond)
+        n, err = cmdStdOutPipe.Read(buf)
+        if nil == err {
+            h264Buffer.AppendBuffer(buf, n)
+        }
     }
     _, err = cmdStdInPipe.Write([]byte("2\r\n"))
     fmt.Println("STOP H264 Steam ,OpErr", err)
@@ -652,8 +668,8 @@ func h264StreamService()  {
             if err != nil {
                 fmt.Println(err)
             }else{
-                //go sendToClientH264Stream(conn)
-                go handleStreamConn(conn)
+                go sendToClientH264Stream(conn)
+                //go handleStreamConn(conn)
             }
             
         }
