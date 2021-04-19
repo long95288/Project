@@ -950,3 +950,12 @@ func TestEncryptDecrypt(t *testing.T) {
         log.Fatal("TEST FAILED")
     }
 }
+func TestRemoveElement(t *testing.T)  {
+    // 0.1.3.0.4
+    nums := []int{2}
+    
+    ret :=  removeElement(nums, 2)
+    fmt.Println(ret)
+    fmt.Println(nums)
+    
+}

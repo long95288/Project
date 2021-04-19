@@ -3974,5 +3974,16 @@ func getPbkdf2Key(securityKey, salt []byte) []byte {
 }
 
 
-
+func removeElement(nums []int, val int) int {
+    // 双索引,一个往前,一个标记
+    cur := 0
+    for i := 0;i < len(nums);i ++ {
+        if nums[i] != val {
+            // 不相等
+            nums[cur] = nums[i]
+            cur ++
+        }
+    }
+    return cur
+}
 
