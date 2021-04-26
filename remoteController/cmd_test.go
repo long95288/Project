@@ -117,3 +117,7 @@ func TestParse(t *testing.T){
 		
 	}
 }
+
+func TestMouseControl(t *testing.T) {
+	MouseControl(MOUSE_CTL_TYPE_LEFT_SINGLE_CLICK, 40,40)
+}

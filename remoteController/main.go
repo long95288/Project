@@ -102,6 +102,26 @@ func appConnHandler(conn net.Conn) {
     }()
 }
 
+const (
+    PEER_CMD_NOTICE_SERVER = 1
+    PEER_CMD_MOUSE_CTL     = 2
+)
+
+// 处理对端发送的信令
+func handlerPeerCMD(cmdType uint32, data []byte) {
+    switch cmdType {
+    case PEER_CMD_MOUSE_CTL:
+        // 处理控制请求, 4bit type 4bit x 4bit y
+        mouseCTLType := binary.BigEndian.Uint32(data)
+        mouseCTLX := binary.BigEndian.Uint32(data[4:])
+        mouseCTLY := binary.BigEndian.Uint32(data[8:])
+        MouseControl(mouseCTLType, mouseCTLX, mouseCTLY)
+        break
+    default:
+        log.Printf("UNKNOW PEER_CMD TYPE[%d]\n", cmdType)
+    }
+}
+// 数据格式: length(4bit) + data stream
 func server_notice() {
     upd, err := net.ResolveUDPAddr("udp4", ":1400")
     conn, err := net.ListenUDP("udp4", upd)
@@ -111,7 +131,7 @@ func server_notice() {
         return
     }
     readBuf := make([]byte, 1024)
-    writeBuf := []byte("321")
+   
     for true {
         time.Sleep(50 * time.Millisecond)
         n, remoteAddr, err := conn.ReadFromUDP(readBuf)
@@ -119,40 +139,54 @@ func server_notice() {
             fmt.Println(err)
             continue
         }
-        fmt.Printf("server notice read data size = %d\n", n)
-        fmt.Println("客户端探测,ip:", remoteAddr.IP, "端口:", remoteAddr.Port, "数据:", string(readBuf[:n]))
-        peerData := string(readBuf[:n])
-        fmt.Println("peer data..", peerData)
-        if strings.Compare("123", peerData) == 0{
-            peerConn, err := net.DialUDP("udp4", nil, remoteAddr)
-            if err != nil {
-                fmt.Println(err)
-                continue
+        if n < 4 {
+            continue
+        }
+        // 判断协议
+        dataLength := binary.BigEndian.Uint32(readBuf)
+        if dataLength != uint32(n) {
+            log.Printf("NOT DATA PROTOCAL data size[%d], read size[%d]\n", dataLength, n)
+            continue
+        }
+        if n < 8 {
+            log.Printf("NOT DATA PROTOCAL SIZE < 8\n")
+        }
+        // 是需要的协议,取出数据
+        originData := readBuf[4 : n]
+        // 先判断是否是探测报文,探测报文需要回复
+        cmdType := binary.BigEndian.Uint32(originData)
+        switch cmdType {
+        case PEER_CMD_NOTICE_SERVER:
+            // 心跳的话直接返回响应
+            log.Println("Receive PEER_CMD_NOTICE_SERVER")
+            peerData := string(originData[4:])
+            log.Println("客户端探测,ip:", remoteAddr.IP, "端口:", remoteAddr.Port, "数据:", string(peerData))
+            if strings.Compare("123", peerData) == 0{
+                go func() {
+                    peerConn, err := net.DialUDP("udp4", nil, remoteAddr)
+                    if err != nil {
+                        log.Println(err)
+                    }
+                    defer peerConn.Close()
+                    responseData := []byte("321")
+                    responseLength := 4 + len(responseData)
+                    writeBuf := make([]byte, 4)
+                    binary.BigEndian.PutUint32(writeBuf, uint32(responseLength))
+                    writeBuf = append(writeBuf, responseData...)
+                    _, err = peerConn.Write(writeBuf)
+                    if err != nil {
+                        log.Printf("Response PEER_CMD_NOTICE_SERVER request failed, %s\n", err)
+                    }else{
+                        log.Printf("Response PEER_CMD_NOTICE_SERVER request success\n")
+                    }
+                }()
+            } else {
+                log.Printf("Unknow PEER_CMD_NOTICE_SERVER Request data %v\n", peerData)
             }
-            fmt.Println("发送响应....")
-            peerConn.Write(writeBuf)
-            peerConn.Close()
-        }else{
-            fmt.Println("未知数据....")
+        default:
+            // 放入解析函数
+            handlerPeerCMD(cmdType, originData[4:])
         }
-    }
-}
-func App_Server()  {
-    server, err := net.Listen("udp", ":1399")
-    if nil != err {
-        fmt.Println(err)
-    }
-    for !exit_app_server {
-        fmt.Println("等待连接....")
-        conn, err := server.Accept()
-        fmt.Println("接受连接....")
-        if nil != err{
-            fmt.Println(err)
-            
-        }else{
-            go appConnHandler(conn)
-        }
-        time.Sleep(200 * time.Millisecond)
     }
 }
 
