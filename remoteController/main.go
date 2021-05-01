@@ -115,7 +115,7 @@ func handlerPeerCMD(cmdType uint32, data []byte) {
         mouseCTLType := binary.BigEndian.Uint32(data)
         mouseCTLX := binary.BigEndian.Uint32(data[4:])
         mouseCTLY := binary.BigEndian.Uint32(data[8:])
-        MouseControl(mouseCTLType, mouseCTLX, mouseCTLY)
+        MouseControl(mouseCTLType, int32(mouseCTLX), int32(mouseCTLY))
         break
     default:
         log.Printf("UNKNOW PEER_CMD TYPE[%d]\n", cmdType)
@@ -784,6 +784,58 @@ func h264StreamPullService() {
         h264Data.AppendBuffer(readBuf, n)
     }
 }
+func cmdService() {
+    // 命令服务
+    upd, err := net.ResolveUDPAddr("udp4", ":1405")
+    conn, err := net.ListenUDP("udp4", upd)
+    defer conn.Close()
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+    readBuf := make([]byte, 1024)
+    for true {
+        // time.Sleep(10 * time.Millisecond)
+        n, _, err := conn.ReadFromUDP(readBuf)
+        log.Println("read cmd data")
+        if err != nil {
+            fmt.Println(err)
+            continue
+        }
+        if n < 4 {
+            continue
+        }
+        dataType := binary.BigEndian.Uint32(readBuf)
+        log.Printf("CMD DataType %d\n", dataType)
+        switch dataType {
+        case PEER_CMD_MOUSE_CTL:
+            length := binary.BigEndian.Uint32(readBuf[4:])
+            value := readBuf[8: 8 + length]
+            log.Printf("Mouse CMD readSize %d length %d, value %s\n",n, length, string(value))
+            // cmd x y
+            args := strings.Split(string(value), ":")
+            if len(args) == 3 {
+                mouseCmd, err := strconv.Atoi(args[0])
+                if err != nil {
+                    break
+                }
+                mouseX, err   := strconv.Atoi(args[1])
+                if err != nil {
+                    break
+                }
+                mouseY, err   := strconv.Atoi(args[2])
+                if err != nil {
+                    break
+                }
+                MouseControl(uint32(mouseCmd), int32(mouseX), int32(mouseY))
+            }
+            break
+        default:
+            log.Printf("UNKOWN dataType %d", dataType)
+            break
+        }
+    }
+}
 func main() {
     h264DataStream= make(chan []byte, 10)
     // go App_Server()
@@ -793,6 +845,7 @@ func main() {
     go screenCaptureServer2()
     go h264StreamService()
     go h264StreamPullService()
+    go cmdService()
     Http_Server()
     fmt.Println("退出")
     close(exit_ch)

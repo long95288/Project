@@ -138,7 +138,7 @@ const (
 	MOUSE_CTL_TYPE_RIGHT_SINGLE_CLICK = 3 // 右键单击
 )
 
-func MouseControl(ctlType uint32, x uint32, y uint32) {
+func MouseControl(ctlType uint32, x int32, y int32) {
 	args := []string{
 		fmt.Sprintf("%d", CMD_MOUSE_CTL),
 		fmt.Sprintf("%d", ctlType),
