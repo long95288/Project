@@ -15,6 +15,7 @@ import (
     "log"
     "net"
     "net/http"
+    "os"
     "os/exec"
     "strconv"
     "strings"
@@ -379,6 +380,29 @@ func sendMsgCmdHandler(c *gin.Context, body []byte)  {
         return
     }
     log.Printf("SENDMSG_CMD RECEIVE : %s", requestDTO.Msg)
+    // 将Msg写写入文件
+    pwd, err := os.Getwd()
+    if err != nil {
+        log.Printf("GetWd() faild, err %v \n", err)
+    }else{
+        msgFilename := strings.TrimSpace(time.Now().Format("2006-01-02-15-04-05.000")  + ".txt")
+        pwd := strings.TrimSpace(pwd)
+        dir := pwd + "/msg/"
+        _ = os.MkdirAll(dir, 0666)
+        filepath := dir + msgFilename
+        file, err := os.Create(filepath)
+        if err != nil {
+            log.Printf("Create File %s failed\n", filepath)
+        }else{
+            defer file.Close()
+            n, err := file.Write([]byte(requestDTO.Msg))
+            if err != nil {
+                log.Printf("write msg to file failed, err %s.\n", err)
+            }else{
+                log.Printf("write msg to file success, size = %d \n", n)
+            }
+        }
+    }
     ResponseSuccess(c, "success", nil)
 }
 
