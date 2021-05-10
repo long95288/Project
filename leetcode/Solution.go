@@ -3987,3 +3987,26 @@ func removeElement(nums []int, val int) int {
     return cur
 }
 
+func getLeafs(root *TreeNode) []int{
+    if root == nil {
+        return []int{}
+    }
+    if nil == root.Left && nil == root.Right {
+        return []int{root.Val}
+    }
+    return append(getLeafs(root.Left), getLeafs(root.Right)...)
+}
+func leafSimilar(root1 *TreeNode, root2 *TreeNode) bool {
+    // 获得全部的叶子节点,比较就好了
+    r1 := getLeafs(root1)
+    r2 := getLeafs(root2)
+    if len(r1) != len(r2) {
+        return false
+    }
+    for i := 0;i < len(r1);i ++ {
+        if r1[i] != r2[i] {
+            return false
+        }
+    }
+    return true
+}
